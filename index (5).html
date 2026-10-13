@@ -1,0 +1,944 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1a2fb5">
+<title>Football Legends</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Figtree:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
+<style>
+/* Layout: one-screen mobile game, tactics-board pitch in kit blue, sticker cards in paper white */
+:root{
+  --kit:#1a2fb5; --kit-deep:#101d7a; --kit-line:rgba(255,255,255,.22);
+  --paper:#f7f5ef; --ink:#0c1240; --ink-soft:#4a5180;
+  --flash:#ffd23f; --red:#ff4d5e; --green:#19c37d; --white:#ffffff; --mute:rgba(255,255,255,.72);
+  --f-display:"Bungee","Impact","Arial Black",sans-serif;
+  --f-body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--kit);color:var(--white);font-family:var(--f-body);font-size:16px;line-height:1.45;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px);
+  background-image:radial-gradient(120% 60% at 50% -10%,rgba(255,255,255,.14),transparent 60%),
+  repeating-linear-gradient(90deg,transparent 0 46px,rgba(255,255,255,.035) 46px 92px);}
+#app{max-width:480px;margin:0 auto;padding-inline:16px;padding-block:20px 160px;min-height:100%}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+button:focus-visible,input:focus-visible{outline:3px solid var(--flash);outline-offset:2px}
+h1,h2,h3{margin:0;text-wrap:balance}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--flash)}
+.display{font-family:var(--f-display);font-weight:400;line-height:.95;letter-spacing:.01em}
+.muted{color:var(--mute)}
+.stack{display:flex;flex-direction:column;gap:16px}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:16px 20px;border-radius:14px;
+  font-weight:800;font-size:17px;background:var(--flash);color:var(--ink);box-shadow:0 5px 0 #c99a00;transition:transform .08s,box-shadow .08s}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 #c99a00}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--white);box-shadow:none;border:2px solid var(--kit-line)}
+.btn.ink{background:var(--kit);color:var(--white);box-shadow:0 5px 0 var(--kit-deep)}
+.dock{position:fixed;left:0;right:0;bottom:0;padding:12px 16px calc(14px + env(safe-area-inset-bottom,0px));background:linear-gradient(transparent,var(--kit-deep) 30%);z-index:5}
+.dock>div{max-width:448px;margin:0 auto;display:flex;flex-direction:column;gap:8px}
+.card{background:var(--paper);color:var(--ink);border-radius:18px;padding:18px;box-shadow:0 2px 0 rgba(0,0,0,.18)}
+.card h3{font-size:15px;font-weight:800}
+.hero{padding-block:8px 4px}
+.hero h1{font-size:clamp(44px,13vw,62px);margin-top:10px}
+.hero h1 span{color:var(--flash)}
+.hero p{margin:12px 0 0;font-size:17px;color:var(--mute);max-width:36ch}
+.input{width:100%;min-width:0;padding:14px;border-radius:12px;border:2px solid #dcdacf;background:var(--white);color:var(--ink);font:inherit;font-weight:700;font-size:17px}
+.input.code{font-family:var(--f-display);font-size:26px;letter-spacing:.2em;text-transform:uppercase;text-align:center}
+.lbl{font-size:13px;font-weight:700;color:var(--ink-soft);margin-bottom:6px;display:block}
+.hint{font-size:13px;color:var(--ink-soft);margin-top:6px}
+.seg{display:grid;grid-template-columns:repeat(auto-fit,minmax(64px,1fr));gap:6px;background:#ebe8dd;border-radius:12px;padding:4px}
+.seg button{padding:10px 6px;border-radius:9px;font-weight:700;font-size:14px;color:var(--ink-soft)}
+.seg button[aria-pressed="true"]{background:var(--white);color:var(--ink);box-shadow:0 1px 3px rgba(12,18,64,.18)}
+.or{display:flex;align-items:center;gap:10px;color:var(--ink-soft);font-size:13px;font-weight:700}
+.or::before,.or::after{content:"";flex:1;height:1px;background:#dcdacf}
+.err{background:rgba(255,77,94,.14);border:2px solid var(--red);color:var(--ink);border-radius:12px;padding:12px;font-weight:600;font-size:14px}
+.netbadge{display:inline-flex;gap:6px;align-items:center;font-family:var(--f-mono);font-size:11px;font-weight:600;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,.12)}
+.netbadge i{width:7px;height:7px;border-radius:50%;background:var(--green)}
+.netbadge.local i{background:var(--flash)}
+/* lobby */
+.codebox{background:var(--paper);color:var(--ink);border-radius:20px;padding:18px;text-align:center;box-shadow:0 6px 0 rgba(0,0,0,.2)}
+.codebox .display{font-size:clamp(48px,16vw,72px);letter-spacing:.12em;color:var(--kit)}
+.people{display:flex;flex-wrap:wrap;gap:8px}
+.person{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);border-radius:999px;padding:6px 12px 6px 6px;font-weight:700;max-width:100%}
+.person .dot{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--flash);color:var(--ink);font-family:var(--f-display);font-size:12px;flex:none}
+.person span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.person.me{background:var(--paper);color:var(--ink)}
+.person.ok .dot{background:var(--green)}
+.person.wait{opacity:.55}
+.modes{display:grid;gap:10px}
+.mode{text-align:left;background:var(--white);border:3px solid transparent;border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:4px;color:var(--ink)}
+.mode b{font-family:var(--f-display);font-weight:400;font-size:18px}
+.mode small{color:var(--ink-soft);font-size:14px}
+.mode[aria-pressed="true"]{border-color:var(--kit)}
+/* rounds */
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.bar h2{font-family:var(--f-display);font-weight:400;font-size:20px;min-width:0;overflow-wrap:anywhere}
+.chip{font-family:var(--f-mono);font-size:13px;font-weight:600;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.14);white-space:nowrap;font-variant-numeric:tabular-nums}
+.chip.warn{background:var(--red);color:var(--white)}
+.rounds{display:flex;gap:4px;margin-bottom:16px}
+.rounds i{flex:1;height:6px;border-radius:9px;background:rgba(255,255,255,.15)}
+.rounds i.done{background:var(--flash)}
+.rounds i.now{background:var(--white)}
+.ticket{background:var(--paper);color:var(--ink);border-radius:20px;padding:20px 18px;display:grid;grid-template-columns:1fr auto;gap:6px 14px;align-items:end;box-shadow:0 6px 0 rgba(0,0,0,.2);position:relative;overflow:hidden}
+.ticket::after{content:"";position:absolute;right:96px;top:12px;bottom:12px;border-left:2px dashed #d6d3c6}
+.ticket .pos{font-family:var(--f-display);font-size:clamp(24px,7.5vw,32px);line-height:1;min-width:0;overflow-wrap:anywhere}
+.ticket .yr{font-family:var(--f-display);font-size:30px;line-height:1;color:var(--kit);text-align:center;width:82px}
+.ticket .lab{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+.ticket .lab.r{text-align:center;width:82px}
+.answer{display:flex;flex-direction:column;gap:12px;margin-top:18px}
+.answer input{width:100%;padding:18px 16px;border-radius:14px;border:3px solid var(--paper);background:var(--white);color:var(--ink);font:inherit;font-size:20px;font-weight:700}
+.answer input::placeholder{color:#9a9db8;font-weight:500}
+.tries{display:flex;gap:6px;align-items:center;font-size:13px;color:var(--mute)}
+.tries i{width:10px;height:10px;border-radius:50%;background:var(--flash)}
+.tries i.used{background:rgba(255,255,255,.2)}
+.msg{border-radius:14px;padding:14px;font-weight:600;font-size:15px;display:flex;flex-direction:column;gap:10px}
+.msg.bad{background:rgba(255,77,94,.16);border:2px solid var(--red)}
+.msg.info{background:rgba(255,210,63,.12);border:2px solid var(--flash)}
+.msg .opts{display:flex;flex-wrap:wrap;gap:8px}
+.msg .opts button{background:var(--paper);color:var(--ink);font-weight:800;padding:10px 12px;border-radius:10px;font-size:14px}
+.linkbtn{color:var(--mute);font-weight:700;text-decoration:underline;padding:6px 0;text-align:left}
+.waitcard{display:flex;flex-direction:column;gap:14px;align-items:flex-start;margin-top:18px}
+.waitcard .big{display:flex;gap:14px;align-items:center}
+.stamp{font-family:var(--f-display);font-size:13px;padding:5px 9px;border-radius:8px}
+.stamp.ok{background:var(--green);color:var(--ink)}
+.stamp.pending{background:var(--flash);color:var(--ink)}
+.stamp.none{background:rgba(255,255,255,.18)}
+.picks{display:flex;flex-direction:column;gap:8px;margin-top:16px}
+.pick{display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:center;background:var(--paper);color:var(--ink);border-radius:14px;padding:10px 12px}
+.pick .av{width:44px;height:44px;font-size:14px;border-width:2px;box-shadow:none}
+.pick .who{font-size:12px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.06em}
+.pick b{display:block;font-size:16px;line-height:1.2;overflow-wrap:anywhere}
+.pick small{color:var(--ink-soft);font-size:13px}
+.gem{display:inline-block;font-family:var(--f-mono);font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;background:var(--kit);color:var(--white);padding:2px 6px;border-radius:5px;margin-left:6px;vertical-align:2px}
+.judge{grid-column:1/3;display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:13px;color:var(--ink-soft)}
+.judge button{font-weight:800;padding:8px 12px;border-radius:10px;font-size:13px}
+.judge .yes{background:var(--green);color:var(--ink)}
+.judge .no{background:var(--red);color:var(--white)}
+/* pitch */
+.pitch{position:relative;border-radius:20px;padding:18px 6px 14px;background:var(--kit-deep);border:2px solid var(--kit-line);overflow:hidden;display:grid;gap:14px}
+.pitch::before{content:"";position:absolute;inset:0;pointer-events:none;background:
+ radial-gradient(circle at 50% 0,transparent 58px,var(--kit-line) 59px,var(--kit-line) 61px,transparent 62px),
+ linear-gradient(var(--kit-line),var(--kit-line)) 50% 100%/46% 2px no-repeat,
+ linear-gradient(var(--kit-line),var(--kit-line)) 27% 100%/2px 13% no-repeat,
+ linear-gradient(var(--kit-line),var(--kit-line)) 73% 100%/2px 13% no-repeat,
+ linear-gradient(var(--kit-line),var(--kit-line)) 50% 87%/46% 2px no-repeat;}
+.line{position:relative;display:flex;justify-content:space-evenly;gap:2px}
+.slot{display:flex;flex-direction:column;align-items:center;gap:4px;width:25%;max-width:92px;min-width:0;padding:2px}
+.av{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-display);font-size:17px;color:var(--white);border:3px solid var(--paper);box-shadow:0 3px 0 rgba(0,0,0,.25);flex:none;text-shadow:0 1px 0 rgba(0,0,0,.35)}
+.av.empty{background:transparent;border:2px dashed rgba(255,255,255,.55);box-shadow:none;font-family:var(--f-body);font-weight:800;font-size:20px;color:var(--mute)}
+.pick .av.empty{border-color:#c9c6ba;color:var(--ink-soft)}
+.av.pending{border-color:var(--flash);border-style:dashed}
+.slot .nm{font-weight:800;font-size:12.5px;line-height:1.1;text-align:center;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.slot .ps{font-size:11px;color:var(--mute);font-weight:600}
+.ssn{font-family:var(--f-mono);font-size:11px;font-weight:600;padding:2px 6px;border-radius:6px;background:var(--flash);color:var(--ink);font-variant-numeric:tabular-nums}
+.ssn.ghost{background:rgba(255,255,255,.14);color:var(--white)}
+.pitch.mini .av{width:38px;height:38px;font-size:12px;border-width:2px}
+.pitch.mini .slot .nm{font-size:11px}
+.pitch.mini{gap:10px;padding:14px 4px 10px}
+.teamhead{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:8px}
+.teamhead h2{font-family:var(--f-display);font-weight:400;font-size:22px;overflow-wrap:anywhere;min-width:0}
+.rate{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.rate-top{display:flex;justify-content:space-between;align-items:center}
+.score{font-family:var(--f-display);font-size:34px;color:var(--kit);font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--kit);height:28px}
+/* plus ou moins */
+.duel{display:grid;gap:10px;margin-top:4px}
+.duel .card{display:flex;flex-direction:column;gap:6px}
+.duel .nm{font-family:var(--f-display);font-size:clamp(22px,7vw,30px);line-height:1}
+.duel .clubs{font-size:13px;color:var(--ink-soft);font-weight:600}
+.duel .val{font-family:var(--f-display);font-size:44px;color:var(--kit);line-height:1;font-variant-numeric:tabular-nums}
+.duel .val small{font-family:var(--f-body);font-size:14px;font-weight:700;color:var(--ink-soft);margin-left:6px}
+.duel .vs{font-family:var(--f-display);text-align:center;color:var(--flash);font-size:18px}
+.duel .hidden{font-family:var(--f-display);font-size:44px;color:#c9c6ba;line-height:1}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.choices .btn{font-size:19px;padding:20px 10px}
+.choices .btn.sel{background:var(--white);box-shadow:0 5px 0 #b9b6aa;outline:3px solid var(--flash)}
+/* results */
+.podium{display:flex;flex-direction:column;gap:8px}
+.pod{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.1)}
+.pod .rk{font-family:var(--f-display);font-size:22px}
+.pod b{overflow-wrap:anywhere}
+.pod small{display:block;font-size:12px;opacity:.75;font-weight:600}
+.pod .sc{font-family:var(--f-mono);font-weight:600;font-variant-numeric:tabular-nums}
+.pod.first{background:var(--flash);color:var(--ink)}
+.share{background:var(--kit-deep);border:3px solid var(--paper);border-radius:22px;padding:16px;display:flex;flex-direction:column;gap:12px;box-shadow:0 8px 0 rgba(0,0,0,.25)}
+.share-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.share-top .display{font-size:22px;overflow-wrap:anywhere}
+.badge{font-family:var(--f-display);background:var(--flash);color:var(--ink);border-radius:12px;padding:6px 10px;font-size:22px;flex:none;font-variant-numeric:tabular-nums}
+.share-foot{display:flex;justify-content:space-between;gap:8px;font-family:var(--f-mono);font-size:11px;color:var(--mute)}
+.toast{position:fixed;left:50%;top:calc(16px + env(safe-area-inset-top,0px));transform:translateX(-50%);background:var(--red);color:var(--white);font-weight:800;padding:12px 18px;border-radius:12px;z-index:30;box-shadow:0 4px 0 rgba(0,0,0,.25)}
+.hostbar{display:flex;flex-direction:column;gap:8px}
+.hosttag{font-family:var(--f-mono);font-size:11px;color:var(--flash);text-transform:uppercase;letter-spacing:.1em;text-align:center}
+@keyframes pop{from{transform:scale(.92);opacity:0}to{transform:none;opacity:1}}
+.pop{animation:pop .25s ease-out}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/* ======================================================================
+   CONFIGURATION — colle ici les deux valeurs de ton projet Supabase
+   (Supabase > Project Settings > API). Laisse vide pour le mode test :
+   la partie se joue alors entre plusieurs onglets du même navigateur.
+   ====================================================================== */
+const SUPABASE_URL = "";   // ex : "https://abcdefgh.supabase.co"
+const SUPABASE_KEY = "";   // la clé "anon" (ou "publishable")
+
+/* ---------- Données : passages en Premier League (année de début de saison, bornes incluses) ----------
+   p = postes acceptés (GK, DEF, MID, ATT), a = autres façons de l'écrire */
+const P = [
+ // Gardiens
+ {n:"Petr Čech",p:"GK",s:[["Chelsea",2004,2014],["Arsenal",2015,2018]],a:["cech"]},
+ {n:"Edwin van der Sar",k:"Van der Sar",p:"GK",s:[["Fulham",2001,2004],["Man Utd",2005,2010]],a:["vds","van der sar"]},
+ {n:"Jens Lehmann",p:"GK",s:[["Arsenal",2003,2007]]},
+ {n:"Pepe Reina",p:"GK",s:[["Liverpool",2005,2012]],a:["pepe"]},
+ {n:"David de Gea",k:"De Gea",p:"GK",s:[["Man Utd",2011,2022]],a:["de gea","degea"]},
+ {n:"Joe Hart",p:"GK",s:[["Man City",2008,2008],["Birmingham",2009,2009],["Man City",2010,2015]]},
+ {n:"Paul Robinson",p:"GK",s:[["Tottenham",2004,2007],["Blackburn",2008,2011]]},
+ {n:"Brad Friedel",p:"GK",s:[["Blackburn",2000,2007],["Aston Villa",2008,2010],["Tottenham",2011,2013]]},
+ {n:"Tim Howard",p:"GK",s:[["Man Utd",2003,2005],["Everton",2006,2015]]},
+ {n:"Shay Given",p:"GK",s:[["Newcastle",1997,2008],["Man City",2008,2010],["Aston Villa",2011,2012]]},
+ {n:"David James",p:"GK",s:[["Man City",2003,2005],["Portsmouth",2006,2009]]},
+ {n:"Hugo Lloris",p:"GK",s:[["Tottenham",2012,2022]]},
+ {n:"Thibaut Courtois",p:"GK",s:[["Chelsea",2014,2017]]},
+ {n:"Mark Schwarzer",p:"GK",s:[["Middlesbrough",1998,2007],["Fulham",2008,2012],["Chelsea",2013,2013]]},
+ {n:"Jussi Jääskeläinen",p:"GK",s:[["Bolton",2001,2011],["West Ham",2012,2014]],a:["jaaskelainen"]},
+ {n:"Carlo Cudicini",p:"GK",s:[["Chelsea",1999,2008],["Tottenham",2008,2012]]},
+ {n:"Manuel Almunia",p:"GK",s:[["Arsenal",2004,2011]]},
+ {n:"Łukasz Fabiański",p:"GK",s:[["Arsenal",2007,2013],["Swansea",2014,2017]],a:["fabianski"]},
+ {n:"Wojciech Szczęsny",p:"GK",s:[["Arsenal",2010,2014]],a:["szczesny"]},
+ {n:"Heurelho Gomes",p:"GK",s:[["Tottenham",2008,2011]]},
+ {n:"Jerzy Dudek",p:"GK",s:[["Liverpool",2001,2006]]},
+ {n:"Asmir Begović",p:"GK",s:[["Stoke",2009,2014],["Chelsea",2015,2016]],a:["begovic"]},
+ {n:"Simon Mignolet",p:"GK",s:[["Sunderland",2010,2012],["Liverpool",2013,2018]]},
+ {n:"Robert Green",k:"R. Green",p:"GK",s:[["West Ham",2006,2010],["QPR",2012,2012]],a:["rob green","green"]},
+ {n:"Ben Foster",p:"GK",s:[["Man Utd",2007,2009],["Birmingham",2010,2010],["West Brom",2011,2018]]},
+ {n:"Michel Vorm",p:"GK",s:[["Swansea",2011,2013],["Tottenham",2014,2018]]},
+ // Défenseurs
+ {n:"John Terry",p:"DEF",s:[["Chelsea",1998,2016]],a:["jt"]},
+ {n:"Rio Ferdinand",p:"DEF",s:[["Leeds",2000,2001],["Man Utd",2002,2013],["QPR",2014,2014]],a:["rio"]},
+ {n:"Ashley Cole",k:"A. Cole",p:"DEF",s:[["Arsenal",1999,2005],["Chelsea",2006,2013]]},
+ {n:"Gary Neville",k:"G. Neville",p:"DEF",s:[["Man Utd",1992,2010]]},
+ {n:"Jamie Carragher",p:"DEF",s:[["Liverpool",1996,2012]],a:["carra"]},
+ {n:"Nemanja Vidić",p:"DEF",s:[["Man Utd",2005,2013]],a:["vidic"]},
+ {n:"Patrice Evra",p:"DEF",s:[["Man Utd",2005,2013]]},
+ {n:"Sol Campbell",p:"DEF",s:[["Arsenal",2001,2005],["Portsmouth",2006,2008],["Arsenal",2009,2009],["Newcastle",2010,2010]]},
+ {n:"Ricardo Carvalho",p:"DEF",s:[["Chelsea",2004,2009]]},
+ {n:"Vincent Kompany",p:"DEF",s:[["Man City",2008,2018]]},
+ {n:"Pablo Zabaleta",p:"DEF",s:[["Man City",2008,2016]]},
+ {n:"Gaël Clichy",p:"DEF",s:[["Arsenal",2003,2010],["Man City",2011,2016]]},
+ {n:"Kolo Touré",k:"K. Touré",p:"DEF",s:[["Arsenal",2002,2008],["Man City",2009,2012],["Liverpool",2013,2015]],a:["kolo"]},
+ {n:"Sami Hyypiä",p:"DEF",s:[["Liverpool",1999,2008]],a:["hyypia"]},
+ {n:"Branislav Ivanović",p:"DEF",s:[["Chelsea",2008,2016]],a:["ivanovic","brana"]},
+ {n:"Leighton Baines",p:"DEF",s:[["Wigan",2005,2006],["Everton",2007,2019]]},
+ {n:"Ledley King",p:"DEF",s:[["Tottenham",2000,2011]]},
+ {n:"Bacary Sagna",p:"DEF",s:[["Arsenal",2007,2013],["Man City",2014,2016]]},
+ {n:"Phil Jagielka",p:"DEF",s:[["Sheffield Utd",2006,2006],["Everton",2007,2018]]},
+ {n:"Laurent Koscielny",p:"DEF",s:[["Arsenal",2010,2018]]},
+ {n:"Glen Johnson",p:"DEF",s:[["Chelsea",2003,2005],["Portsmouth",2006,2008],["Liverpool",2009,2014]]},
+ {n:"William Gallas",p:"DEF",s:[["Chelsea",2001,2005],["Arsenal",2006,2009],["Tottenham",2010,2012]]},
+ {n:"Gary Cahill",k:"G. Cahill",p:"DEF",s:[["Bolton",2007,2011],["Chelsea",2011,2018]]},
+ {n:"Wes Brown",p:"DEF",s:[["Man Utd",1997,2010],["Sunderland",2011,2016]]},
+ {n:"John O'Shea",p:"DEF",s:[["Man Utd",1999,2010],["Sunderland",2011,2016]],a:["oshea"]},
+ {n:"Jonny Evans",p:"DEF",s:[["Man Utd",2008,2014],["West Brom",2015,2017]]},
+ {n:"Chris Smalling",p:"DEF",s:[["Fulham",2009,2009],["Man Utd",2010,2018]]},
+ {n:"Phil Jones",k:"P. Jones",p:"DEF",s:[["Blackburn",2010,2010],["Man Utd",2011,2021]]},
+ {n:"Rafael da Silva",k:"Rafael",p:"DEF",s:[["Man Utd",2008,2014]],a:["rafael"]},
+ {n:"Mikaël Silvestre",p:"DEF",s:[["Man Utd",1999,2007],["Arsenal",2008,2009]]},
+ {n:"Gabriel Heinze",p:"DEF",s:[["Man Utd",2004,2006]]},
+ {n:"Daniel Agger",p:"DEF",s:[["Liverpool",2005,2013]]},
+ {n:"Martin Škrtel",p:"DEF",s:[["Liverpool",2007,2015]],a:["skrtel"]},
+ {n:"Fábio Aurélio",p:"DEF",s:[["Liverpool",2006,2011]],a:["aurelio"]},
+ {n:"Álvaro Arbeloa",p:"DEF",s:[["Liverpool",2006,2008]]},
+ {n:"Steve Finnan",p:"DEF",s:[["Liverpool",2003,2007]]},
+ {n:"John Arne Riise",p:"DEF",s:[["Liverpool",2001,2007]],a:["riise"]},
+ {n:"Paulo Ferreira",p:"DEF",s:[["Chelsea",2004,2012]]},
+ {n:"José Bosingwa",p:"DEF",s:[["Chelsea",2008,2011],["QPR",2012,2012]]},
+ {n:"David Luiz",p:"DEF",s:[["Chelsea",2010,2013],["Chelsea",2016,2018],["Arsenal",2019,2020]],a:["luiz"]},
+ {n:"César Azpilicueta",p:"DEF",s:[["Chelsea",2012,2022]],a:["azpi"]},
+ {n:"Wayne Bridge",p:"DEF",s:[["Chelsea",2003,2008],["Man City",2008,2010]]},
+ {n:"Joleon Lescott",p:"DEF",s:[["Everton",2006,2008],["Man City",2009,2013],["West Brom",2014,2014]]},
+ {n:"Micah Richards",p:"DEF",s:[["Man City",2005,2013],["Aston Villa",2015,2015]]},
+ {n:"Aleksandar Kolarov",p:"DEF",s:[["Man City",2010,2016]]},
+ {n:"Thomas Vermaelen",p:"DEF",s:[["Arsenal",2009,2013]]},
+ {n:"Per Mertesacker",p:"DEF",s:[["Arsenal",2011,2017]]},
+ {n:"Philippe Senderos",p:"DEF",s:[["Arsenal",2004,2007]]},
+ {n:"Lauren",p:"DEF",s:[["Arsenal",2000,2006],["Portsmouth",2006,2008]]},
+ {n:"Emmanuel Eboué",p:"DEF MID",s:[["Arsenal",2004,2010]]},
+ {n:"Kieran Gibbs",p:"DEF",s:[["Arsenal",2008,2016]]},
+ {n:"Nacho Monreal",p:"DEF",s:[["Arsenal",2012,2018]]},
+ {n:"Jan Vertonghen",p:"DEF",s:[["Tottenham",2012,2019]]},
+ {n:"Michael Dawson",p:"DEF",s:[["Tottenham",2005,2013],["Hull",2014,2014]]},
+ {n:"Younès Kaboul",p:"DEF",s:[["Tottenham",2007,2007],["Portsmouth",2008,2009],["Tottenham",2009,2014]]},
+ {n:"Benoît Assou-Ekotto",p:"DEF",s:[["Tottenham",2006,2012]],a:["bae","assou ekotto"]},
+ {n:"Kyle Walker",p:"DEF",s:[["Aston Villa",2010,2010],["Tottenham",2011,2016]]},
+ {n:"Jonathan Woodgate",p:"DEF",s:[["Middlesbrough",2006,2007],["Tottenham",2007,2010]]},
+ {n:"Sylvain Distin",p:"DEF",s:[["Man City",2002,2006],["Portsmouth",2007,2008],["Everton",2009,2014]]},
+ {n:"Tony Hibbert",p:"DEF",s:[["Everton",2000,2015]]},
+ {n:"Joseph Yobo",p:"DEF",s:[["Everton",2002,2010]]},
+ {n:"Seamus Coleman",p:"DEF",s:[["Everton",2009,2023]]},
+ {n:"Steven Taylor",p:"DEF",s:[["Newcastle",2004,2008],["Newcastle",2010,2015]]},
+ {n:"Fabricio Coloccini",p:"DEF",s:[["Newcastle",2008,2008],["Newcastle",2010,2015]]},
+ {n:"Ryan Shawcross",p:"DEF",s:[["Stoke",2008,2017]]},
+ {n:"Ashley Williams",p:"DEF",s:[["Swansea",2011,2015],["Everton",2016,2018]]},
+ {n:"Richard Dunne",p:"DEF",s:[["Man City",2002,2008],["Aston Villa",2009,2012]]},
+ {n:"James Collins",p:"DEF",s:[["West Ham",2005,2008],["Aston Villa",2009,2011],["West Ham",2012,2017]]},
+ // Milieux
+ {n:"Steven Gerrard",p:"MID",s:[["Liverpool",1998,2014]],a:["stevie g"]},
+ {n:"Frank Lampard",p:"MID",s:[["Chelsea",2001,2013],["Man City",2014,2014]],a:["lamps"]},
+ {n:"Paul Scholes",p:"MID",s:[["Man Utd",1994,2012]]},
+ {n:"Ryan Giggs",p:"MID ATT",s:[["Man Utd",1990,2013]]},
+ {n:"Cesc Fàbregas",p:"MID",s:[["Arsenal",2004,2010],["Chelsea",2014,2018]],a:["cesc","fabregas"]},
+ {n:"Patrick Vieira",p:"MID",s:[["Arsenal",1996,2004],["Man City",2009,2010]]},
+ {n:"Claude Makélélé",p:"MID",s:[["Chelsea",2003,2007]],a:["makelele"]},
+ {n:"Michael Essien",p:"MID",s:[["Chelsea",2005,2011]]},
+ {n:"Yaya Touré",k:"Y. Touré",p:"MID",s:[["Man City",2010,2017]],a:["yaya"]},
+ {n:"David Silva",p:"MID ATT",s:[["Man City",2010,2019]]},
+ {n:"Xabi Alonso",p:"MID",s:[["Liverpool",2004,2008]],a:["xabi"]},
+ {n:"Michael Carrick",p:"MID",s:[["Tottenham",2004,2005],["Man Utd",2006,2017]]},
+ {n:"Juan Mata",p:"MID ATT",s:[["Chelsea",2011,2013],["Man Utd",2013,2021]]},
+ {n:"Samir Nasri",p:"MID ATT",s:[["Arsenal",2008,2010],["Man City",2011,2015]]},
+ {n:"Robert Pirès",p:"MID ATT",s:[["Arsenal",2000,2005]],a:["pires"]},
+ {n:"Javier Mascherano",p:"MID",s:[["West Ham",2006,2006],["Liverpool",2006,2009]],a:["masche"]},
+ {n:"Luka Modrić",p:"MID",s:[["Tottenham",2008,2011]],a:["modric"]},
+ {n:"Gareth Bale",p:"MID ATT DEF",s:[["Tottenham",2007,2012]]},
+ {n:"Mesut Özil",p:"MID",s:[["Arsenal",2013,2020]],a:["ozil"]},
+ {n:"Santi Cazorla",p:"MID",s:[["Arsenal",2012,2017]]},
+ {n:"Joe Cole",k:"J. Cole",p:"MID ATT",s:[["Chelsea",2003,2009],["Liverpool",2010,2010],["West Ham",2012,2013],["Aston Villa",2014,2014]]},
+ {n:"Tim Cahill",k:"T. Cahill",p:"MID ATT",s:[["Everton",2004,2011]]},
+ {n:"Mikel Arteta",p:"MID",s:[["Everton",2004,2010],["Arsenal",2011,2015]]},
+ {n:"Michael Ballack",p:"MID",s:[["Chelsea",2006,2009]]},
+ {n:"Darren Fletcher",p:"MID",s:[["Man Utd",2003,2014]]},
+ {n:"Lucas Leiva",k:"Lucas",p:"MID",s:[["Liverpool",2007,2016]],a:["lucas"]},
+ {n:"Momo Sissoko",p:"MID",s:[["Liverpool",2005,2007]],a:["mohamed sissoko"]},
+ {n:"Dietmar Hamann",p:"MID",s:[["Liverpool",1999,2005],["Man City",2006,2008]],a:["didi hamann"]},
+ {n:"Luis García",k:"L. García",p:"MID ATT",s:[["Liverpool",2004,2006]],a:["luis garcia"]},
+ {n:"Harry Kewell",p:"MID ATT",s:[["Liverpool",2003,2007]]},
+ {n:"Jordan Henderson",p:"MID",s:[["Sunderland",2008,2010],["Liverpool",2011,2022]],a:["hendo"]},
+ {n:"Philippe Coutinho",p:"MID ATT",s:[["Liverpool",2012,2017]]},
+ {n:"Joe Allen",p:"MID",s:[["Swansea",2011,2011],["Liverpool",2012,2015]]},
+ {n:"Ramires",p:"MID",s:[["Chelsea",2010,2015]]},
+ {n:"John Obi Mikel",k:"Mikel",p:"MID",s:[["Chelsea",2006,2016]],a:["obi mikel","mikel"]},
+ {n:"Oscar",p:"MID",s:[["Chelsea",2012,2016]]},
+ {n:"Nemanja Matić",p:"MID",s:[["Chelsea",2013,2016],["Man Utd",2017,2021]],a:["matic"]},
+ {n:"Florent Malouda",p:"MID ATT",s:[["Chelsea",2007,2011]]},
+ {n:"Shaun Wright-Phillips",k:"SWP",p:"MID ATT",s:[["Man City",2004,2004],["Chelsea",2005,2007],["Man City",2008,2010],["QPR",2011,2012]],a:["wright phillips","swp"]},
+ {n:"Damien Duff",p:"MID ATT",s:[["Chelsea",2003,2005],["Newcastle",2006,2008],["Fulham",2009,2012]]},
+ {n:"Gareth Barry",p:"MID",s:[["Aston Villa",1997,2008],["Man City",2009,2013],["Everton",2013,2016]]},
+ {n:"James Milner",p:"MID ATT DEF",s:[["Newcastle",2004,2004],["Aston Villa",2005,2005],["Newcastle",2006,2007],["Aston Villa",2008,2009],["Man City",2010,2014],["Liverpool",2015,2022]]},
+ {n:"Ashley Young",k:"A. Young",p:"MID ATT DEF",s:[["Aston Villa",2006,2010],["Man Utd",2011,2019]]},
+ {n:"Stewart Downing",p:"MID ATT",s:[["Middlesbrough",2004,2008],["Aston Villa",2009,2010],["Liverpool",2011,2012],["West Ham",2013,2014]]},
+ {n:"Owen Hargreaves",p:"MID",s:[["Man Utd",2007,2010]]},
+ {n:"Anderson",p:"MID",s:[["Man Utd",2007,2014]]},
+ {n:"Ji-sung Park",k:"Park",p:"MID ATT",s:[["Man Utd",2005,2011],["QPR",2012,2012]],a:["park","park ji sung","ji sung park"]},
+ {n:"Nani",p:"MID ATT",s:[["Man Utd",2007,2014]]},
+ {n:"Antonio Valencia",p:"MID ATT DEF",s:[["Wigan",2006,2008],["Man Utd",2009,2018]]},
+ {n:"Ander Herrera",p:"MID",s:[["Man Utd",2014,2018]]},
+ {n:"Marouane Fellaini",p:"MID",s:[["Everton",2008,2012],["Man Utd",2013,2018]]},
+ {n:"Leon Osman",p:"MID",s:[["Everton",2004,2015]]},
+ {n:"Phil Neville",k:"P. Neville",p:"MID DEF",s:[["Man Utd",1994,2004],["Everton",2005,2012]]},
+ {n:"Aaron Ramsey",p:"MID",s:[["Arsenal",2008,2018]]},
+ {n:"Jack Wilshere",p:"MID",s:[["Arsenal",2008,2008],["Arsenal",2010,2016]]},
+ {n:"Abou Diaby",p:"MID",s:[["Arsenal",2005,2014]]},
+ {n:"Alexandre Song",p:"MID",s:[["Arsenal",2006,2011]],a:["alex song"]},
+ {n:"Mathieu Flamini",p:"MID",s:[["Arsenal",2004,2007],["Arsenal",2013,2015]]},
+ {n:"Gilberto Silva",k:"Gilberto",p:"MID",s:[["Arsenal",2002,2007]],a:["gilberto"]},
+ {n:"Freddie Ljungberg",p:"MID ATT",s:[["Arsenal",1998,2006],["West Ham",2007,2007]],a:["fredrik ljungberg"]},
+ {n:"Alexander Hleb",p:"MID",s:[["Arsenal",2005,2007]]},
+ {n:"Tomáš Rosický",p:"MID",s:[["Arsenal",2006,2015]],a:["rosicky"]},
+ {n:"Theo Walcott",p:"ATT MID",s:[["Arsenal",2005,2017]]},
+ {n:"Alex Oxlade-Chamberlain",k:"Oxlade",p:"MID ATT",s:[["Arsenal",2011,2016]],a:["ox","oxlade chamberlain","chamberlain"]},
+ {n:"Aaron Lennon",p:"MID ATT",s:[["Tottenham",2005,2014],["Everton",2014,2017]]},
+ {n:"Tom Huddlestone",p:"MID",s:[["Tottenham",2005,2012]]},
+ {n:"Jermaine Jenas",p:"MID",s:[["Newcastle",2002,2004],["Tottenham",2005,2012]]},
+ {n:"Rafael van der Vaart",k:"Van der Vaart",p:"MID ATT",s:[["Tottenham",2010,2011]],a:["vdv","van der vaart"]},
+ {n:"Scott Parker",p:"MID",s:[["Chelsea",2003,2004],["Newcastle",2005,2006],["West Ham",2007,2010],["Tottenham",2011,2012],["Fulham",2013,2013]]},
+ {n:"Mousa Dembélé",p:"MID",s:[["Fulham",2010,2011],["Tottenham",2012,2018]],a:["dembele"]},
+ {n:"Christian Eriksen",p:"MID",s:[["Tottenham",2013,2019]]},
+ {n:"Kevin Nolan",p:"MID",s:[["Bolton",2001,2008],["Newcastle",2010,2010],["West Ham",2012,2014]]},
+ {n:"Jay-Jay Okocha",p:"MID",s:[["Bolton",2002,2005]],a:["okocha","jay jay okocha"]},
+ {n:"Stiliyan Petrov",p:"MID",s:[["Aston Villa",2006,2011]]},
+ {n:"Nigel de Jong",k:"De Jong",p:"MID",s:[["Man City",2008,2011]],a:["de jong"]},
+ {n:"Fernandinho",p:"MID",s:[["Man City",2013,2021]]},
+ {n:"Jesús Navas",p:"MID ATT",s:[["Man City",2013,2016]],a:["navas"]},
+ {n:"Yohan Cabaye",p:"MID",s:[["Newcastle",2011,2013],["Crystal Palace",2015,2017]]},
+ {n:"Hatem Ben Arfa",p:"MID ATT",s:[["Newcastle",2010,2013],["Hull",2014,2014]],a:["ben arfa"]},
+ {n:"Joey Barton",p:"MID",s:[["Man City",2003,2006],["Newcastle",2007,2008],["Newcastle",2010,2010],["QPR",2011,2011],["Burnley",2014,2014]]},
+ {n:"Morten Gamst Pedersen",p:"MID",s:[["Blackburn",2004,2011]],a:["pedersen"]},
+ {n:"Charlie Adam",p:"MID",s:[["Blackpool",2010,2010],["Liverpool",2011,2011],["Stoke",2012,2017]]},
+ {n:"Yossi Benayoun",p:"MID ATT",s:[["West Ham",2005,2006],["Liverpool",2007,2009],["Chelsea",2010,2010],["Arsenal",2011,2011],["West Ham",2012,2012]]},
+ {n:"Andrei Arshavin",p:"ATT MID",s:[["Arsenal",2008,2011]]},
+ {n:"Riyad Mahrez",p:"ATT MID",s:[["Leicester",2014,2017],["Man City",2018,2022]]},
+ {n:"Ángel Di María",p:"ATT MID",s:[["Man Utd",2014,2014]],a:["di maria"]},
+ // Attaquants
+ {n:"Thierry Henry",p:"ATT",s:[["Arsenal",1999,2006],["Arsenal",2011,2011]],a:["titi"]},
+ {n:"Wayne Rooney",p:"ATT MID",s:[["Everton",2002,2003],["Man Utd",2004,2016]]},
+ {n:"Cristiano Ronaldo",k:"Ronaldo",p:"ATT MID",s:[["Man Utd",2003,2008]],a:["ronaldo","cr7","cristiano"]},
+ {n:"Didier Drogba",p:"ATT",s:[["Chelsea",2004,2011],["Chelsea",2014,2014]]},
+ {n:"Fernando Torres",p:"ATT",s:[["Liverpool",2007,2010],["Chelsea",2010,2013]],a:["nando"]},
+ {n:"Robin van Persie",k:"Van Persie",p:"ATT",s:[["Arsenal",2004,2011],["Man Utd",2012,2014]],a:["rvp","van persie"]},
+ {n:"Sergio Agüero",p:"ATT",s:[["Man City",2011,2020]],a:["aguero","kun"]},
+ {n:"Luis Suárez",p:"ATT",s:[["Liverpool",2010,2013]],a:["suarez"]},
+ {n:"Carlos Tevez",p:"ATT",s:[["West Ham",2006,2006],["Man Utd",2007,2008],["Man City",2009,2012]]},
+ {n:"Dimitar Berbatov",p:"ATT",s:[["Tottenham",2006,2007],["Man Utd",2008,2011],["Fulham",2012,2013]]},
+ {n:"Jermain Defoe",p:"ATT",s:[["Tottenham",2004,2007],["Portsmouth",2008,2008],["Tottenham",2009,2013],["Sunderland",2014,2016]]},
+ {n:"Peter Crouch",p:"ATT",s:[["Southampton",2004,2004],["Liverpool",2005,2007],["Portsmouth",2008,2008],["Tottenham",2009,2010],["Stoke",2011,2018]]},
+ {n:"Nicolas Anelka",p:"ATT",s:[["Man City",2002,2004],["Bolton",2006,2007],["Chelsea",2007,2011]]},
+ {n:"Michael Owen",p:"ATT",s:[["Newcastle",2005,2008],["Man Utd",2009,2011],["Stoke",2012,2012]]},
+ {n:"Alan Shearer",p:"ATT",s:[["Newcastle",1996,2005]]},
+ {n:"Arjen Robben",p:"ATT MID",s:[["Chelsea",2004,2006]]},
+ {n:"Eden Hazard",p:"ATT MID",s:[["Chelsea",2012,2018]]},
+ {n:"Diego Costa",p:"ATT",s:[["Chelsea",2014,2016]]},
+ {n:"Harry Kane",p:"ATT",s:[["Tottenham",2013,2022]]},
+ {n:"Romelu Lukaku",p:"ATT",s:[["Chelsea",2011,2011],["West Brom",2012,2012],["Everton",2013,2016]]},
+ {n:"Emmanuel Adebayor",p:"ATT",s:[["Arsenal",2005,2008],["Man City",2009,2010],["Tottenham",2011,2014]]},
+ {n:"Samuel Eto'o",p:"ATT",s:[["Chelsea",2013,2013]],a:["etoo"]},
+ {n:"Andy Carroll",p:"ATT",s:[["Newcastle",2010,2010],["Liverpool",2010,2011],["West Ham",2012,2018]]},
+ {n:"Raheem Sterling",p:"ATT MID",s:[["Liverpool",2011,2014],["Man City",2015,2021]]},
+ {n:"Alexis Sánchez",k:"Alexis",p:"ATT",s:[["Arsenal",2014,2017]],a:["alexis","sanchez"]},
+ {n:"Dirk Kuyt",p:"ATT MID",s:[["Liverpool",2006,2011]]},
+ {n:"Darren Bent",p:"ATT",s:[["Charlton",2005,2006],["Tottenham",2007,2008],["Sunderland",2009,2010],["Aston Villa",2010,2012]]},
+ {n:"Robbie Keane",p:"ATT",s:[["Tottenham",2002,2007],["Liverpool",2008,2008]]},
+ {n:"Yakubu",p:"ATT",s:[["Middlesbrough",2005,2006],["Everton",2007,2010],["Blackburn",2011,2011]],a:["yak"]},
+ {n:"Ruud van Nistelrooy",k:"Van Nistelrooy",p:"ATT",s:[["Man Utd",2001,2005]],a:["ruud","van nistelrooy","rvn"]},
+ {n:"Louis Saha",p:"ATT",s:[["Man Utd",2003,2007],["Everton",2008,2011]]},
+ {n:"Hernán Crespo",p:"ATT",s:[["Chelsea",2003,2003],["Chelsea",2005,2005]],a:["crespo"]},
+ {n:"Andriy Shevchenko",p:"ATT",s:[["Chelsea",2006,2007]],a:["sheva"]},
+ {n:"Salomon Kalou",p:"ATT",s:[["Chelsea",2006,2011]]},
+ {n:"Daniel Sturridge",p:"ATT",s:[["Man City",2007,2008],["Chelsea",2009,2012],["Liverpool",2012,2018]]},
+ {n:"Emile Heskey",p:"ATT",s:[["Birmingham",2004,2005],["Wigan",2006,2008],["Aston Villa",2008,2011]]},
+ {n:"Kevin Davies",p:"ATT",s:[["Bolton",2003,2011]]},
+ {n:"Javier Hernández",k:"Chicharito",p:"ATT",s:[["Man Utd",2010,2013]],a:["chicharito","hernandez"]},
+ {n:"Danny Welbeck",p:"ATT",s:[["Man Utd",2008,2008],["Sunderland",2010,2010],["Man Utd",2011,2013],["Arsenal",2014,2018]]},
+ {n:"Olivier Giroud",p:"ATT",s:[["Arsenal",2012,2017]]},
+ {n:"Edin Džeko",p:"ATT",s:[["Man City",2010,2014]],a:["dzeko"]},
+ {n:"Mario Balotelli",p:"ATT",s:[["Man City",2010,2012],["Liverpool",2014,2014]],a:["super mario"]},
+ {n:"Gabriel Agbonlahor",p:"ATT",s:[["Aston Villa",2005,2015]],a:["gabby"]},
+ {n:"John Carew",p:"ATT",s:[["Aston Villa",2006,2010]]},
+ {n:"Obafemi Martins",p:"ATT",s:[["Newcastle",2006,2008]],a:["oba martins"]},
+ {n:"Bobby Zamora",p:"ATT",s:[["West Ham",2005,2007],["Fulham",2008,2011],["QPR",2011,2012],["QPR",2014,2014]]},
+ {n:"Clint Dempsey",p:"ATT MID",s:[["Fulham",2006,2011],["Tottenham",2012,2012]]},
+ {n:"Wilfried Bony",p:"ATT",s:[["Swansea",2013,2014],["Man City",2014,2015]]},
+ {n:"Loïc Rémy",p:"ATT",s:[["QPR",2012,2012],["Newcastle",2013,2013],["Chelsea",2014,2015]],a:["remy"]},
+ {n:"Papiss Cissé",p:"ATT",s:[["Newcastle",2011,2015]],a:["papiss cisse"]},
+ {n:"Djibril Cissé",p:"ATT",s:[["Liverpool",2004,2005],["Sunderland",2008,2008],["QPR",2011,2012]],a:["djibril cisse"]},
+ {n:"Demba Ba",p:"ATT",s:[["West Ham",2010,2010],["Newcastle",2011,2012],["Chelsea",2012,2013]]},
+ {n:"Rickie Lambert",p:"ATT",s:[["Southampton",2012,2013],["Liverpool",2014,2014]]},
+ {n:"Christian Benteke",p:"ATT",s:[["Aston Villa",2012,2014],["Liverpool",2015,2015]]},
+ {n:"Graziano Pellè",p:"ATT",s:[["Southampton",2014,2015]],a:["pelle"]},
+ {n:"Robinho",p:"ATT",s:[["Man City",2008,2009]]},
+ {n:"Ryan Babel",p:"ATT",s:[["Liverpool",2007,2010]]},
+ {n:"Milan Baroš",p:"ATT",s:[["Liverpool",2002,2004],["Aston Villa",2005,2006]],a:["baros"]},
+ {n:"Radamel Falcao",p:"ATT",s:[["Man Utd",2014,2014],["Chelsea",2015,2015]]},
+ {n:"Andy Johnson",k:"A. Johnson",p:"ATT",s:[["Crystal Palace",2004,2004],["Everton",2006,2007],["Fulham",2008,2011]]},
+];
+const CLUB = {"Chelsea":"#1d4fb0","Arsenal":"#d81f26","Man Utd":"#c1121f","Liverpool":"#a8102a","Man City":"#4c9fd6","Tottenham":"#1e2a5e",
+ "Everton":"#1f4bbd","Newcastle":"#2a2a2a","Fulham":"#3a3a3a","Aston Villa":"#7a1f45","Blackburn":"#0b86c9","Portsmouth":"#1b3a9a",
+ "Birmingham":"#2440c9","Stoke":"#c8323a","West Ham":"#7a263a","Bolton":"#2b3f80","Charlton":"#c0101f","Sunderland":"#d1202e",
+ "Middlesbrough":"#c8161e","Southampton":"#c41a24","Wigan":"#1d59af","Sheffield Utd":"#c9202c","QPR":"#1d5ba4","West Brom":"#1a2e66",
+ "Leeds":"#b8930a","Swansea":"#3d3d3d","Hull":"#c77700","Burnley":"#6c1d45","Blackpool":"#e06a00","Crystal Palace":"#1b458f","Leicester":"#003090"};
+
+
+/* ---------- Plus ou moins : buts en Premier League, joueurs qui ont quitté le championnat (chiffres figés) ---------- */
+const GOALS = [
+ {n:"Alan Shearer",g:260,c:"Blackburn · Newcastle"},{n:"Harry Kane",g:213,c:"Tottenham"},{n:"Wayne Rooney",g:208,c:"Everton · Man Utd"},
+ {n:"Andy Cole",g:187,c:"Newcastle · Man Utd · Blackburn…"},{n:"Sergio Agüero",g:184,c:"Man City"},{n:"Frank Lampard",g:177,c:"West Ham · Chelsea · Man City"},
+ {n:"Thierry Henry",g:175,c:"Arsenal"},{n:"Robbie Fowler",g:163,c:"Liverpool · Leeds · Man City"},{n:"Jermain Defoe",g:162,c:"West Ham · Tottenham · Sunderland…"},
+ {n:"Michael Owen",g:150,c:"Liverpool · Newcastle · Man Utd · Stoke"},{n:"Les Ferdinand",g:149,c:"QPR · Newcastle · Tottenham…"},{n:"Teddy Sheringham",g:146,c:"Tottenham · Man Utd · West Ham…"},
+ {n:"Robin van Persie",g:144,c:"Arsenal · Man Utd"},{n:"Jimmy Floyd Hasselbaink",g:127,c:"Leeds · Chelsea · Middlesbrough…"},{n:"Robbie Keane",g:126,c:"Leeds · Tottenham · Liverpool…"},
+ {n:"Nicolas Anelka",g:125,c:"Arsenal · Man City · Bolton · Chelsea…"},{n:"Dwight Yorke",g:123,c:"Aston Villa · Man Utd · Blackburn…"},{n:"Steven Gerrard",g:120,c:"Liverpool"},
+ {n:"Ian Wright",g:113,c:"Arsenal · West Ham"},{n:"Dion Dublin",g:111,c:"Coventry · Aston Villa…"},{n:"Emile Heskey",g:110,c:"Leicester · Liverpool · Aston Villa…"},
+ {n:"Ryan Giggs",g:109,c:"Man Utd"},{n:"Peter Crouch",g:108,c:"Liverpool · Tottenham · Stoke…"},{n:"Paul Scholes",g:107,c:"Man Utd"},
+ {n:"Darren Bent",g:106,c:"Charlton · Tottenham · Sunderland · Aston Villa"},{n:"Didier Drogba",g:104,c:"Chelsea"},{n:"Cristiano Ronaldo",g:103,c:"Man Utd"},
+ {n:"Matt Le Tissier",g:100,c:"Southampton"},{n:"Yakubu",g:95,c:"Portsmouth · Middlesbrough · Everton…"},{n:"Ruud van Nistelrooy",g:95,c:"Man Utd"},
+ {n:"Dimitar Berbatov",g:94,c:"Tottenham · Man Utd · Fulham"},{n:"Kevin Phillips",g:92,c:"Sunderland · Southampton…"},{n:"Olivier Giroud",g:90,c:"Arsenal · Chelsea"},
+ {n:"Dennis Bergkamp",g:87,c:"Arsenal"},{n:"Fernando Torres",g:85,c:"Liverpool · Chelsea"},{n:"Eden Hazard",g:85,c:"Chelsea"},
+ {n:"Carlos Tevez",g:84,c:"West Ham · Man Utd · Man City"},{n:"Luis Suárez",g:69,c:"Liverpool"},{n:"Edin Džeko",g:50,c:"Man City"}
+];
+
+/* ---------- Constantes de jeu ---------- */
+const SEASONS=[2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014];
+const sLbl=y=>`${y}-${String(y+1).slice(2)}`, sShort=y=>`${String(y).slice(2)}/${String(y+1).slice(2)}`;
+const SLOTS=[{id:"GK",l:"GK",fr:"Gardien",ab:"G"},
+ {id:"LB",l:"DEF",fr:"Latéral gauche",ab:"DG"},{id:"CB1",l:"DEF",fr:"Défenseur central",ab:"DC"},{id:"CB2",l:"DEF",fr:"Défenseur central",ab:"DC"},{id:"RB",l:"DEF",fr:"Latéral droit",ab:"DD"},
+ {id:"CM1",l:"MID",fr:"Milieu",ab:"MIL"},{id:"CM2",l:"MID",fr:"Milieu",ab:"MIL"},{id:"CM3",l:"MID",fr:"Milieu",ab:"MIL"},
+ {id:"LW",l:"ATT",fr:"Ailier gauche",ab:"AG"},{id:"ST",l:"ATT",fr:"Avant-centre",ab:"BU"},{id:"RW",l:"ATT",fr:"Ailier droit",ab:"AD"}];
+const LINES=[["LW","ST","RW"],["CM1","CM2","CM3"],["LB","CB1","CB2","RB"],["GK"]];
+const ROLE={GK:"gardien",DEF:"défenseur",MID:"milieu",ATT:"attaquant"};
+const MODES={saison:{t:"Un joueur par saison",d:"11 manches, un poste et une saison de PL. Tu cites un joueur de mémoire."},
+             plusmoins:{t:"Plus ou moins",d:"Buts en Premier League : le joueur suivant en a-t-il plus ou moins ? 10 duels."}};
+const MAX_TRIES=3, PM_DUELS=10;
+const slotById=id=>SLOTS.find(s=>s.id===id);
+
+/* ---------- Utilitaires ---------- */
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const norm=s=>String(s).normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[łŁ]/g,"l").toLowerCase().replace(/['’]/g,"").replace(/[^a-z0-9 ]/g," ").replace(/\s+/g," ").trim();
+const short=p=>p.k||p.n.split(" ").slice(-1)[0];
+const initialsOf=name=>{const w=String(name).replace(/['’.]/g,"").trim().split(/\s+/).filter(Boolean); if(!w.length) return "?"; return (w.length>1?w[0][0]+w[w.length-1][0]:w[0].slice(0,2)).toUpperCase();};
+const clubAt=(p,y)=>{const st=p.s.find(([c,a,b])=>y>=a&&y<=b); return st?st[0]:null;};
+const lines=p=>p.p.split(" ");
+const shuffle=a=>{a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a;};
+const uid=()=>Math.random().toString(36).slice(2,10);
+const LS={get(k){try{return JSON.parse(localStorage.getItem(k));}catch(e){return null;}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}},del(k){try{localStorage.removeItem(k);}catch(e){}}};
+const ALIAS=P.map(p=>{const set=new Set([norm(p.n),norm(short(p)),norm(p.n.split(" ").slice(-1)[0]),...(p.a||[]).map(norm)]);
+  const w=norm(p.n).split(" "); if(w.length>2) set.add(w.slice(1).join(" ")); return [...set].filter(x=>x.length>1);});
+function lev(a,b){if(Math.abs(a.length-b.length)>2) return 9; const d=Array.from({length:a.length+1},(_,i)=>[i]); for(let j=1;j<=b.length;j++) d[0][j]=j;
+  for(let i=1;i<=a.length;i++) for(let j=1;j<=b.length;j++) d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1)); return d[a.length][b.length];}
+function findPlayers(input){const q=norm(input); if(!q) return [];
+  let hits=P.map((p,i)=>i).filter(i=>ALIAS[i].includes(q));
+  if(!hits.length&&q.length>=5){const tol=q.length>=8?2:1; hits=P.map((p,i)=>i).filter(i=>ALIAS[i].some(a=>a.length>=4&&lev(q,a)<=tol));}
+  return hits;}
+
+/* ======================================================================
+   RÉSEAU : un "salon" = un canal temps réel. L'hôte détient la partie,
+   les autres téléphones envoient leurs actions et reçoivent l'état.
+   ====================================================================== */
+const ONLINE=!!(SUPABASE_URL&&SUPABASE_KEY);
+async function connect(code,onMsg){
+  if(ONLINE){
+    if(!window.supabase) throw new Error("La librairie Supabase n'a pas pu se charger. Vérifie ta connexion.");
+    const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+    const ch=sb.channel("fl-"+code,{config:{broadcast:{self:false}}});
+    ch.on("broadcast",{event:"msg"},({payload})=>onMsg(payload));
+    await new Promise((res,rej)=>{const t=setTimeout(()=>rej(new Error("Connexion impossible au serveur de jeu.")),10000);
+      ch.subscribe(st=>{ if(st==="SUBSCRIBED"){clearTimeout(t);res();} else if(st==="CHANNEL_ERROR"||st==="TIMED_OUT"){clearTimeout(t);rej(new Error("Connexion impossible au serveur de jeu."));} });});
+    return {send:m=>ch.send({type:"broadcast",event:"msg",payload:m}),close:()=>sb.removeChannel(ch)};
+  }
+  const bc=new BroadcastChannel("fl-"+code); bc.onmessage=e=>onMsg(e.data);
+  return {send:m=>bc.postMessage(m),close:()=>bc.close()};
+}
+
+/* ---------- État ---------- */
+let ME=LS.get("fl-me")||{id:uid(),name:""}; LS.set("fl-me",ME);
+let NET=null, CODE=null, IS_HOST=false;
+let G=null;            // partie complète (seulement chez l'hôte)
+let game=null;         // état public reçu de l'hôte
+let deadline=null;     // fin du chrono, en heure locale
+let hostTimer=null, joinTimer=null, lastKey=null;
+let L=freshLocal();
+function freshLocal(){return {joinCode:"",err:null,busy:false,round:-1,draft:"",tries:0,msg:null,pendingRaw:null,why:null,mine:null,pmCur:-1,pmPick:null,ratings:{},voted:false,ver:0};}
+const app=document.getElementById("app");
+
+/* ======================================================================
+   HÔTE
+   ====================================================================== */
+function newGame(){return {code:CODE,host:ME.id,mode:"saison",timer:30,phase:"lobby",players:[{id:ME.id,name:ME.name}],
+  rounds:[],round:0,answers:{},revealed:{},votes:{},chain:[],pm:{cur:0,picks:{},scores:{},last:null},deadlineAt:null};}
+function pub(){
+  const s={...G}; delete s.answers; delete s.votes; s.pm={...G.pm}; delete s.pm.picks;
+  s.answeredIds=Object.keys(G.answers[G.round]||{});
+  s.pickedIds=Object.keys(G.pm.picks||{});
+  s.votedIds=Object.keys(G.votes||{});
+  if(G.phase==="results") s.votes=G.votes;
+  return s;
+}
+function push(){
+  if(!IS_HOST||!G) return;
+  LS.set("fl-g-"+CODE,G);
+  const m={t:"state",s:pub(),endsIn:G.deadlineAt?Math.max(0,G.deadlineAt-Date.now()):null};
+  try{NET&&NET.send(m);}catch(e){}
+  onState(m);
+}
+function armTimer(fn){
+  clearTimeout(hostTimer);
+  if(G.timer){G.deadlineAt=Date.now()+G.timer*1000; hostTimer=setTimeout(fn,G.timer*1000+1200);} else G.deadlineAt=null;
+}
+function hostHandle(m){
+  if(!G||!m||!m.id) return;
+  const inGame=G.players.some(p=>p.id===m.id);
+  switch(m.t){
+    case "join":
+      if(inGame){ G.players.find(p=>p.id===m.id).name=String(m.name||"").slice(0,18)||"Joueur"; }
+      else if(G.phase==="lobby"&&G.players.length<8){ G.players.push({id:m.id,name:String(m.name||"").slice(0,18)||"Joueur"}); }
+      push(); break;
+    case "hello": push(); break;
+    case "leave": if(G.phase==="lobby"){G.players=G.players.filter(p=>p.id!==m.id); push();} break;
+    case "answer":
+      if(G.phase!=="answering"||m.round!==G.round||!inGame) return;
+      (G.answers[G.round] ||= {})[m.id]=sanitizeEntry(m.entry);
+      if(G.players.every(p=>G.answers[G.round][p.id])) endRound(); else push(); break;
+    case "pick":
+      if(G.phase!=="pmAsk"||m.cur!==G.pm.cur||!inGame||!["plus","moins"].includes(m.choice)) return;
+      G.pm.picks[m.id]=m.choice;
+      if(G.players.every(p=>G.pm.picks[p.id])) endPm(); else push(); break;
+    case "votes":
+      if(G.phase!=="voting"||!inGame) return;
+      G.votes[m.id]=m.ratings||{};
+      if(G.players.every(p=>G.votes[p.id])){G.phase="results";} push(); break;
+  }
+}
+function sanitizeEntry(e){
+  if(!e) return {st:"none"};
+  if(e.st==="ok"&&Number.isInteger(e.i)&&P[e.i]) return {st:"ok",i:e.i};
+  if(e.st==="pending") return {st:"pending",raw:String(e.raw||"").slice(0,40)};
+  return {st:"none"};
+}
+function hostStart(){
+  if(G.mode==="saison"){
+    const ss=shuffle(SEASONS); G.rounds=SLOTS.map((s,k)=>({slot:s.id,y:ss[k]}));
+    G.round=0; G.answers={}; G.revealed={}; G.votes={}; G.phase="answering"; armTimer(endRound);
+  } else {
+    G.chain=shuffle(GOALS.map((g,i)=>i)).slice(0,PM_DUELS+1);
+    G.pm={cur:0,picks:{},scores:Object.fromEntries(G.players.map(p=>[p.id,0])),last:null};
+    G.votes={}; G.phase="pmAsk"; armTimer(endPm);
+  }
+  push();
+}
+function endRound(){
+  if(G.phase!=="answering") return; clearTimeout(hostTimer);
+  const a=G.answers[G.round]||{};
+  G.revealed[G.round]=Object.fromEntries(G.players.map(p=>[p.id,a[p.id]||{st:"none"}]));
+  G.phase="roundResult"; G.deadlineAt=null; push();
+}
+function endPm(){
+  if(G.phase!=="pmAsk") return; clearTimeout(hostTimer);
+  const A=GOALS[G.chain[G.pm.cur]], B=GOALS[G.chain[G.pm.cur+1]];
+  const right=B.g>A.g?"plus":B.g<A.g?"moins":"egal";
+  const winners=G.players.filter(p=>G.pm.picks[p.id]&&(right==="egal"||G.pm.picks[p.id]===right)).map(p=>p.id);
+  winners.forEach(id=>G.pm.scores[id]=(G.pm.scores[id]||0)+1);
+  G.pm.last={right,winners,picks:{...G.pm.picks}};
+  G.phase="pmResult"; G.deadlineAt=null; push();
+}
+function hostNext(){
+  if(G.phase==="roundResult"){
+    if(Object.values(G.revealed[G.round]).some(e=>e.st==="pending")) return;
+    if(G.round<SLOTS.length-1){G.round++; G.phase="answering"; armTimer(endRound);}
+    else {G.phase=G.players.length>1?"voting":"results"; G.votes={};}
+  } else if(G.phase==="pmResult"){
+    if(G.pm.cur<G.chain.length-2){G.pm.cur++; G.pm.picks={}; G.phase="pmAsk"; armTimer(endPm);}
+    else G.phase="results";
+  }
+  push();
+}
+function hostForce(){ if(G.phase==="answering") endRound(); else if(G.phase==="pmAsk") endPm(); else if(G.phase==="voting"){G.phase="results"; push();} }
+function hostJudge(r,id,v){ const e=G.revealed[r]&&G.revealed[r][id]; if(e&&e.st==="pending"){e.st=v==="ok"?"agreed":"refused"; push();} }
+function hostLobby(){ clearTimeout(hostTimer); const keep=G.players; const mode=G.mode, timer=G.timer; G=newGame(); G.players=keep; G.mode=mode; G.timer=timer; push(); }
+
+/* ======================================================================
+   CLIENT (tous les téléphones, y compris l'hôte)
+   ====================================================================== */
+function act(m){ m.id=ME.id; if(IS_HOST) hostHandle(m); else { try{NET.send(m);}catch(e){} } }
+function onMsg(m){
+  if(!m) return;
+  if(m.t==="state"){ if(!IS_HOST) onState(m); return; }
+  if(IS_HOST) hostHandle(m);
+}
+function onState(m){
+  if(!m.s||m.s.code!==CODE) return;
+  clearTimeout(joinTimer);
+  const prevPhase=game&&game.phase;
+  game=m.s; deadline=m.endsIn!=null?Date.now()+m.endsIn:null;
+  if(game.phase==="lobby"&&prevPhase&&prevPhase!=="lobby") L=freshLocal();
+  if(!game.players.some(p=>p.id===ME.id)&&game.phase!=="lobby"){ L.err="La partie a déjà commencé sans toi."; leave(true); return; }
+  render();
+}
+async function createGame(){
+  if(!ME.name.trim()){L.err="Entre ton prénom d'abord."; return render(true);}
+  L.busy=true; L.err=null; render(true);
+  CODE=Array.from({length:4},()=>"ABCDEFGHJKMNPQRSTUVWXYZ"[Math.floor(Math.random()*23)]).join("");
+  IS_HOST=true; G=newGame();
+  try{ NET=await connect(CODE,onMsg); }catch(e){ L.err=e.message; L.busy=false; IS_HOST=false; G=null; return render(true); }
+  LS.set("fl-session",{code:CODE,host:true}); L.busy=false; push();
+}
+async function joinGame(code){
+  code=String(code||"").toUpperCase().replace(/[^A-Z]/g,"");
+  if(!ME.name.trim()){L.err="Entre ton prénom d'abord."; return render(true);}
+  if(code.length!==4){L.err="Le code fait 4 lettres."; return render(true);}
+  L.busy=true; L.err=null; render(true);
+  CODE=code; IS_HOST=false;
+  try{ NET=await connect(CODE,onMsg); }catch(e){ L.err=e.message; L.busy=false; CODE=null; return render(true); }
+  LS.set("fl-session",{code:CODE,host:false});
+  act({t:"join",name:ME.name});
+  joinTimer=setTimeout(()=>{ if(!game){ L.err=`Aucune partie trouvée avec le code ${CODE}. Vérifie le code et que l'hôte a l'appli ouverte.`; leave(true);} },7000);
+}
+function leave(keepErr){
+  if(!IS_HOST&&NET&&game&&game.phase==="lobby") act({t:"leave"});
+  try{NET&&NET.close();}catch(e){}
+  clearTimeout(hostTimer); clearTimeout(joinTimer);
+  if(CODE) LS.del("fl-g-"+CODE);
+  LS.del("fl-session"); NET=null; CODE=null; IS_HOST=false; G=null; game=null; deadline=null;
+  const err=keepErr?L.err:null; L=freshLocal(); L.err=err; L.busy=false; render(true);
+}
+async function resume(){
+  const s=LS.get("fl-session"); if(!s||!s.code) return render(true);
+  CODE=s.code; IS_HOST=!!s.host;
+  try{ NET=await connect(CODE,onMsg); }catch(e){ LS.del("fl-session"); CODE=null; IS_HOST=false; return render(true); }
+  if(IS_HOST){
+    G=LS.get("fl-g-"+CODE); if(!G){ leave(); return; }
+    if(G.deadlineAt){ const left=G.deadlineAt-Date.now(); const fn=G.phase==="answering"?endRound:G.phase==="pmAsk"?endPm:null; if(fn) hostTimer=setTimeout(fn,Math.max(0,left)+1200); }
+    push();
+  } else {
+    act({t:"hello"});
+    joinTimer=setTimeout(()=>{ if(!game){ L.err="La partie précédente n'est plus disponible."; leave(true);} },7000);
+  }
+}
+setInterval(()=>{ if(IS_HOST&&G&&NET){ try{NET.send({t:"state",s:pub(),endsIn:G.deadlineAt?Math.max(0,G.deadlineAt-Date.now()):null});}catch(e){} } },4000);
+
+/* ---------- Saisie de mémoire (validée sur le téléphone du joueur) ---------- */
+function myTeam(id=ME.id){ const t={}; (game.rounds||[]).forEach((r,k)=>{ const e=game.revealed&&game.revealed[k]&&game.revealed[k][id]; if(e) t[r.slot]=e; }); return t; }
+function submitGuess(raw){
+  const r=game.rounds[game.round], slot=slotById(r.slot);
+  if(!norm(raw)) return;
+  L.draft=raw;
+  const hits=findPlayers(raw);
+  if(!hits.length){ L.msg={kind:"unknown",raw}; L.pendingRaw=raw; L.ver++; return render(); }
+  const already=new Set(Object.values(myTeam()).filter(e=>e.st==="ok").map(e=>e.i));
+  const valid=hits.filter(i=>clubAt(P[i],r.y)&&lines(P[i]).includes(slot.l)&&!already.has(i));
+  if(valid.length===1) return sendAnswer({st:"ok",i:valid[0]});
+  if(valid.length>1){ L.msg={kind:"ambig",opts:valid}; L.ver++; return render(); }
+  L.tries++; const p=P[hits[0]]; let text,contest=false;
+  if(hits.some(i=>already.has(i))) text=`${short(p)} est déjà dans ton 11.`;
+  else if(!hits.some(i=>clubAt(P[i],r.y))){ text=`D'après notre base, ${short(p)} ne jouait pas en Premier League en ${sLbl(r.y)}.`; contest=true; }
+  else { text=`${short(p)} n'est pas ${ROLE[slot.l]} pour nous.`; contest=true; }
+  L.pendingRaw=raw;
+  if(L.tries>=MAX_TRIES){ L.why=text+" Plus d'essais."; return sendAnswer({st:"none"}); }
+  L.msg={kind:"bad",text,contest}; L.ver++; render();
+}
+function sendAnswer(entry){ L.mine=entry; L.msg=null; L.ver++; act({t:"answer",round:game.round,entry}); render(); }
+
+/* ======================================================================
+   AFFICHAGE
+   ====================================================================== */
+function avatar(e,y){
+  if(!e||e.st==="none"||e.st==="refused") return `<span class="av empty">–</span>`;
+  if(e.st==="pending"||e.st==="agreed") return `<span class="av${e.st==="pending"?" pending":""}" style="background:#5a5f86">${esc(initialsOf(e.raw))}</span>`;
+  const p=P[e.i]; return `<span class="av" style="background:${CLUB[clubAt(p,y)]||"#334"}">${esc(initialsOf(p.n))}</span>`;
+}
+const entryName=e=>!e||e.st==="none"||e.st==="refused"?null:e.st==="ok"?short(P[e.i]):e.raw;
+const seasonOf=id=>(game.rounds||[]).find(r=>r.slot===id)?.y;
+function pitch(team,mini){
+  return `<div class="pitch${mini?" mini":""}">${LINES.map(line=>`<div class="line">${line.map(id=>{
+    const s=slotById(id), e=team[id], y=seasonOf(id), nm=entryName(e);
+    return `<div class="slot">${e?avatar(e,y):`<span class="av empty"></span>`}<span class="nm">${nm?esc(nm):`<span class="ps">${s.ab}</span>`}</span>${e&&y!=null?`<span class="ssn${nm?"":" ghost"}">${sShort(y)}</span>`:""}</div>`;
+  }).join("")}</div>`).join("")}</div>`;
+}
+function ticket(r){const s=slotById(r.slot); return `<div class="ticket"><span class="lab">Poste</span><span class="lab r">Saison</span><span class="pos">${s.fr}</span><span class="yr">${sShort(r.y)}</span></div>`;}
+function roundBar(n,cur){return `<div class="rounds">${Array.from({length:n},(_,k)=>`<i class="${k<cur?"done":k===cur?"now":""}"></i>`).join("")}</div>`;}
+const dock=html=>`<div class="dock"><div>${html}</div></div>`;
+const nameOf=id=>(game.players.find(p=>p.id===id)||{}).name||"?";
+const clock=()=>deadline?`<span class="chip" data-clock>--</span>`:"";
+const keyOf=e=>!e||e.st==="none"||e.st==="refused"?null:e.st==="ok"?"i"+e.i:"r"+norm(e.raw);
+function isGem(r,id){ if(game.players.length<2) return false; const rv=game.revealed[r]; const k=keyOf(rv&&rv[id]); if(!k) return false; return game.players.every(p=>p.id===id||keyOf(rv[p.id])!==k); }
+const netBadge=()=>`<span class="netbadge${ONLINE?"":" local"}"><i></i>${ONLINE?"En ligne":"Mode test · onglets"}</span>`;
+function hostDock(btns){ return IS_HOST?dock(`<div class="hostbar"><div class="hosttag">Tu es l'hôte</div>${btns}</div>`):""; }
+
+function screenWelcome(){
+  return {key:"welcome"+L.ver+L.busy+(L.err||""),html:`
+  <div class="stack">
+   <div class="hero"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span class="eyebrow">Football Legends</span>${netBadge()}</div>
+    <h1 class="display">Défie tes <span>potes</span></h1>
+    <p>Une partie, un code, chacun joue sur son téléphone. Le débat se fait en vrai.</p></div>
+   ${ONLINE?"":`<div class="card" style="font-size:14px"><b>Mode test.</b> Le serveur en ligne n'est pas encore branché : ouvre cette page dans 2 ou 3 onglets du même navigateur pour simuler plusieurs téléphones.</div>`}
+   <div class="card stack">
+    <div><label class="lbl" for="me-name">Ton prénom</label><input class="input" id="me-name" maxlength="18" value="${esc(ME.name)}" placeholder="Prénom" autocomplete="nickname"></div>
+    <button class="btn ink" data-act="create" ${L.busy?"disabled":""}>Créer une partie</button>
+    <div class="or">ou rejoindre</div>
+    <input class="input code" id="join-code" maxlength="4" value="${esc(L.joinCode)}" placeholder="CODE" autocomplete="off" autocapitalize="characters" spellcheck="false">
+    <button class="btn" data-act="join" ${L.busy?"disabled":""}>Rejoindre</button>
+    ${L.err?`<div class="err" role="alert">${esc(L.err)}</div>`:""}
+   </div>
+  </div>`};
+}
+function screenLobby(){
+  const g=game, n=g.players.length;
+  return {key:"lobby"+JSON.stringify([g.players,g.mode,g.timer]),html:`
+  <div class="stack">
+   <div style="display:flex;justify-content:space-between;align-items:center"><span class="eyebrow">Salon</span>${netBadge()}</div>
+   <div class="codebox"><div class="lbl" style="margin:0">Code de la partie</div><div class="display">${esc(g.code)}</div><div class="hint">Tes potes tapent ce code sur leur téléphone.</div></div>
+   <div><div class="eyebrow" style="margin-bottom:8px">${n} joueur${n>1?"s":""} dans le salon</div>
+    <div class="people">${g.players.map(p=>`<span class="person${p.id===ME.id?" me":""}"><span class="dot">${esc(initialsOf(p.name))}</span><span>${esc(p.name)}${p.id===g.host?" · hôte":""}</span></span>`).join("")}</div></div>
+   ${IS_HOST?`<div class="card stack">
+     <div><span class="lbl">Mode de jeu</span><div class="modes">${Object.entries(MODES).map(([k,m])=>`<button class="mode" data-act="mode" data-v="${k}" aria-pressed="${g.mode===k}"><b>${m.t}</b><small>${m.d}</small></button>`).join("")}</div></div>
+     <div><span class="lbl">Temps par manche</span><div class="seg">${[[0,"Sans"],[15,"15 s"],[30,"30 s"],[45,"45 s"]].map(([v,l])=>`<button data-act="timer" data-v="${v}" aria-pressed="${g.timer===v}">${l}</button>`).join("")}</div>
+      <div class="hint">Sans chrono, c'est toi qui clôtures chaque manche.</div></div>
+    </div>`:`<div class="card"><h3>${esc(MODES[g.mode].t)}</h3><p style="margin:6px 0 0;color:var(--ink-soft)">${esc(MODES[g.mode].d)}</p><p class="hint">En attente de ${esc(nameOf(g.host))} pour lancer.</p></div>`}
+  </div>
+  ${IS_HOST?dock(`<button class="btn" data-act="start">${n<2?"Lancer seul (test)":`Lancer avec ${n} joueurs`}</button><button class="btn ghost" data-act="leave">Fermer le salon</button>`)
+           :dock(`<button class="btn ghost" data-act="leave">Quitter le salon</button>`)}`};
+}
+function msgBox(m){
+  if(m.kind==="ambig") return `<div class="msg info">Plusieurs joueurs correspondent. Lequel ?<div class="opts">${m.opts.map(i=>`<button type="button" data-act="choose" data-i="${i}">${esc(P[i].n)} · ${esc(clubAt(P[i],game.rounds[game.round].y))}</button>`).join("")}</div></div>`;
+  if(m.kind==="unknown") return `<div class="msg info">« ${esc(m.raw)} » n'est pas dans notre base. Vérifie l'orthographe, ou garde ta réponse : le groupe tranchera.<div class="opts"><button type="button" data-act="keep">Garder ma réponse</button></div></div>`;
+  return `<div class="msg bad">${esc(m.text)}${m.contest?`<div class="opts"><button type="button" data-act="keep">Contester, le groupe tranchera</button></div>`:""}</div>`;
+}
+function screenAnswering(){
+  const g=game, r=g.rounds[g.round];
+  if(L.round!==g.round){ const keep=L.ver; Object.assign(L,{round:g.round,draft:"",tries:0,msg:null,pendingRaw:null,why:null,mine:null}); L.ver=keep+1; }
+  const done=!!L.mine||g.answeredIds.includes(ME.id);
+  const count=`<span data-live="count">${g.answeredIds.length}/${g.players.length}</span>`;
+  const head=`${roundBar(11,g.round)}<div class="bar"><h2>Manche ${g.round+1}/11</h2>${clock()}</div>${ticket(r)}`;
+  if(done){
+    const e=L.mine||{st:"none"};
+    const lab=e.st==="ok"?`<span class="stamp ok">Validé</span>`:e.st==="pending"?`<span class="stamp pending">Le groupe tranchera</span>`:`<span class="stamp none">Poste vide</span>`;
+    const title=e.st==="ok"?esc(P[e.i].n):e.st==="pending"?esc(e.raw):"Raté";
+    return {key:`ans-${g.round}-done`,html:`${head}
+     <div class="waitcard pop">${lab}<div class="big">${avatar(e,r.y)}<div><h2 class="display" style="font-size:26px">${title}</h2>
+       <p class="muted" style="margin:4px 0 0">${e.st==="ok"?esc(clubAt(P[e.i],r.y)):esc(L.why||"")}</p></div></div>
+       <p class="muted">Réponses reçues : ${count}. On attend les autres.</p></div>
+     ${hostDock(`<button class="btn ghost" data-act="force">Clôturer la manche maintenant</button>`)}`};
+  }
+  return {key:`ans-${g.round}-open-${L.ver}`,html:`${head}
+   <form class="answer" data-form="answer" autocomplete="off">
+    <label class="eyebrow" for="guess">Ton joueur, de mémoire</label>
+    <input id="guess" name="guess" autocomplete="off" autocorrect="off" autocapitalize="words" spellcheck="false" enterkeyhint="done" placeholder="Nom du joueur" value="${esc(L.draft)}">
+    <div class="tries">${Array.from({length:MAX_TRIES},(_,k)=>`<i class="${k<L.tries?"used":""}"></i>`).join("")}<span>${MAX_TRIES-L.tries} essai${MAX_TRIES-L.tries>1?"s":""} · réponses reçues ${count}</span></div>
+    ${L.msg?msgBox(L.msg):""}
+    <button class="btn ink" type="submit">Valider</button>
+    <button class="linkbtn" type="button" data-act="skip">Je sèche, laisser le poste vide</button>
+   </form>
+   ${hostDock(`<button class="btn ghost" data-act="force">Clôturer la manche maintenant</button>`)}`};
+}
+function screenRoundResult(){
+  const g=game, r=g.rounds[g.round], rv=g.revealed[g.round]||{}, pend=Object.values(rv).filter(e=>e.st==="pending").length;
+  return {key:"rr"+JSON.stringify([g.round,rv]),html:`
+   ${roundBar(11,g.round)}<div class="bar"><h2>Manche ${g.round+1}/11</h2><span class="chip">Réponses</span></div>
+   ${ticket(r)}
+   <div class="picks">${g.players.map(p=>{ const e=rv[p.id]||{st:"none"};
+     let main=e.st==="ok"?`<b>${esc(P[e.i].n)}${isGem(g.round,p.id)?`<span class="gem">Pépite</span>`:""}</b><small>${esc(clubAt(P[e.i],r.y))}</small>`
+       :e.st==="pending"?`<b>${esc(e.raw)}</b><small>À valider</small>`
+       :e.st==="agreed"?`<b>${esc(e.raw)}${isGem(g.round,p.id)?`<span class="gem">Pépite</span>`:""}</b><small>Validé par le groupe</small>`
+       :e.st==="refused"?`<b><s>${esc(e.raw)}</s></b><small>Refusé par le groupe</small>`:`<b>Poste vide</b><small>Pas de réponse valide</small>`;
+     const j=e.st==="pending"?(IS_HOST?`<div class="judge">Il jouait bien là en ${sLbl(r.y)} ? <button class="yes" data-act="judge" data-p="${p.id}" data-v="ok">Validé</button><button class="no" data-act="judge" data-p="${p.id}" data-v="refused">Refusé</button></div>`
+       :`<div class="judge">Débattez : l'hôte valide ou refuse.</div>`):"";
+     return `<div class="pick"><span>${avatar(e,r.y)}</span><span><span class="who">${esc(p.name)}${p.id===ME.id?" · toi":""}</span>${main}</span>${j}</div>`; }).join("")}</div>
+   <div style="margin-top:20px"><div class="eyebrow" style="margin-bottom:8px">Ton 11</div>${pitch(myTeam(),true)}</div>
+   ${IS_HOST?hostDock(`<button class="btn" data-act="next" ${pend?"disabled":""}>${pend?`Tranchez ${pend} réponse${pend>1?"s":""} d'abord`:g.round<10?"Manche suivante":"Passer au vote"}</button>`)
+     :dock(`<p class="muted" style="text-align:center;margin:0">${pend?"L'hôte tranche les réponses contestées.":"En attente de l'hôte pour la suite."}</p>`)}`};
+}
+function screenVoting(){
+  const g=game, others=g.players.filter(p=>p.id!==ME.id);
+  const voted=L.voted||g.votedIds.includes(ME.id);
+  others.forEach(p=>{ if(L.ratings[p.id]==null) L.ratings[p.id]=5; });
+  const count=`<span data-live="count">${g.votedIds.length}/${g.players.length}</span>`;
+  if(voted) return {key:"vote-done",html:`<div class="stack"><div class="hero"><span class="eyebrow">Vote</span><h1 class="display" style="font-size:42px">Notes <span>envoyées</span></h1>
+    <p>Votes reçus : ${count}. Les résultats arrivent quand tout le monde a voté.</p></div><div><div class="eyebrow" style="margin-bottom:8px">Ton 11</div>${pitch(myTeam(),true)}</div></div>
+    ${hostDock(`<button class="btn ghost" data-act="force">Afficher les résultats maintenant</button>`)}`};
+  return {key:"vote-open",html:`
+   <div class="bar"><h2>Note les équipes</h2><span class="chip">${count}</span></div>
+   <div class="stack">${others.map(p=>`<div class="card">
+     <div class="teamhead"><h2>${esc(p.name)}</h2></div>${pitch(myTeam(p.id),true)}
+     <div class="rate"><div class="rate-top"><label for="r-${p.id}" style="font-weight:800">Ta note</label><span class="score" id="sv-${p.id}">${L.ratings[p.id]}</span></div>
+      <input type="range" id="r-${p.id}" min="0" max="10" step="1" value="${L.ratings[p.id]}" data-act="rate" data-p="${p.id}"></div></div>`).join("")}</div>
+   ${dock(`<button class="btn" data-act="sendvotes">Envoyer mes notes</button>`)}`};
+}
+function rankingSaison(){
+  const g=game; return g.players.map(p=>{ const got=Object.values(g.votes||{}).map(r=>r[p.id]).filter(v=>typeof v==="number");
+    const t=myTeam(p.id); const filled=Object.values(t).filter(e=>e.st==="ok"||e.st==="agreed"||e.st==="pending").length;
+    const gems=g.rounds.filter((r,k)=>isGem(k,p.id)).length;
+    return {id:p.id,name:p.name,avg:got.length?got.reduce((a,b)=>a+b,0)/got.length:0,filled,gems}; }).sort((a,b)=>b.avg-a.avg||b.gems-a.gems);
+}
+function screenResults(){
+  const g=game;
+  if(g.mode==="plusmoins"){
+    const res=g.players.map(p=>({name:p.name,id:p.id,sc:g.pm.scores[p.id]||0})).sort((a,b)=>b.sc-a.sc), w=res[0], tie=res.length>1&&res[1].sc===w.sc;
+    return {key:"res-pm"+JSON.stringify(res),html:`<div class="stack">
+     <div class="hero"><span class="eyebrow">Plus ou moins · Résultats</span><h1 class="display" style="font-size:clamp(36px,11vw,52px)">${tie?`Égalité <span>parfaite</span>`:`${esc(w.name)} <span>gagne</span>`}</h1></div>
+     <div class="podium">${res.map((r,k)=>`<div class="pod${k===0?" first":""}"><span class="rk">${k+1}</span><b>${esc(r.name)}</b><span class="sc">${r.sc}/${PM_DUELS}</span></div>`).join("")}</div></div>
+     ${IS_HOST?hostDock(`<button class="btn" data-act="lobby">Retour au salon</button>`):dock(`<p class="muted" style="text-align:center;margin:0">L'hôte peut relancer une partie.</p>`)}`};
+  }
+  const res=rankingSaison(), w=res[0], tie=res.length>1&&res[1].avg===w.avg;
+  return {key:"res-s"+JSON.stringify(res),html:`<div class="stack">
+   <div class="hero"><span class="eyebrow">Résultats</span><h1 class="display" style="font-size:clamp(36px,11vw,52px)">${tie?`Égalité, <span>débat obligatoire</span>`:`${esc(w.name)} <span>gagne</span>`}</h1></div>
+   <div class="podium">${res.map((r,k)=>`<div class="pod${k===0?" first":""}"><span class="rk">${k+1}</span><span><b>${esc(r.name)}</b><small>${r.filled}/11 postes · ${r.gems} pépite${r.gems>1?"s":""}</small></span><span class="sc">${r.avg.toFixed(1)}/10</span></div>`).join("")}</div>
+   <div><div class="eyebrow" style="margin-bottom:8px">Carte à partager</div>
+    <div class="share"><div class="share-top"><div><div class="eyebrow">Un joueur par saison · PL</div><div class="display">${esc(w.name)}</div></div><span class="badge">${w.avg.toFixed(1)}</span></div>
+     ${pitch(myTeam(w.id),true)}<div class="share-foot"><span>De mémoire · 04/05 → 14/15</span><span>FOOTBALL LEGENDS</span></div></div>
+    <p class="muted" style="font-size:14px;margin-top:10px">Fais une capture d'écran de la carte pour la partager en story.</p></div></div>
+   ${IS_HOST?hostDock(`<button class="btn" data-act="lobby">Retour au salon</button>`):dock(`<p class="muted" style="text-align:center;margin:0">L'hôte peut relancer une partie.</p>`)}`};
+}
+function duelCards(A,B,showB){
+  return `<div class="duel">
+   <div class="card"><span class="lbl" style="margin:0">Référence</span><span class="nm">${esc(A.n)}</span><span class="clubs">${esc(A.c)}</span><span class="val">${A.g}<small>buts en PL</small></span></div>
+   <div class="vs">VS</div>
+   <div class="card"><span class="lbl" style="margin:0">Il en a plus ou moins ?</span><span class="nm">${esc(B.n)}</span><span class="clubs">${esc(B.c)}</span>
+    ${showB?`<span class="val pop">${B.g}<small>buts en PL</small></span>`:`<span class="hidden">???</span>`}</div></div>`;
+}
+function screenPmAsk(){
+  const g=game, A=GOALS[g.chain[g.pm.cur]], B=GOALS[g.chain[g.pm.cur+1]];
+  if(L.pmCur!==g.pm.cur){L.pmCur=g.pm.cur; L.pmPick=null;}
+  const picked=L.pmPick||(g.pickedIds.includes(ME.id)?"?":null);
+  const count=`<span data-live="count">${g.pickedIds.length}/${g.players.length}</span>`;
+  return {key:`pm-${g.pm.cur}-${picked}`,html:`
+   ${roundBar(PM_DUELS,g.pm.cur)}<div class="bar"><h2>Duel ${g.pm.cur+1}/${PM_DUELS}</h2>${clock()}</div>
+   ${duelCards(A,B,false)}
+   <div class="choices"><button class="btn${picked==="plus"?" sel":""}" data-act="pm" data-v="plus" ${picked?"disabled":""}>Plus</button><button class="btn${picked==="moins"?" sel":""}" data-act="pm" data-v="moins" ${picked?"disabled":""}>Moins</button></div>
+   <p class="muted" style="font-size:14px">${picked?`Choix envoyé. Réponses reçues : ${count}.`:`En cas d'égalité, tout le monde marque. Réponses reçues : ${count}.`}</p>
+   ${hostDock(`<button class="btn ghost" data-act="force">Révéler maintenant</button>`)}`};
+}
+function screenPmResult(){
+  const g=game, A=GOALS[g.chain[g.pm.cur]], B=GOALS[g.chain[g.pm.cur+1]], last=g.pm.last||{winners:[],picks:{}};
+  const mine=last.picks[ME.id], won=last.winners.includes(ME.id);
+  const res=g.players.map(p=>({p,sc:g.pm.scores[p.id]||0})).sort((a,b)=>b.sc-a.sc);
+  return {key:"pmr"+g.pm.cur+JSON.stringify(g.pm.scores),html:`
+   ${roundBar(PM_DUELS,g.pm.cur)}<div class="bar"><h2>Duel ${g.pm.cur+1}/${PM_DUELS}</h2><span class="stamp ${won?"ok":"none"}">${won?"+1 point":mine?"Raté":"Pas de réponse"}</span></div>
+   ${duelCards(A,B,true)}
+   <div class="podium" style="margin-top:16px">${res.map((r,k)=>`<div class="pod${last.winners.includes(r.p.id)?" first":""}"><span class="rk">${k+1}</span><span><b>${esc(r.p.name)}</b><small>${last.picks[r.p.id]?(last.picks[r.p.id]==="plus"?"A dit plus":"A dit moins"):"Pas de réponse"}</small></span><span class="sc">${r.sc} pt${r.sc>1?"s":""}</span></div>`).join("")}</div>
+   ${IS_HOST?hostDock(`<button class="btn" data-act="next">${g.pm.cur<g.chain.length-2?"Duel suivant":"Voir le classement"}</button>`):dock(`<p class="muted" style="text-align:center;margin:0">En attente de l'hôte.</p>`)}`};
+}
+function view(){
+  if(!game) return screenWelcome();
+  switch(game.phase){
+    case "lobby": return screenLobby();
+    case "answering": return screenAnswering();
+    case "roundResult": return screenRoundResult();
+    case "voting": return screenVoting();
+    case "pmAsk": return screenPmAsk();
+    case "pmResult": return screenPmResult();
+    default: return screenResults();
+  }
+}
+function render(force){
+  const v=view();
+  if(!force&&v.key===lastKey){ updateLive(v.html); return; }
+  const sameScreen=lastKey&&v.key.split("-")[0]===lastKey.split("-")[0];
+  const y=window.scrollY; lastKey=v.key; app.innerHTML=v.html; window.scrollTo(0,sameScreen?y:0);
+  const g=document.getElementById("guess"); if(g&&!L.mine){ g.focus({preventScroll:true}); const n=g.value.length; try{g.setSelectionRange(n,n);}catch(e){} }
+  tickClock();
+}
+function updateLive(html){ const tmp=document.createElement("div"); tmp.innerHTML=html; app.querySelectorAll("[data-live]").forEach(el=>{ const n=tmp.querySelector(`[data-live="${el.dataset.live}"]`); if(n) el.textContent=n.textContent; }); }
+function tickClock(){ document.querySelectorAll("[data-clock]").forEach(el=>{ const left=Math.max(0,Math.ceil((deadline-Date.now())/1000)); el.textContent=`${left}s`; el.classList.toggle("warn",left<=10);
+  if(left<=0&&game&&game.phase==="answering"&&!L.mine&&!game.answeredIds.includes(ME.id)){ L.why="Temps écoulé."; sendAnswer({st:"none"}); } }); }
+setInterval(tickClock,250);
+function toast(msg){const t=document.createElement("div"); t.className="toast"; t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),1800);}
+
+/* ---------- Événements ---------- */
+app.addEventListener("submit",e=>{ if(e.target.dataset.form==="answer"){ e.preventDefault(); submitGuess(e.target.querySelector("#guess").value); } });
+app.addEventListener("click",e=>{
+  const el=e.target.closest("[data-act]"); if(!el) return;
+  const a=el.dataset.act;
+  switch(a){
+    case "create": createGame(); break;
+    case "join": joinGame(L.joinCode); break;
+    case "leave": leave(); break;
+    case "mode": if(IS_HOST){G.mode=el.dataset.v; push();} break;
+    case "timer": if(IS_HOST){G.timer=+el.dataset.v; push();} break;
+    case "start": if(IS_HOST) hostStart(); break;
+    case "next": if(IS_HOST) hostNext(); break;
+    case "force": if(IS_HOST) hostForce(); break;
+    case "judge": if(IS_HOST) hostJudge(game.round,el.dataset.p,el.dataset.v); break;
+    case "lobby": if(IS_HOST) hostLobby(); break;
+    case "choose": sendAnswer({st:"ok",i:+el.dataset.i}); break;
+    case "keep": sendAnswer({st:"pending",raw:L.pendingRaw||L.draft}); break;
+    case "skip": L.why="Tu as séché sur ce poste."; sendAnswer({st:"none"}); break;
+    case "pm": L.pmPick=el.dataset.v; act({t:"pick",cur:game.pm.cur,choice:el.dataset.v}); render(); break;
+    case "sendvotes": L.voted=true; act({t:"votes",ratings:{...L.ratings}}); render(); break;
+  }
+});
+app.addEventListener("input",e=>{
+  const el=e.target;
+  if(el.id==="me-name"){ ME.name=el.value.slice(0,18); LS.set("fl-me",ME); }
+  if(el.id==="join-code"){ L.joinCode=el.value.toUpperCase().replace(/[^A-Z]/g,"").slice(0,4); el.value=L.joinCode; }
+  if(el.id==="guess"){ L.draft=el.value; }
+  if(el.dataset.act==="rate"){ L.ratings[el.dataset.p]=+el.value; const o=document.getElementById(`sv-${el.dataset.p}`); if(o) o.textContent=el.value; }
+});
+app.addEventListener("keydown",e=>{ if(e.key==="Enter"&&e.target.id==="join-code"){ e.preventDefault(); joinGame(L.joinCode);} });
+
+resume();
+</script>
+</body>
+</html>
