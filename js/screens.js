@@ -31,13 +31,13 @@ function ticket(r){ const s = slotById(r.slot); return `<div class="ticket"><spa
 const roundBar = (n, cur) => `<div class="rounds">${Array.from({length:n}, (_,k) => `<i class="${k<cur?"done":k===cur?"now":""}"></i>`).join("")}</div>`;
 function tabbar(){
   const t = [["home","Jouer",ICON.home],["collection","Collection",ICON.cards],["board","Classement",ICON.trophy]];
-  const cur = VIEW==="album" ? "collection" : VIEW;
+  const cur = ["album","pack"].includes(VIEW) ? "collection" : ["pmPick","chronoPick"].includes(VIEW) ? "home" : VIEW;
   return `<nav class="tabbar" aria-label="Navigation"><div>${t.map(([v,l,i]) => `<button data-act="nav" data-v="${v}" ${cur===v?'aria-current="page"':""}>${i}<span>${l}</span></button>`).join("")}</div></nav>`;
 }
 function topbar(){
-  const li = levelInfo(), st = streakAlive();
+  const li = levelInfo(), st = WALLET.loaded ? WALLET.streak : streakAlive();
   return `<header class="topbar"><div class="wordmark">${BALL}<div>FOOTBALL<br><span>LEGENDS</span></div></div>
-   <div class="me-pill" title="${esc(titleOf(li.level))}"><span class="lvl">${li.level}</span><span class="nm">${esc(PROFILE.name)}</span>${st?`<span class="st">${ICON.flame}${st}</span>`:""}</div></header>`;
+   <div class="tb-right">${coinPill()}<div class="me-pill" title="${esc(titleOf(li.level))}"><span class="lvl">${li.level}</span><span class="nm">${esc(PROFILE.name)}</span>${st?`<span class="st">${ICON.flame}${st}</span>`:""}</div></div></header>`;
 }
 
 /* ======================================================================
@@ -82,7 +82,7 @@ function dailyCard(){
 function screenHome(){
   const li = levelInfo(), b = PROFILE.best;
   const tile = (act, ic, cls, t, d, rec, extra="") => `<button class="tile" data-act="${act}" ${extra}><span class="ic ${cls}">${ic}</span><span><b>${t}</b><small>${d}</small></span>${rec?`<span class="rec">${rec}</span>`:"<span></span>"}</button>`;
-  return {key:"home"+JSON.stringify([dailyDone(), PROFILE.xp, L.shareFallback, !!DEFERRED_INSTALL, PROFILE.seenInstall]), html:`
+  return {key:"home"+JSON.stringify([dailyDone(), PROFILE.xp, L.shareFallback, !!DEFERRED_INSTALL, PROFILE.seenInstall, WALLET.loaded, WALLET.streak]), html:`
   ${topbar()}
   <div class="xpbar" title="Niveau ${li.level}" aria-label="Progression du niveau ${li.level} : ${li.pct} %"><i style="width:${li.pct}%"></i></div>
   <div style="display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:11px;color:var(--mute);margin:6px 0 14px"><span>${esc(titleOf(li.level))}</span><span>${li.into}/${li.need} XP</span></div>
@@ -90,8 +90,8 @@ function screenHome(){
   <div style="margin-top:12px">${dailyCard()}</div>
   <div class="sec-title"><h2>Jouer seul</h2><small>sans limite</small></div>
   <div class="tiles">
-   ${tile("pm",ICON.updown,"","Plus ou moins","Buts en PL : enchaîne sans te tromper.", b.pm?`Record<br>${b.pm}`:"")}
-   ${tile("pickchrono",ICON.clock,"b","Chrono","Ballons d'Or, buteurs, clubs… cite-les tous.", "")}
+   ${tile("pickpm",ICON.updown,"","Plus ou moins","Premier League ou Ligue des champions : enchaîne sans te tromper.", Math.max(b.pm||0,b.pmLdc||0)?`Record<br>${Math.max(b.pm||0,b.pmLdc||0)}`:"")}
+   ${tile("pickchrono",ICON.clock,"b","Chrono",`${LISTS.length} listes : PL, Ligue 1, Liga, Serie A, LDC, Bleus…`, "")}
    ${tile("saison",ICON.pitch,"g","Un joueur par saison","11 postes, 11 saisons de PL, de mémoire.", b.saison?`Record<br>${b.saison}/11`:"")}
   </div>
   <div class="sec-title"><h2>Entre potes</h2><small>chacun sur son téléphone</small></div>
@@ -99,13 +99,28 @@ function screenHome(){
   ${tabbar()}`};
 }
 function screenChronoPick(){
-  return {key:"chronoPick", html:`
+  const f = L.lgFilter || "all", lgs = ["all", ...new Set(LISTS.map(l => l.lg))];
+  const shown = LISTS.filter(l => f==="all" || l.lg===f);
+  return {key:"chronoPick"+f, html:`
   <div class="subhead"><button class="iconbtn" data-act="nav" data-v="home" aria-label="Retour">${ICON.back}</button><h1>Chrono</h1></div>
-  <p class="muted" style="margin:0 0 14px">1 min 30 pour citer un maximum de noms. Les fautes de frappe et les surnoms passent.</p>
-  <div class="pick-list">${LISTS.map(l => { const r = PROFILE.best.chrono[l.id];
-    return `<button class="mode" data-act="chrono" data-v="${l.id}"><b>${esc(l.t)}</b><small>${esc(l.hint)}</small>${r?`<span class="rec">Ton record : ${r}/${l.items.length}</span>`:""}</button>`; }).join("")}</div>
+  <p class="muted" style="margin:0 0 12px">1 min 30 pour citer un maximum de noms. Les fautes de frappe et les surnoms passent.</p>
+  <div class="chips" role="group" aria-label="Compétition">${lgs.map(k => `<button data-act="lgfilter" data-v="${k}" aria-pressed="${f===k}">${k==="all"?"Toutes":esc(LEAGUES[k]||k)}</button>`).join("")}</div>
+  <div class="pick-list">${shown.map(l => { const r = PROFILE.best.chrono[l.id];
+    return `<button class="mode" data-act="chrono" data-v="${l.id}"><span class="lgtag">${esc(LEAGUES[l.lg]||"")}</span><b>${esc(l.t)}</b><small>${esc(l.hint)}</small>${r?`<span class="rec">Ton record : ${r}/${l.items.length}</span>`:""}</button>`; }).join("")}</div>
   ${tabbar()}`};
 }
+function screenPmPick(){
+  const b = PROFILE.best;
+  return {key:"pmPick", html:`
+  <div class="subhead"><button class="iconbtn" data-act="nav" data-v="home" aria-label="Retour">${ICON.back}</button><h1>Plus ou moins</h1></div>
+  <p class="muted" style="margin:0 0 14px">Le joueur suivant a-t-il marqué plus ou moins ? Une erreur et la série s'arrête.</p>
+  <div class="pick-list">
+   <button class="mode" data-act="pm" data-v="pl"><span class="lgtag">Premier League</span><b>Buts en Premier League</b><small>${GOALS.length} buteurs qui ont quitté la PL, chiffres vérifiés.</small>${b.pm?`<span class="rec">Ton record : ${b.pm}</span>`:""}</button>
+   <button class="mode" data-act="pm" data-v="ldc"><span class="lgtag">Ligue des champions</span><b>Buts en Ligue des champions</b><small>${GOALS_UCL.length} légendes de la C1, de Di Stéfano à Benzema.</small>${b.pmLdc?`<span class="rec">Ton record : ${b.pmLdc}</span>`:""}</button>
+  </div>
+  ${tabbar()}`};
+}
+
 function screenFriends(){
   return {key:"friends"+L.busy+(L.err||""), html:`
   <div class="subhead"><button class="iconbtn" data-act="nav" data-v="home" aria-label="Retour">${ICON.back}</button><h1>Entre potes</h1><span style="margin-left:auto">${netBadge()}</span></div>
@@ -121,27 +136,60 @@ function screenFriends(){
   ${tabbar()}`};
 }
 function screenCollection(){
-  const got = Object.keys(PROFILE.cards).filter(n => playerByName(n)!==undefined), al = albums();
-  const legends = got.filter(n => LEGENDS.has(n)).length, peps = got.filter(n => rarityOf(n)==="p").length;
-  const recent = got.sort((a,b) => (PROFILE.cards[b].at||"").localeCompare(PROFILE.cards[a].at||"")).slice(0, 12);
-  return {key:"collection"+got.length, html:`
+  if(!WALLET.loaded && !WALLET.loading && !WALLET.err) setTimeout(() => loadWallet(), 0);
+  const own = ownedIds(), byR = r => own.filter(id => CARD.get(id).r===r).length, tot = r => CARDS.filter(c => c.r===r).length;
+  const f = L.colFilter || "all";
+  const shown = own.filter(id => { const c = CARD.get(id); return f==="all" || c.r===f || c.lg===f; })
+    .sort((a,b) => ({legend:0,rare:1,common:2}[CARD.get(a).r] - {legend:0,rare:1,common:2}[CARD.get(b).r]) || CARD.get(a).n.localeCompare(CARD.get(b).n));
+  const clubs = {}; CARDS.forEach(c => (clubs[c.c] ||= []).push(c.id));
+  const al = Object.entries(clubs).map(([club, ids]) => ({club, ids, got:ids.filter(id => WALLET.cards[id]).length})).filter(a => a.ids.length>=3)
+    .sort((a,b) => b.got/b.ids.length - a.got/a.ids.length || b.ids.length - a.ids.length);
+  const packBtn = k => { const p = PACKS[k], ok = WALLET.loaded && WALLET.coins>=p.price;
+    return `<button class="pack pack-${k}" data-act="openpack" data-v="${k}" ${ok&&!L.opening?"":"disabled"}><span class="pk-box">${ICON.pack}</span><span><b>${p.t}</b><small>${p.d}</small></span><span class="pk-price">${ICON.coin}${p.price}</span></button>`; };
+  const filters = [["all","Toutes"],["legend","Légendes"],["rare","Rares"],["common","Communes"],["pl","Premier League"],["l1","Ligue 1"],["liga","Liga"],["seriea","Serie A"],["europe","Europe"]];
+  return {key:"collection"+JSON.stringify([own.length, WALLET.coins, WALLET.loaded, WALLET.err, f, L.opening, L.packErr, !!L.allAlbums]), html:`
   ${topbar()}
-  <div class="stats3"><div class="stat"><b>${got.length}</b><small>cartes sur ${P.length}</small></div><div class="stat"><b>${peps}</b><small>pépites</small></div><div class="stat"><b>${legends}</b><small>légendes sur ${LEGENDS.size}</small></div></div>
-  <div class="sec-title"><h2>Dernières cartes</h2><small>citées de mémoire</small></div>
-  ${recent.length ? `<div class="fgrid">${recent.map(n => cardHTML(n)).join("")}</div>`
-    : `<div class="empty">Ta collection est vide. Chaque joueur que tu cites dans « Un joueur par saison » ou dans un Chrono de joueurs devient une carte.</div>`}
-  <div class="sec-title"><h2>Albums par club</h2><small>${al.filter(a => a.got===a.names.length).length} complété${al.filter(a => a.got===a.names.length).length>1?"s":""}</small></div>
-  <div class="albums">${al.map(a => `<button class="album${a.got===a.names.length?" full":""}" data-act="album" data-v="${esc(a.club)}">${crest(a.club)}<span><b>${esc(a.club)}</b><span class="xpbar"><i style="width:${Math.round(a.got/a.names.length*100)}%"></i></span></span><span class="cnt">${a.got}/${a.names.length}</span></button>`).join("")}</div>
+  ${WALLET.err?`<div class="empty">${esc(WALLET.err)}</div>`:`
+  <div class="stats3"><div class="stat"><b>${own.length}</b><small>cartes sur ${CARDS.length}</small></div><div class="stat"><b>${byR("rare")}</b><small>rares sur ${tot("rare")}</small></div><div class="stat"><b>${byR("legend")}</b><small>légendes sur ${tot("legend")}</small></div></div>
+  <div class="sec-title"><h2>Boutique</h2><small>tu gagnes des pièces en jouant</small></div>
+  <div class="packs">${packBtn("classic")}${packBtn("gold")}</div>
+  ${L.packErr?`<div class="err" role="alert" style="margin-top:10px">${esc(L.packErr)}</div>`:""}
+  <p class="solo-note" style="margin-top:8px">Une carte en double te rembourse des pièces : 10 pour une commune, 25 pour une rare, 60 pour une légende.</p>
+  <div class="sec-title"><h2>Ma collection</h2><small>${plural(own.length,"carte")}</small></div>
+  <div class="chips" role="group" aria-label="Filtrer">${filters.map(([k,l]) => `<button data-act="colfilter" data-v="${k}" aria-pressed="${f===k}">${l}</button>`).join("")}</div>
+  ${!WALLET.loaded?`<div class="empty">Chargement de ta collection…</div>`:shown.length?`<div class="fgrid">${shown.map(id => cardHTML(id,{count:WALLET.cards[id]})).join("")}</div>`
+    :`<div class="empty">${own.length?"Aucune carte dans ce filtre pour l'instant.":"Ta collection est vide. Ouvre ton premier pack : tu as reçu 150 pièces de bienvenue."}</div>`}
+  <div class="sec-title"><h2>Albums par club</h2><small>${al.filter(a => a.got===a.ids.length).length} complété${al.filter(a => a.got===a.ids.length).length>1?"s":""}</small></div>
+  <div class="albums">${(L.allAlbums?al:al.slice(0,10)).map(a => `<button class="album${a.got===a.ids.length?" full":""}" data-act="album" data-v="${esc(a.club)}">${crest(a.club)}<span><b>${esc(a.club)}</b><span class="xpbar"><i style="width:${Math.round(a.got/a.ids.length*100)}%"></i></span></span><span class="cnt">${a.got}/${a.ids.length}</span></button>`).join("")}</div>${!L.allAlbums&&al.length>10?`<button class="btn ghost" style="margin-top:10px" data-act="allalbums">Voir les ${al.length} albums</button>`:""}`}
   ${tabbar()}`};
 }
+
 function screenAlbum(){
-  const a = albums().find(x => x.club===VIEW_ARG); if(!a){ VIEW = "collection"; return screenCollection(); }
-  return {key:"album"+a.club+a.got, html:`
-  <div class="subhead"><button class="iconbtn" data-act="nav" data-v="collection" aria-label="Retour">${ICON.back}</button>${crest(a.club,34)}<h1>${esc(a.club)}</h1><span class="chip" style="margin-left:auto">${a.got}/${a.names.length}</span></div>
-  <p class="muted" style="margin:0 0 14px">Les cartes cachées se débloquent quand tu cites le joueur de mémoire.</p>
-  <div class="fgrid">${a.names.map(n => cardHTML(n, {locked:!PROFILE.cards[n], club:a.club, small:true})).join("")}</div>
+  const ids = CARDS.filter(c => c.c===VIEW_ARG).sort((a,b) => ({legend:0,rare:1,common:2}[a.r]-{legend:0,rare:1,common:2}[b.r]) || a.n.localeCompare(b.n)).map(c => c.id);
+  if(!ids.length){ VIEW = "collection"; return screenCollection(); }
+  const got = ids.filter(id => WALLET.cards[id]).length;
+  return {key:"album"+VIEW_ARG+got, html:`
+  <div class="subhead"><button class="iconbtn" data-act="nav" data-v="collection" aria-label="Retour">${ICON.back}</button>${crest(VIEW_ARG,34)}<h1>${esc(VIEW_ARG)}</h1><span class="chip" style="margin-left:auto">${got}/${ids.length}</span></div>
+  <p class="muted" style="margin:0 0 14px">Les cartes cachées s'obtiennent dans les packs.</p>
+  <div class="fgrid">${ids.map(id => cardHTML(id, {locked:!WALLET.cards[id], small:true, count:WALLET.cards[id]})).join("")}</div>
   ${tabbar()}`};
 }
+function screenPack(){
+  const p = L.pack; if(!p){ VIEW = "collection"; return screenCollection(); }
+  const all = p.shown>=p.cards.length, best = p.cards.reduce((m,c) => Math.max(m, {common:0,rare:1,legend:2}[c.rarity]), 0);
+  return {key:"pack"+p.shown, html:`
+  <div class="pack-stage tier-${["c","r","l"][best]}">
+   <span class="eyebrow">${esc(PACKS[p.kind].t)}</span>
+   <h1 class="display" style="font-size:clamp(30px,9vw,42px)">${all?(best===2?"Une <span>légende</span> !":best===1?"Une <span>rare</span> !":"Pack <span>ouvert</span>"):"Touche une carte <span>pour la retourner</span>"}</h1>
+   <div class="pack-cards">${p.cards.map((c,i) => i<p.shown
+     ? `<div class="flip in">${cardHTML(c.id,{tag:c.new?`<span class="newtag">Nouvelle</span>`:`<span class="duptag">Doublon</span>`})}</div>`
+     : `<button class="flip back r-${c.rarity}" data-act="reveal" aria-label="Retourner la carte ${i+1}">${ICON.pack}<span>?</span></button>`).join("")}</div>
+   ${all&&p.refund?`<p class="muted" style="text-align:center">Doublons remboursés : <b style="color:var(--flash)">+${p.refund} pièces</b></p>`:""}
+  </div>
+  ${all?dock(`<button class="btn" data-act="openpack" data-v="${p.kind}" ${WALLET.coins>=PACKS[p.kind].price?"":"disabled"}>Ouvrir un autre ${esc(PACKS[p.kind].t)} (${WALLET.coins} pièces)</button><button class="btn ghost" data-act="nav" data-v="collection">Voir ma collection</button>`)
+     :dock(`<button class="btn ghost" data-act="revealall">Tout retourner</button>`)}`};
+}
+
 function screenBoard(){
   const d = dailyFor(), r = dailyDone();
   if(BOARD.key!==d.key && !BOARD.loading) setTimeout(() => loadBoard(d.key), 0);
@@ -171,7 +219,7 @@ function gameTop(title, right=""){
 }
 function screenLobby(){
   const g = game, n = g.players.length;
-  return {key:"lobby"+JSON.stringify([g.players, g.mode, g.timer, g.chronoList, g.chronoTime]), html:`
+  return {key:"lobby"+JSON.stringify([g.players, g.mode, g.timer, g.chronoList, g.chronoTime, g.pmTheme]), html:`
   <div class="stack">
    <div style="display:flex;justify-content:space-between;align-items:center"><span class="eyebrow">Salon</span>${netBadge()}</div>
    <div class="codebox"><div class="lbl" style="margin:0">Code de la partie</div><div class="display">${esc(g.code)}</div><div class="hint">Tes potes ouvrent ${SITE_URL}, puis « Jouer avec des amis » et tapent ce code.</div></div>
@@ -181,7 +229,7 @@ function screenLobby(){
      <div><span class="lbl">Mode de jeu</span><div class="modes">${Object.entries(MODES).map(([k,m]) => `<button class="mode" data-act="mode" data-v="${k}" aria-pressed="${g.mode===k}"><b>${m.t}</b><small>${m.d}</small></button>`).join("")}</div></div>
      ${g.mode==="chrono"?`<div><span class="lbl">Liste</span><div class="modes">${[["random","Au hasard","Une liste surprise à chaque partie."], ...LISTS.map(l => [l.id, l.t, `${l.items.length} réponses possibles`])].map(([k,t2,d]) => `<button class="mode" data-act="chlist" data-v="${k}" aria-pressed="${g.chronoList===k}"><b>${esc(t2)}</b><small>${esc(d)}</small></button>`).join("")}</div></div>
      <div><span class="lbl">Durée</span><div class="seg">${[[60,"1 min"],[90,"1 min 30"],[120,"2 min"]].map(([v,l]) => `<button data-act="chtime" data-v="${v}" aria-pressed="${g.chronoTime===v}">${l}</button>`).join("")}</div></div>`
-     :`<div><span class="lbl">Temps par manche</span><div class="seg">${[[0,"Sans"],[15,"15 s"],[30,"30 s"],[45,"45 s"]].map(([v,l]) => `<button data-act="timer" data-v="${v}" aria-pressed="${g.timer===v}">${l}</button>`).join("")}</div>
+     :`${g.mode==="plusmoins"?`<div><span class="lbl">Thème</span><div class="seg">${Object.entries(PM_THEMES).map(([k,v]) => `<button data-act="pmtheme" data-v="${k}" aria-pressed="${g.pmTheme===k}">${k==="ldc"?"Ligue des champions":"Premier League"}</button>`).join("")}</div></div>`:""}<div><span class="lbl">Temps par manche</span><div class="seg">${[[0,"Sans"],[15,"15 s"],[30,"30 s"],[45,"45 s"]].map(([v,l]) => `<button data-act="timer" data-v="${v}" aria-pressed="${g.timer===v}">${l}</button>`).join("")}</div>
       <div class="hint">Sans chrono, c'est toi qui clôtures chaque manche.</div></div>`}
     </div>`:`<div class="card"><h3>${esc(MODES[g.mode].t)}</h3><p style="margin:6px 0 0;color:var(--ink-soft)">${esc(MODES[g.mode].d)}</p>${g.mode==="chrono"?`<p class="hint">Liste : ${esc(g.chronoList==="random"?"au hasard":(listById(g.chronoList)||{}).t||"")}</p>`:""}<p class="hint">En attente de ${esc(nameOf(g.host))} pour lancer.</p></div>`}
   </div>
@@ -262,13 +310,14 @@ function summaryBlock(){
   return `<div class="summary">
     <div class="xpline"><b>+${s.xp} XP</b>${s.levelUp?`<span class="lvup">${ICON.star} Niveau ${s.levelUp}</span>`:`<span class="muted" style="color:var(--ink-soft);font-size:13px">Niveau ${levelInfo().level}</span>`}</div>
     <div class="xpbar"><i style="width:${levelInfo().pct}%"></i></div>
-    ${s.rec.length||s.streak?`<div class="recs">${s.rec.map(x => `<span>${esc(x)}</span>`).join("")}${s.streak?`<span>Série : ${plural(s.streak,"jour")}</span>`:""}</div>`:""}
-    ${s.cards.length?`<div><div class="lbl" style="margin:0 0 6px">${plural(s.cards.length,"nouvelle carte","nouvelles cartes")}</div><div class="newcards">${s.cards.map(n => cardHTML(n,{small:true})).join("")}</div></div>`:""}
+    ${s.rec.length||(s.streak&&!s.bonus)?`<div class="recs">${s.rec.map(x => `<span>${esc(x)}</span>`).join("")}${s.streak&&!s.bonus?`<span>Série : ${plural(s.streak,"jour")}</span>`:""}</div>`:""}
+    <div class="coinline">${ICON.coin}<span>${s.coins==null?"Pièces en cours de calcul…":s.coins===0?"Plafond de pièces du jour atteint":`<b>+${s.coins}</b> pièces`}</span>${s.bonus?`<span class="bonus">${ICON.flame} Série de ${plural(s.bonus.streak,"jour")} : <b>+${s.bonus.amount}</b></span>`:""}</div>
+    ${WALLET.loaded&&WALLET.coins>=PACKS.classic.price?`<button class="btn ink sm" data-act="tohome" data-v="collection">${ICON.pack} Ouvrir un pack (${WALLET.coins} pièces)</button>`:""}
   </div>`;
 }
 function endButtons(replayAct){
   if(game.daily) return dock(`<button class="btn" data-act="share">${ICON.share} Partager mon résultat</button><button class="btn ghost" data-act="tohome" data-v="board">Voir le classement</button>`);
-  if(game.solo) return dock(`<button class="btn" data-act="${replayAct}">Rejouer</button><button class="btn ghost" data-act="tohome">Accueil</button>`);
+  if(game.solo) return dock(`<button class="btn" data-act="${replayAct}" ${replayAct==="pm"?`data-v="${game.pmTheme}"`:""}>Rejouer</button><div class="row2"><button class="btn ghost" data-act="sharegame">${ICON.share} Partager</button><button class="btn ghost" data-act="tohome">Accueil</button></div>`);
   return IS_HOST ? hostDock(`<button class="btn" data-act="lobby">Retour au salon</button>`) : dock(`<p class="muted" style="text-align:center;margin:0">L'hôte peut relancer une partie.</p>`);
 }
 function screenResults(){
@@ -278,7 +327,7 @@ function screenResults(){
     const title = g.solo ? (g.pm.endless ? `Série de <span>${w.sc}</span>` : `${w.sc} <span>sur ${PM_DUELS}</span>`) : tie ? `Égalité <span>parfaite</span>` : `${esc(w.name)} <span>gagne</span>`;
     return {key:"res-pm"+g.gameNo, html:`<div class="stack">
      <div class="hero"><span class="eyebrow">${g.daily?`Défi n°${dayNumber(g.daily)} · `:""}Plus ou moins</span><h1 class="display" style="font-size:clamp(36px,11vw,52px)">${title}</h1>
-      ${g.pm.endless?`<p>${w.sc>=PROFILE.best.pm?"Nouveau record personnel.":`Ton record : ${PROFILE.best.pm}.`}</p>`:""}</div>
+      ${g.pm.endless?`<p>${PM_THEMES[g.pmTheme].t} · ${w.sc>=(PROFILE.best[g.pmTheme==="ldc"?"pmLdc":"pm"]||0)?"Nouveau record personnel.":`Ton record : ${PROFILE.best[g.pmTheme==="ldc"?"pmLdc":"pm"]}.`}</p>`:""}</div>
      ${g.solo?"":`<div class="podium">${res.map((r,k) => `<div class="pod${k===0?" first":""}"><span class="rk">${k+1}</span><b>${esc(r.name)}</b><span class="sc">${r.sc}/${PM_DUELS}</span></div>`).join("")}</div>`}
      ${summaryBlock()}</div>${endButtons("pm")}`};
   }
@@ -292,35 +341,35 @@ function screenResults(){
      ${pitch(myTeam(g.solo?ME.id:w.id), true)}<div class="share-foot"><span>De mémoire · 04/05 → 14/15</span><span>FOOTBALL LEGENDS</span></div></div></div>
    ${summaryBlock()}</div>${endButtons("saison")}`};
 }
-function duelCards(A, B, showB){
+function duelCards(A, B, showB, theme="pl"){ const U = PM_THEMES[theme].u;
   return `<div class="duel">
-   <div class="card"><span class="lbl" style="margin:0">Référence</span><span class="nm">${esc(A.n)}</span><span class="clubs">${esc(A.c)}</span><span class="val">${A.g}<small>buts en PL</small></span></div>
+   <div class="card"><span class="lbl" style="margin:0">Référence</span><span class="nm">${esc(A.n)}</span><span class="clubs">${esc(A.c)}</span><span class="val">${A.g}<small>${U}</small></span></div>
    <div class="vs">VS</div>
    <div class="card"><span class="lbl" style="margin:0">Il en a plus ou moins ?</span><span class="nm">${esc(B.n)}</span><span class="clubs">${esc(B.c)}</span>
-    ${showB?`<span class="val pop">${B.g}<small>buts en PL</small></span>`:`<span class="hidden">???</span>`}</div></div>`;
+    ${showB?`<span class="val pop">${B.g}<small>${U}</small></span>`:`<span class="hidden">???</span>`}</div></div>`;
 }
 function screenPmAsk(){
-  const g = game, A = GOALS[g.chain[g.pm.cur]], B = GOALS[g.chain[g.pm.cur+1]];
+  const g = game, GS = goalsOf(g.pmTheme), A = GS[g.chain[g.pm.cur]], B = GS[g.chain[g.pm.cur+1]], rk = g.pmTheme==="ldc" ? "pmLdc" : "pm";
   if(L.pmCur!==g.pm.cur){ L.pmCur = g.pm.cur; L.pmPick = null; }
   const picked = L.pmPick || (g.pickedIds.includes(ME.id) ? "?" : null);
   const count = `<span data-live="count">${g.pickedIds.length}/${g.players.length}</span>`;
-  const head = g.pm.endless ? gameTop(`Série : ${g.pm.scores[ME.id]||0}`, PROFILE.best.pm?`<span class="chip">Record ${PROFILE.best.pm}</span>`:"")
+  const head = g.pm.endless ? gameTop(`Série : ${g.pm.scores[ME.id]||0}`, PROFILE.best[rk]?`<span class="chip">Record ${PROFILE.best[rk]}</span>`:"")
     : `${roundBar(PM_DUELS, g.pm.cur)}${gameTop(`Duel ${g.pm.cur+1}/${PM_DUELS}`, clock())}`;
   return {key:`pm-${g.pm.cur}-${picked}`, html:`${head}
-   ${duelCards(A, B, false)}
+   ${duelCards(A, B, false, g.pmTheme)}
    <div class="choices"><button class="btn${picked==="plus"?" sel":""}" data-act="pm-pick" data-v="plus" ${picked?"disabled":""}>Plus</button><button class="btn${picked==="moins"?" sel":""}" data-act="pm-pick" data-v="moins" ${picked?"disabled":""}>Moins</button></div>
    ${g.solo?`<p class="solo-note">${g.pm.endless?"Une erreur et la série s'arrête. En cas d'égalité, c'est gagné.":"En cas d'égalité, c'est gagné."}</p>`
      :`<p class="muted" style="font-size:14px">${picked?`Choix envoyé. Réponses reçues : ${count}.`:`En cas d'égalité, tout le monde marque. Réponses reçues : ${count}.`}</p>`}
    ${g.solo?"":hostDock(`<button class="btn ghost" data-act="force">Révéler maintenant</button>`)}`};
 }
 function screenPmResult(){
-  const g = game, A = GOALS[g.chain[g.pm.cur]], B = GOALS[g.chain[g.pm.cur+1]], last = g.pm.last || {winners:[], picks:{}};
+  const g = game, GS = goalsOf(g.pmTheme), A = GS[g.chain[g.pm.cur]], B = GS[g.chain[g.pm.cur+1]], last = g.pm.last || {winners:[], picks:{}};
   const mine = last.picks[ME.id], won = last.winners.includes(ME.id);
   const res = g.players.map(p => ({p, sc:g.pm.scores[p.id]||0})).sort((a,b) => b.sc-a.sc);
   const head = g.pm.endless ? gameTop(`Série : ${g.pm.scores[ME.id]||0}`, g.pm.over?`<span class="over">Fin de série</span>`:`<span class="stamp ok">+1</span>`)
     : `${roundBar(PM_DUELS, g.pm.cur)}${gameTop(`Duel ${g.pm.cur+1}/${PM_DUELS}`, `<span class="stamp ${won?"ok":"none"}">${won?"+1 point":mine?"Raté":"Pas de réponse"}</span>`)}`;
   return {key:"pmr"+g.pm.cur+JSON.stringify(g.pm.scores)+!!g.pm.over, html:`${head}
-   ${duelCards(A, B, true)}
+   ${duelCards(A, B, true, g.pmTheme)}
    ${g.solo?"":`<div class="podium" style="margin-top:16px">${res.map((r,k) => `<div class="pod${last.winners.includes(r.p.id)?" first":""}"><span class="rk">${k+1}</span><span><b>${esc(r.p.name)}</b><small>${last.picks[r.p.id]?(last.picks[r.p.id]==="plus"?"A dit plus":"A dit moins"):"Pas de réponse"}</small></span><span class="sc">${plural(r.sc,"pt")}</span></div>`).join("")}</div>`}
    ${g.solo?dock(`<p class="solo-note">${g.pm.over?"Bilan…":"Duel suivant…"}</p>`)
      :IS_HOST?hostDock(`<button class="btn" data-act="next">${g.pm.cur<g.chain.length-2?"Duel suivant":"Voir le classement"}</button>`):dock(`<p class="muted" style="text-align:center;margin:0">En attente de l'hôte.</p>`)}`};
@@ -362,7 +411,7 @@ function screenChronoResult(){
     <div class="clist">${l.items.map((it,i) => { const f = finders[i];
       return `<div class="citem${f.length?"":" miss"}"><b>${esc(it.n)}</b><div class="who">${f.length?(multi?f.map(p => `<i title="${esc(p.name)}">${esc(initialsOf(p.name))}</i>`).join("")+(f.length===1?`<span class="gem">Pépite</span>`:""):`<small>Trouvé</small>`):`<small>${multi?"Personne":"Oublié"}</small>`}</div></div>`; }).join("")}</div></div>
   </div>
-  ${game.solo&&!game.daily?dock(`<button class="btn" data-act="chrono" data-v="${l.id}">Rejouer cette liste</button><button class="btn ghost" data-act="tohome">Accueil</button>`):g.daily?endButtons():IS_HOST?hostDock(`<button class="btn" data-act="start">Rejouer${g.chronoList==="random"?" avec une autre liste":""}</button><button class="btn ghost" data-act="lobby">Retour au salon</button>`):dock(`<p class="muted" style="text-align:center;margin:0">L'hôte peut relancer une partie.</p>`)}`};
+  ${game.solo&&!game.daily?dock(`<button class="btn" data-act="chrono" data-v="${l.id}">Rejouer cette liste</button><div class="row2"><button class="btn ghost" data-act="sharegame">${ICON.share} Partager</button><button class="btn ghost" data-act="tohome">Accueil</button></div>`):g.daily?endButtons():IS_HOST?hostDock(`<button class="btn" data-act="start">Rejouer${g.chronoList==="random"?" avec une autre liste":""}</button><button class="btn ghost" data-act="lobby">Retour au salon</button>`):dock(`<p class="muted" style="text-align:center;margin:0">L'hôte peut relancer une partie.</p>`)}`};
 }
 function gameView(){
   switch(game.phase){

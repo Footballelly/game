@@ -32,7 +32,7 @@ async function connect(code, onMsg){
    ====================================================================== */
 function newGame(){ return {code:CODE, host:ME.id, mode:"saison", timer:30, phase:"lobby", players:[{id:ME.id, name:ME.name}],
   rounds:[], round:0, answers:{}, revealed:{}, votes:{}, chain:[], pm:{cur:0, picks:{}, scores:{}, hist:{}, last:null, endless:false},
-  deadlineAt:null, chronoList:"random", chronoTime:90, chrono:null, lastList:null, gameNo:0, solo:false, daily:null}; }
+  deadlineAt:null, pmTheme:"pl", chronoList:"random", chronoTime:90, chrono:null, lastList:null, gameNo:0, solo:false, daily:null}; }
 function pub(){
   const s = {...G}; delete s.answers; delete s.votes; s.pm = {...G.pm}; delete s.pm.picks;
   s.answeredIds = Object.keys(G.answers[G.round] || {});
@@ -107,7 +107,8 @@ function hostStart(){
     G.round = 0; G.answers = {}; G.revealed = {}; G.votes = {}; G.phase = "answering"; armTimer(endRound);
   } else {
     const endless = G.solo && !G.daily;
-    G.chain = shuffle(GOALS.map((g,i) => i), r).slice(0, endless ? GOALS.length : PM_DUELS+1);
+    const pool = goalsOf(G.pmTheme);
+    G.chain = shuffle(pool.map((g,i) => i), r).slice(0, endless ? pool.length : PM_DUELS+1);
     G.pm = {cur:0, picks:{}, scores:Object.fromEntries(G.players.map(p => [p.id,0])), hist:Object.fromEntries(G.players.map(p => [p.id,[]])), last:null, endless};
     G.votes = {}; G.phase = "pmAsk"; armTimer(endPm, G.solo ? (G.daily ? 20 : 0) : undefined);
   }
@@ -124,7 +125,7 @@ function endRound(){
 function endChrono(){ if(G.phase!=="chronoPlay") return; clearTimeout(hostTimer); G.phase = "chronoResult"; G.deadlineAt = null; push(); }
 function endPm(){
   if(G.phase!=="pmAsk") return; clearTimeout(hostTimer);
-  const A = GOALS[G.chain[G.pm.cur]], B = GOALS[G.chain[G.pm.cur+1]];
+  const GS = goalsOf(G.pmTheme), A = GS[G.chain[G.pm.cur]], B = GS[G.chain[G.pm.cur+1]];
   const right = B.g>A.g ? "plus" : B.g<A.g ? "moins" : "egal";
   const winners = G.players.filter(p => G.pm.picks[p.id] && (right==="egal" || G.pm.picks[p.id]===right)).map(p => p.id);
   winners.forEach(id => G.pm.scores[id] = (G.pm.scores[id]||0)+1);
@@ -150,7 +151,7 @@ function hostNext(){
 }
 function hostForce(){ if(G.phase==="answering") endRound(); else if(G.phase==="pmAsk") endPm(); else if(G.phase==="chronoPlay") endChrono(); else if(G.phase==="voting"){ G.phase = "results"; push(); } }
 function hostJudge(r, id, v){ const e = G.revealed[r] && G.revealed[r][id]; if(e && e.st==="pending"){ e.st = v==="ok" ? "agreed" : "refused"; if(G.solo && !Object.values(G.revealed[r]).some(x => x.st==="pending")) autoTimer = setTimeout(hostNext, 900); push(); } }
-function hostLobby(){ clearTimeout(hostTimer); clearTimeout(autoTimer); const old = G; G = newGame(); ["players","mode","timer","chronoList","chronoTime","lastList","gameNo"].forEach(k => { if(old[k]!==undefined) G[k] = old[k]; }); push(); }
+function hostLobby(){ clearTimeout(hostTimer); clearTimeout(autoTimer); const old = G; G = newGame(); ["players","mode","timer","pmTheme","chronoList","chronoTime","lastList","gameNo"].forEach(k => { if(old[k]!==undefined) G[k] = old[k]; }); push(); }
 
 /* ======================================================================
    CLIENT (tous les téléphones, hôte compris)
@@ -172,7 +173,7 @@ function onState(m){
 function startSolo(mode, opts={}){
   leaveGame(false, true);
   CODE = "SOLO"; IS_HOST = true; NET = null;
-  G = newGame(); G.solo = true; G.mode = mode; G.daily = opts.daily || null;
+  G = newGame(); G.solo = true; G.mode = mode; G.daily = opts.daily || null; G.pmTheme = opts.theme || "pl";
   if(mode==="chrono"){ G.chronoList = opts.list || "random"; G.chronoTime = opts.time || 90; }
   if(mode==="saison"){ G.timer = opts.timer ?? 30; }
   VIEW = "game"; hostStart();
@@ -283,9 +284,16 @@ function finishGame(){
       r.pepites = l.kind==="player" ? mine.filter(i => game.players.every(p => p.id===ME.id || !(all[p.id]||[]).includes(i))).map(i => l.items[i].n) : []; }
   } else {
     r.score = (game.pm.scores||{})[ME.id] || 0; r.detail = (game.pm.hist||{})[ME.id] || [];
-    r.total = game.pm.endless ? null : PM_DUELS;
+    r.total = game.pm.endless ? null : PM_DUELS; r.theme = game.pmTheme;
     if(multi){ const best = Math.max(...Object.values(game.pm.scores)); r.won = r.score===best && r.score>0; }
   }
-  L.summary = Object.assign(recordGame(r), {r});
+  L.summary = Object.assign(recordGame(r), {r, coins:null, bonus:null});
   if(r.daily) submitDaily(r);
+  (async () => {
+    const s = L.summary, coins = await rewardGame(r.score, r.won);
+    if(L.summary!==s) return;
+    s.coins = coins;
+    if(r.daily){ const d = await claimDaily(r.daily); if(d && !d.already){ s.bonus = d; PROFILE.streak = {count:d.streak, best:Math.max(PROFILE.streak.best||0, d.streak), last:r.daily}; saveProfile(); } }
+    render(true);
+  })();
 }

@@ -32,17 +32,15 @@ function miniPlayer(kit=DEFAULT_KIT, {w=60, label=""}={}){
 }
 const miniFor = (p, club, w) => miniPlayer(kitOf(club || mainClub(p)), {w, label:`Mini-joueur de ${p.n}`});
 
-const RAR = {c:"Commune", p:"Pépite", l:"Légende"};
+const RAR = {common:"Commune", rare:"Rare", legend:"Légende"};
 const POS_FR = {GK:"Gardien", DEF:"Défenseur", MID:"Milieu", ATT:"Attaquant"};
-/* carte de collection ; locked = carte pas encore débloquée */
-function cardHTML(name, {locked=false, club=null, small=false}={}){
-  const i = playerByName(name); if(i===undefined) return "";
-  const p = P[i], c = club || mainClub(p), r = rarityOf(name);
-  const years = p.s.filter(s => s[0]===c).map(s => s[1]).concat(p.s.filter(s => s[0]===c).map(s => s[2]));
-  const span = years.length ? `${String(Math.min(...years)).slice(2)}–${String(Math.max(...years)+1).slice(2)}` : "";
-  if(locked) return `<div class="fcard locked${small?" sm":""}"><div class="fc-art" style="--club:#2b3170">${miniPlayer({s:"#3a4180",t:"#4a5190",sh:"#3a4180",so:"#3a4180",p:"plain"},{w:small?54:70})}<span class="fc-q">?</span></div>
-    <div class="fc-meta"><b>???</b><small>${POS_FR[lines(p)[0]]}</small></div></div>`;
-  return `<div class="fcard r-${r}${small?" sm":""}"><div class="fc-top"><span class="fc-rar">${r==="l"?ICON.star:""}${RAR[r]}</span><span class="fc-yr">${span}</span></div>
-    <div class="fc-art" style="--club:${CLUB[c]||"#334"}">${miniPlayer(kitOf(c),{w:small?54:70, label:`Mini-joueur de ${p.n}`})}</div>
-    <div class="fc-meta"><b>${esc(short(p))}</b><small>${esc(c)} · ${POS_FR[lines(p)[0]]}</small></div></div>`;
+/* carte de collection (catalogue FL_CARDS) ; locked = pas encore obtenue */
+function cardHTML(id, {locked=false, small=false, count=0, tag=""}={}){
+  const c = CARD.get(id); if(!c) return "";
+  const r = {common:"c", rare:"p", legend:"l"}[c.r];
+  if(locked) return `<div class="fcard locked${small?" sm":""}"><div class="fc-art">${miniPlayer({s:"#3a4180",t:"#4a5190",sh:"#3a4180",so:"#3a4180",p:"plain"},{w:small?54:70})}<span class="fc-q">?</span></div>
+    <div class="fc-meta"><b>???</b><small>${POS_FR[c.p]}</small></div></div>`;
+  return `<div class="fcard r-${r}${small?" sm":""}">${tag}<div class="fc-top"><span class="fc-rar">${c.r==="legend"?ICON.star:""}${RAR[c.r]}</span><span class="fc-yr">${count>1?`×${count}`:({pl:"PL",l1:"L1",liga:"Liga",seriea:"Serie A",europe:"Europe"}[c.lg]||"")}</span></div>
+    <div class="fc-art" style="--club:${CLUB[c.c]||"#334"}">${miniPlayer(kitOf(c.c),{w:small?54:70, label:`Mini-joueur de ${c.n}`})}</div>
+    <div class="fc-meta"><b>${esc(c.n.split(" ").length>1&&c.n.length>14?c.n.split(" ").slice(-1)[0]:c.n)}</b><small>${esc(c.c)} · ${POS_FR[c.p]}</small></div></div>`;
 }

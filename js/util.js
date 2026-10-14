@@ -15,6 +15,10 @@ const CLUB = window.FL_CLUBS || {};
 const KITS = window.FL_KITS || {};
 const GOALS = window.FL_GOALS || [];
 const LISTS = window.FL_LISTS || [];
+const GOALS_UCL = window.FL_GOALS_UCL || [];
+const PM_THEMES = window.FL_PM_THEMES || {pl:{t:"Buts en Premier League", u:"buts en PL"}};
+const goalsOf = th => th==="ldc" ? GOALS_UCL : GOALS;
+const LEAGUES = window.FL_LEAGUES || {};
 
 /* ---------- Constantes de jeu ---------- */
 const SEASONS = [2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014];
@@ -116,5 +120,7 @@ const ICON = {
   share:`<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="18" cy="5" r="2.6" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="6" cy="12" r="2.6" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="18" cy="19" r="2.6" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="m8.3 10.8 7.4-4.3M8.3 13.2l7.4 4.3" stroke="currentColor" stroke-width="2.2"/></svg>`,
   back:`<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
   lock:`<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2" fill="currentColor"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5" fill="none" stroke="currentColor" stroke-width="2.2"/></svg>`,
+  coin:`<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="9.5" fill="#ffd23f" stroke="#c99a00" stroke-width="2"/><circle cx="12" cy="12" r="5.5" fill="none" stroke="#c99a00" stroke-width="1.8"/><path d="M12 8.5v7" stroke="#c99a00" stroke-width="1.8" stroke-linecap="round"/></svg>`,
+  pack:`<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 7.5 12 3l8 4.5v9L12 21l-8-4.5z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><path d="M4 7.5 12 12l8-4.5M12 12v9" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg>`,
   plus:`<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>`
 };

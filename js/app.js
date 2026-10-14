@@ -11,6 +11,8 @@ function view(){
   if(!PROFILE.name) return screenOnboard();
   switch(VIEW){
     case "chronoPick": return screenChronoPick();
+    case "pmPick": return screenPmPick();
+    case "pack": return screenPack();
     case "friends": return screenFriends();
     case "collection": return screenCollection();
     case "album": return screenAlbum();
@@ -47,7 +49,7 @@ function tickClock(){
 setInterval(tickClock, 250);
 setInterval(() => { if(VIEW!=="game" && document.visibilityState==="visible"){ const k = lastKey; render(); if(k!==lastKey) return; } }, 30000);
 function toast(msg, kind){ const t = document.createElement("div"); t.className = "toast"+(kind?" "+kind:""); t.textContent = msg; t.setAttribute("role","status"); document.body.appendChild(t); setTimeout(() => t.remove(), 2200); }
-function go(v, arg=null){ VIEW = v; VIEW_ARG = arg; L.shareFallback = null; render(true); }
+function go(v, arg=null){ VIEW = v; VIEW_ARG = arg; L.shareFallback = null; L.packErr = null; if(v==="collection") loadWallet(true); render(true); }
 
 /* ---------- Événements ---------- */
 app.addEventListener("submit", e => {
@@ -69,7 +71,16 @@ app.addEventListener("click", e => {
     case "quit": leaveGame(false, true); go("home"); break;
     /* solo */
     case "daily": playDaily(); break;
-    case "pm": startSolo("plusmoins"); break;
+    case "pickpm": go("pmPick"); break;
+    case "pm": startSolo("plusmoins", {theme:v||"pl"}); break;
+    case "lgfilter": L.lgFilter = v; render(true); break;
+    case "colfilter": L.colFilter = v; render(true); break;
+    case "openpack": openPack(v); break;
+    case "allalbums": L.allAlbums = true; render(true); break;
+    case "reveal": if(L.pack){ L.pack.shown++; render(true); } break;
+    case "revealall": if(L.pack){ L.pack.shown = L.pack.cards.length; render(true); } break;
+    case "sharegame": shareDaily("game"); break;
+    case "pmtheme": if(IS_HOST){ G.pmTheme = v; push(); } break;
     case "saison": startSolo("saison", {timer:45}); break;
     case "pickchrono": go("chronoPick"); break;
     case "chrono": startSolo("chrono", {list:v, time:90}); break;
@@ -114,6 +125,7 @@ if("serviceWorker" in navigator && location.protocol==="https:"){ window.addEven
 /* ---------- Démarrage ---------- */
 (async () => {
   render(true);
+  loadWallet();
   if(location.hash==="#salon") go("friends");
   if(await resumeSession()) render(true);
 })();

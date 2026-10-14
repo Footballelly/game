@@ -6,7 +6,7 @@ const PROFILE_KEY = "fl-profile";
 function freshProfile(){
   return { v:1, id:uuid(), name:"", xp:0, games:0, created:todayKey(),
     streak:{count:0, best:0, last:null},
-    best:{pm:0, saison:0, chrono:{}},
+    best:{pm:0, pmLdc:0, saison:0, chrono:{}},
     daily:{},          // { "2026-10-14": {kind, score, total, detail, at} }
     cards:{},          // { "Thierry Henry": {r:"c"|"p", at:"2026-10-14"} }  r = commune / pépite
     seenInstall:false };
@@ -61,10 +61,10 @@ function recordGame(r){
   let xp = 20 + r.score*10 + (r.pepites||[]).length*15 + (r.won?30:0);
   if(r.daily) xp += 50;
   const rec = [];
-  if(r.mode==="plusmoins" && r.solo && r.score>PROFILE.best.pm){ PROFILE.best.pm = r.score; rec.push(`Record de série : ${r.score}`); }
+  if(r.mode==="plusmoins" && r.solo && !r.daily){ const k = r.theme==="ldc" ? "pmLdc" : "pm"; if(r.score>(PROFILE.best[k]||0)){ PROFILE.best[k] = r.score; rec.push(`Record de série : ${r.score}`); } }
   if(r.mode==="saison" && r.score>PROFILE.best.saison){ PROFILE.best.saison = r.score; rec.push(`Record : ${r.score}/11 postes`); }
   if(r.mode==="chrono" && r.list){ const b = PROFILE.best.chrono[r.list]||0; if(r.score>b){ PROFILE.best.chrono[r.list] = r.score; if(b) rec.push(`Record sur cette liste : ${r.score}`); } }
-  const cards = unlockCards(r.found||[], r.pepites||[]);
+  const cards = [];
   PROFILE.xp += xp; PROFILE.games++;
   let streak = null;
   if(r.daily){ PROFILE.daily[r.daily] = {kind:r.mode, score:r.score, total:r.total, detail:r.detail||null, list:r.list||null, at:Date.now()}; streak = bumpStreak(r.daily); }

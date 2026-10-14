@@ -334,3 +334,48 @@ input[type=range]{width:100%;accent-color:var(--kit);height:28px}
 .toast.ok{background:var(--green);color:var(--ink)}
 .solo-note{font-size:13px;color:var(--mute);text-align:center;margin:0}
 .over{font-family:var(--f-display);font-size:13px;background:var(--red);color:var(--white);border-radius:8px;padding:5px 9px}
+
+/* ======================================================================
+   Pièces, packs, filtres
+   ====================================================================== */
+.tb-right{display:flex;align-items:center;gap:8px;min-width:0}
+.tb-right .me-pill{max-width:none;min-width:0}
+.coins{display:inline-flex;align-items:center;gap:5px;background:rgba(0,0,0,.25);border-radius:999px;padding:6px 10px 6px 7px;font-family:var(--f-mono);font-weight:600;font-size:14px;color:var(--white);flex:none;font-variant-numeric:tabular-nums}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:2px 0 12px;scrollbar-width:none}
+.chips button{flex:none;font-weight:700;font-size:13px;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.1);color:var(--white);border:2px solid transparent}
+.chips button[aria-pressed="true"]{background:var(--flash);color:var(--ink)}
+.lgtag{display:inline-block;font-family:var(--f-mono);font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--kit);margin-bottom:2px}
+.packs{display:grid;gap:10px}
+.pack{display:grid;grid-template-columns:52px 1fr auto;gap:12px;align-items:center;text-align:left;border-radius:18px;padding:12px 14px;color:var(--ink);box-shadow:0 5px 0 rgba(0,0,0,.25);transition:transform .08s}
+.pack:active:not([disabled]){transform:translateY(3px)}
+.pack[disabled]{opacity:.5;cursor:not-allowed}
+.pack b{display:block;font-family:var(--f-display);font-weight:400;font-size:17px}
+.pack small{display:block;font-size:12.5px;font-weight:600;opacity:.8}
+.pack .pk-box{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;background:rgba(255,255,255,.55)}
+.pack .pk-box svg{width:30px;height:30px}
+.pack .pk-price{display:inline-flex;align-items:center;gap:4px;font-family:var(--f-mono);font-weight:600;font-size:15px;background:var(--ink);color:var(--white);border-radius:10px;padding:6px 9px}
+.pack-classic{background:linear-gradient(135deg,#f7f5ef,#dfe6ff)}
+.pack-gold{background:linear-gradient(135deg,#ffd23f,#fff4c2 40%,#e0a800)}
+.coinline{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;font-size:15px}
+.coinline>span{display:inline-flex;align-items:center;gap:5px}
+.coinline .bonus{background:#fff1b8;border-radius:8px;padding:4px 8px;font-size:13.5px;color:var(--ink)}
+.coinline .bonus svg{color:#e06a00}
+/* ouverture de pack */
+.pack-stage{min-height:70vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center;padding-bottom:40px}
+.pack-stage .display span{color:var(--flash)}
+.pack-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:100%}
+.flip{min-width:0}
+.flip.back{aspect-ratio:3/4.3;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--ink);font-family:var(--f-display);font-size:28px;border:3px solid var(--ink);box-shadow:0 5px 0 rgba(0,0,0,.3);background:repeating-linear-gradient(45deg,#f7f5ef 0 10px,#e9e5d8 10px 20px);animation:wobble 1.6s ease-in-out infinite}
+.flip.back svg{width:34px;height:34px}
+.flip.back.r-rare{background:repeating-linear-gradient(45deg,#cfdcff 0 10px,#b6c8ff 10px 20px)}
+.flip.back.r-legend{background:repeating-linear-gradient(45deg,#ffe58a 0 10px,#ffd23f 10px 20px);box-shadow:0 0 22px rgba(255,210,63,.8),0 5px 0 rgba(0,0,0,.3)}
+.flip.in{animation:flipin .45s ease-out}
+.flip .fcard{position:relative}
+.newtag,.duptag{position:absolute;z-index:2;top:-9px;left:50%;transform:translateX(-50%);font-family:var(--f-display);font-size:10px;border-radius:6px;padding:3px 6px;white-space:nowrap}
+.newtag{background:var(--green);color:var(--ink)}
+.duptag{background:var(--ink);color:var(--white)}
+.pack-stage.tier-l{background:radial-gradient(circle at 50% 45%,rgba(255,210,63,.35),transparent 60%)}
+@keyframes flipin{from{transform:rotateY(90deg) scale(.9);opacity:.3}to{transform:none;opacity:1}}
+@keyframes wobble{0%,100%{transform:rotate(-1.5deg)}50%{transform:rotate(1.5deg)}}
+@media (max-width:360px){.pack-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
