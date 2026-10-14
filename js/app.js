@@ -15,6 +15,7 @@ function view(){
     case "pack": return screenPack();
     case "career": return screenCareer();
     case "careerPick": return screenCareerPick();
+    case "saisonPick": return screenSaisonPick();
     case "friends": return screenFriends();
     case "collection": return screenCollection();
     case "album": return screenAlbum();
@@ -119,7 +120,8 @@ app.addEventListener("click", e => {
     case "carnext": careerNext(); break;
     case "sharegame": shareDaily("game"); break;
     case "pmtheme": if(IS_HOST){ G.pmTheme = v; push(); } break;
-    case "saison": startSolo("saison", {timer:45}); break;
+    case "saison": startSolo("saison", {timer:45, era:v||"classic"}); break;
+    case "era": if(IS_HOST){ G.era = v; push(); } break;
     case "pickchrono": go("chronoPick"); break;
     case "chrono": startSolo("chrono", {list:v, time:PROFILE.chTime||90}); break;
     case "chtimesolo": PROFILE.chTime = +v; saveProfile(); render(true); break;

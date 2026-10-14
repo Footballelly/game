@@ -33,7 +33,7 @@ function shareTextGame(){
   const s = L.summary; if(!s) return "";
   const r = s.r; let line, grid = "";
   if(r.mode==="chrono"){ const l = listById(r.list); line = `Chrono ${l.t}${r.time&&r.time!==90?` (${(CH_TIMES.find(x => x[0]===r.time)||[,""])[1]})`:""} : ${r.score}/${r.total}`; const k = Math.round(r.score/r.total*10); grid = "🟨".repeat(k)+"⬛".repeat(10-k); }
-  else if(r.mode==="saison"){ line = `Un joueur par saison : ${r.score}/11`; grid = (r.detail||[]).map(x => x ? "🟩" : "⬛").join(""); }
+  else if(r.mode==="saison"){ line = `Un joueur par saison${r.era==="modern"?" (ère moderne)":""} : ${r.score}/11`; grid = (r.detail||[]).map(x => x ? "🟩" : "⬛").join(""); }
   else { line = r.total ? `Plus ou moins : ${r.score}/${r.total}` : `Plus ou moins (${PM_THEMES[r.theme||"pl"].u}) : série de ${r.score}`; grid = (r.detail||[]).map(x => x ? "🟦" : "🟥").join(""); }
   return `Football Legends\n${line}\n${grid}\nTu fais mieux ? ${SITE_URL}`;
 }

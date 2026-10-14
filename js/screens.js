@@ -31,7 +31,7 @@ function ticket(r){ const s = slotById(r.slot); return `<div class="ticket"><spa
 const roundBar = (n, cur) => `<div class="rounds">${Array.from({length:n}, (_,k) => `<i class="${k<cur?"done":k===cur?"now":""}"></i>`).join("")}</div>`;
 function tabbar(){
   const t = [["home","Jouer",ICON.home],["collection","Collection",ICON.cards],["board","Classement",ICON.trophy]];
-  const cur = ["album","pack"].includes(VIEW) ? "collection" : ["pmPick","chronoPick","career","careerPick"].includes(VIEW) ? "home" : VIEW;
+  const cur = ["album","pack"].includes(VIEW) ? "collection" : ["pmPick","chronoPick","career","careerPick","saisonPick"].includes(VIEW) ? "home" : VIEW;
   return `<nav class="tabbar" aria-label="Navigation"><div>${t.map(([v,l,i]) => `<button data-act="nav" data-v="${v}" ${cur===v?'aria-current="page"':""}>${i}<span>${l}</span></button>`).join("")}</div></nav>`;
 }
 function topbar(){
@@ -104,11 +104,11 @@ function screenHome(){
   ${installBanner()}
   <div style="margin-top:12px">${dailyCard()}</div>
   <div class="sec-title"><h2>Jouer seul</h2><small>sans limite</small></div>
-  <div class="modes">
+  <div class="mgrid">
    ${m("nav",ICON.route,"m-pink","Parcours de carrière","Trouve le joueur à partir de ses clubs.", carRec || "Nouveau", 'data-v="careerPick"')}
    ${m("pickpm",ICON.updown,"m-gold","Plus ou moins","Plus de buts ou moins ? Enchaîne.", pmRec?`Record ${pmRec}`:"")}
    ${m("pickchrono",ICON.clock,"m-sky","Chrono",`${LISTS.length} listes à vider avant la fin du temps.`, "")}
-   ${m("saison",ICON.pitch,"m-green","Un joueur par saison","11 postes, 11 saisons de PL.", b.saison?`Record ${b.saison}/11`:"")}
+   ${m("nav",ICON.pitch,"m-green","Un joueur par saison","11 postes, 11 saisons de PL. Années 2000 ou ère moderne.", b.saison||b.saisonModern?`Record ${Math.max(b.saison||0,b.saisonModern||0)}/11`:"", 'data-v="saisonPick"')}
   </div>
   <div class="sec-title"><h2>Collection</h2><small>${WALLET.loaded?`${WALLET.coins} pièces`:""}</small></div>
   ${collectionTeaser()}
@@ -126,6 +126,14 @@ function screenChronoPick(){
   <div class="chips" role="group" aria-label="Compétition">${lgs.map(k => `<button data-act="lgfilter" data-v="${k}" aria-pressed="${f===k}">${k==="all"?"Toutes":esc(LEAGUES[k]||k)}</button>`).join("")}</div>
   <div class="pick-list">${shown.map(l => { const r = PROFILE.best.chrono[chronoKey(l.id, PROFILE.chTime||90)];
     return `<button class="mode" data-act="chrono" data-v="${l.id}"><span class="lgtag">${esc(LEAGUES[l.lg]||"")}</span><b>${esc(l.t)}</b><small>${esc(l.hint)}</small>${r?`<span class="rec">Ton record : ${r}/${l.items.length}</span>`:""}</button>`; }).join("")}</div>
+  ${tabbar()}`};
+}
+function screenSaisonPick(){
+  const b = PROFILE.best, card = (k, rec) => `<button class="mode" data-act="saison" data-v="${k}"><span class="lgtag">${ERAS[k].d}</span><b>${ERAS[k].t}</b><small>${k==="modern"?"Salah, De Bruyne, Saka, Haaland… 11 postes, 11 saisons récentes.":"Henry, Lampard, Gerrard, Ronaldo… 11 postes, 11 saisons de la grande époque."}</small>${rec?`<span class="rec">Ton record : ${rec}/11</span>`:""}</button>`;
+  return {key:"saisonPick", html:`
+  <div class="subhead"><button class="iconbtn" data-act="nav" data-v="home" aria-label="Retour">${ICON.back}</button><h1>Un joueur par saison</h1></div>
+  <p class="muted" style="margin:0 0 14px">Pour chaque poste, une saison de Premier League tirée au hasard : cite un joueur qui y jouait, de mémoire. 45 s par manche.</p>
+  <div class="pick-list">${card("classic", b.saison)}${card("modern", b.saisonModern)}</div>
   ${tabbar()}`};
 }
 function screenPmPick(){
@@ -258,7 +266,7 @@ function gameTop(title, right=""){
 }
 function screenLobby(){
   const g = game, n = g.players.length;
-  return {key:"lobby"+JSON.stringify([g.players, g.mode, g.timer, g.chronoList, g.chronoTime, g.pmTheme]), html:`
+  return {key:"lobby"+JSON.stringify([g.players, g.mode, g.timer, g.chronoList, g.chronoTime, g.pmTheme, g.era]), html:`
   <div class="stack">
    <div style="display:flex;justify-content:space-between;align-items:center"><span class="eyebrow">Salon</span>${netBadge()}</div>
    <div class="codebox"><div class="lbl" style="margin:0">Code de la partie</div><div class="display">${esc(g.code)}</div><div class="hint">Tes potes ouvrent ${SITE_URL}, puis « Jouer avec des amis » et tapent ce code.</div></div>
@@ -268,7 +276,7 @@ function screenLobby(){
      <div><span class="lbl">Mode de jeu</span><div class="modes">${Object.entries(MODES).map(([k,m]) => `<button class="mode" data-act="mode" data-v="${k}" aria-pressed="${g.mode===k}"><b>${m.t}</b><small>${m.d}</small></button>`).join("")}</div></div>
      ${g.mode==="chrono"?`<div><span class="lbl">Liste</span><div class="modes">${[["random","Au hasard","Une liste surprise à chaque partie."], ...LISTS.map(l => [l.id, l.t, `${l.items.length} réponses possibles`])].map(([k,t2,d]) => `<button class="mode" data-act="chlist" data-v="${k}" aria-pressed="${g.chronoList===k}"><b>${esc(t2)}</b><small>${esc(d)}</small></button>`).join("")}</div></div>
      <div><span class="lbl">Durée</span><div class="seg">${[[60,"1 min"],[90,"1 min 30"],[120,"2 min"]].map(([v,l]) => `<button data-act="chtime" data-v="${v}" aria-pressed="${g.chronoTime===v}">${l}</button>`).join("")}</div></div>`
-     :`${g.mode==="plusmoins"?`<div><span class="lbl">Thème</span><div class="seg">${Object.entries(PM_THEMES).map(([k,v]) => `<button data-act="pmtheme" data-v="${k}" aria-pressed="${g.pmTheme===k}">${k==="ldc"?"Ligue des champions":"Premier League"}</button>`).join("")}</div></div>`:""}<div><span class="lbl">Temps par manche</span><div class="seg">${[[0,"Sans"],[15,"15 s"],[30,"30 s"],[45,"45 s"]].map(([v,l]) => `<button data-act="timer" data-v="${v}" aria-pressed="${g.timer===v}">${l}</button>`).join("")}</div>
+     :`${g.mode==="plusmoins"?`<div><span class="lbl">Thème</span><div class="seg">${Object.entries(PM_THEMES).map(([k,v]) => `<button data-act="pmtheme" data-v="${k}" aria-pressed="${g.pmTheme===k}">${k==="ldc"?"Ligue des champions":"Premier League"}</button>`).join("")}</div></div>`:""}${g.mode==="saison"?`<div><span class="lbl">Époque</span><div class="seg">${Object.entries(ERAS).map(([k,v]) => `<button data-act="era" data-v="${k}" aria-pressed="${(g.era||"classic")===k}">${v.t}</button>`).join("")}</div></div>`:""}<div><span class="lbl">Temps par manche</span><div class="seg">${[[0,"Sans"],[15,"15 s"],[30,"30 s"],[45,"45 s"]].map(([v,l]) => `<button data-act="timer" data-v="${v}" aria-pressed="${g.timer===v}">${l}</button>`).join("")}</div>
       <div class="hint">Sans chrono, c'est toi qui clôtures chaque manche.</div></div>`}
     </div>`:`<div class="card"><h3>${esc(MODES[g.mode].t)}</h3><p style="margin:6px 0 0;color:var(--ink-soft)">${esc(MODES[g.mode].d)}</p>${g.mode==="chrono"?`<p class="hint">Liste : ${esc(g.chronoList==="random"?"au hasard":(listById(g.chronoList)||{}).t||"")}</p>`:""}<p class="hint">En attente de ${esc(nameOf(g.host))} pour lancer.</p></div>`}
   </div>
@@ -354,9 +362,9 @@ function summaryBlock(){
     ${WALLET.loaded&&WALLET.coins>=PACKS.classic.price?`<button class="btn ink sm" data-act="tohome" data-v="collection">${ICON.pack} Ouvrir un pack (${WALLET.coins} pièces)</button>`:""}
   </div>`;
 }
-function endButtons(replayAct){
+function endButtons(replayAct, replayV){
   if(game.daily) return dock(`<button class="btn" data-act="share">${ICON.share} Partager mon résultat</button><button class="btn ghost" data-act="tohome" data-v="board">Voir le classement</button>`);
-  if(game.solo) return dock(`<button class="btn" data-act="${replayAct}" ${replayAct==="pm"?`data-v="${game.pmTheme}"`:""}>Rejouer</button><div class="row2"><button class="btn ghost" data-act="sharegame">${ICON.share} Partager</button><button class="btn ghost" data-act="tohome">Accueil</button></div>`);
+  if(game.solo) return dock(`<button class="btn" data-act="${replayAct}" ${replayAct==="pm"?`data-v="${game.pmTheme}"`:replayV?`data-v="${replayV}"`:""}>Rejouer</button><div class="row2"><button class="btn ghost" data-act="sharegame">${ICON.share} Partager</button><button class="btn ghost" data-act="tohome">Accueil</button></div>`);
   return IS_HOST ? hostDock(`<button class="btn" data-act="lobby">Retour au salon</button>`) : dock(`<p class="muted" style="text-align:center;margin:0">L'hôte peut relancer une partie.</p>`);
 }
 function screenResults(){
@@ -376,9 +384,9 @@ function screenResults(){
    <div class="hero"><span class="eyebrow">${g.daily?`Défi n°${dayNumber(g.daily)} · `:""}Un joueur par saison</span><h1 class="display" style="font-size:clamp(36px,11vw,52px)">${g.solo?`${filled} <span>sur 11</span>`:tie?`Égalité, <span>débat obligatoire</span>`:`${esc(w.name)} <span>gagne</span>`}</h1></div>
    ${g.solo?"":`<div class="podium">${res.map((r,k) => `<div class="pod${k===0?" first":""}"><span class="rk">${k+1}</span><span><b>${esc(r.name)}</b><small>${r.filled}/11 postes · ${plural(r.gems,"exclu")}</small></span><span class="sc">${r.avg.toFixed(1)}/10</span></div>`).join("")}</div>`}
    <div><div class="eyebrow" style="margin-bottom:8px">${g.solo?"Ton 11":"Carte à partager"}</div>
-    <div class="share"><div class="share-top"><div><div class="eyebrow">Un joueur par saison · PL</div><div class="display">${esc(g.solo?PROFILE.name:w.name)}</div></div><span class="badge">${g.solo?`${filled}/11`:w.avg.toFixed(1)}</span></div>
-     ${pitch(myTeam(g.solo?ME.id:w.id), true)}<div class="share-foot"><span>De mémoire · 04/05 → 14/15</span><span>FOOTBALL LEGENDS</span></div></div></div>
-   ${summaryBlock()}</div>${endButtons("saison")}`};
+    <div class="share"><div class="share-top"><div><div class="eyebrow">Un joueur par saison · ${g.era==="modern"?"Ère moderne":"PL"}</div><div class="display">${esc(g.solo?PROFILE.name:w.name)}</div></div><span class="badge">${g.solo?`${filled}/11`:w.avg.toFixed(1)}</span></div>
+     ${pitch(myTeam(g.solo?ME.id:w.id), true)}<div class="share-foot"><span>De mémoire · ${g.era==="modern"?"15/16 → 25/26":"04/05 → 14/15"}</span><span>FOOTBALL LEGENDS</span></div></div></div>
+   ${summaryBlock()}</div>${endButtons("saison", g.era)}`};
 }
 function duelCards(A, B, showB, theme="pl"){ const U = PM_THEMES[theme].u;
   return `<div class="duel">

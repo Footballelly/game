@@ -527,7 +527,7 @@ input[type=range]{width:100%;accent-color:var(--kit);height:28px}
 .lvl-strip .lvl-t{font-weight:700;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:42vw}
 .lvl-strip .xpbar{height:7px;margin:0}
 .lvl-strip .lvl-x{font-family:var(--f-mono);color:var(--mute);font-size:11px}
-.modes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .mtile{position:relative;overflow:hidden;isolation:isolate;min-height:158px;border-radius:20px;padding:14px;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;text-align:left;color:var(--ink);box-shadow:0 5px 0 rgba(0,0,0,.25);transition:transform .1s}
 .mtile:active{transform:translateY(3px) scale(.99);box-shadow:0 2px 0 rgba(0,0,0,.25)}
 .mtile .m-ic{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:rgba(255,255,255,.55)}
@@ -560,7 +560,7 @@ input[type=range]{width:100%;accent-color:var(--kit);height:28px}
 .friends-tile b{display:block;font-family:var(--f-display);font-weight:400;font-size:17px}
 .friends-tile small{display:block;font-size:13px;font-weight:600;opacity:.9;margin-top:3px}
 .friends-tile .arrow{font-size:30px;font-weight:300;opacity:.8}
-@media (max-width:350px){.modes{grid-template-columns:1fr}.mtile{min-height:120px}}
+@media (max-width:350px){.mgrid{grid-template-columns:1fr}.mtile{min-height:120px}}
 /* boutique v2 */
 .packs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .shop-pack{display:flex;flex-direction:column;align-items:stretch;gap:8px;text-align:center;border-radius:20px;padding:10px;background:rgba(255,255,255,.08);border:2px solid var(--kit-line);color:#fff;transition:transform .1s}

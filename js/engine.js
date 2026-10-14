@@ -32,7 +32,7 @@ async function connect(code, onMsg){
    ====================================================================== */
 function newGame(){ return {code:CODE, host:ME.id, mode:"saison", timer:30, phase:"lobby", players:[{id:ME.id, name:ME.name}],
   rounds:[], round:0, answers:{}, revealed:{}, votes:{}, chain:[], pm:{cur:0, picks:{}, scores:{}, hist:{}, last:null, endless:false},
-  deadlineAt:null, pmTheme:"pl", chronoList:"random", chronoTime:90, chrono:null, lastList:null, gameNo:0, solo:false, daily:null}; }
+  deadlineAt:null, pmTheme:"pl", era:"classic", chronoList:"random", chronoTime:90, chrono:null, lastList:null, gameNo:0, solo:false, daily:null}; }
 function pub(){
   const s = {...G}; delete s.answers; delete s.votes; s.pm = {...G.pm}; delete s.pm.picks;
   s.answeredIds = Object.keys(G.answers[G.round] || {});
@@ -103,7 +103,7 @@ function hostStart(){
     if(id==="random" || !listById(id)){ const pool = LISTS.filter(l => l.id!==G.lastList); id = pool[Math.floor(Math.random()*pool.length)].id; }
     G.lastList = id; G.chrono = {list:id, found:{}, done:{}}; G.phase = "chronoPlay"; armTimer(endChrono, G.chronoTime||90);
   } else if(G.mode==="saison"){
-    const ss = shuffle(SEASONS, r); G.rounds = SLOTS.map((s,k) => ({slot:s.id, y:ss[k]}));
+    const ss = shuffle((ERAS[G.era]||ERAS.classic).s, r); G.rounds = SLOTS.map((s,k) => ({slot:s.id, y:ss[k]}));
     G.round = 0; G.answers = {}; G.revealed = {}; G.votes = {}; G.phase = "answering"; armTimer(endRound);
   } else {
     const endless = G.solo && !G.daily;
@@ -151,7 +151,7 @@ function hostNext(){
 }
 function hostForce(){ if(G.phase==="answering") endRound(); else if(G.phase==="pmAsk") endPm(); else if(G.phase==="chronoPlay") endChrono(); else if(G.phase==="voting"){ G.phase = "results"; push(); } }
 function hostJudge(r, id, v){ const e = G.revealed[r] && G.revealed[r][id]; if(e && e.st==="pending"){ e.st = v==="ok" ? "agreed" : "refused"; if(G.solo && !Object.values(G.revealed[r]).some(x => x.st==="pending")) autoTimer = setTimeout(hostNext, 900); push(); } }
-function hostLobby(){ clearTimeout(hostTimer); clearTimeout(autoTimer); const old = G; G = newGame(); ["players","mode","timer","pmTheme","chronoList","chronoTime","lastList","gameNo"].forEach(k => { if(old[k]!==undefined) G[k] = old[k]; }); push(); }
+function hostLobby(){ clearTimeout(hostTimer); clearTimeout(autoTimer); const old = G; G = newGame(); ["players","mode","timer","pmTheme","era","chronoList","chronoTime","lastList","gameNo"].forEach(k => { if(old[k]!==undefined) G[k] = old[k]; }); push(); }
 
 /* ======================================================================
    CLIENT (tous les téléphones, hôte compris)
@@ -175,7 +175,7 @@ function startSolo(mode, opts={}){
   CODE = "SOLO"; IS_HOST = true; NET = null;
   G = newGame(); G.solo = true; G.mode = mode; G.daily = opts.daily || null; G.pmTheme = opts.theme || "pl";
   if(mode==="chrono"){ G.chronoList = opts.list || "random"; G.chronoTime = opts.time || 90; }
-  if(mode==="saison"){ G.timer = opts.timer ?? 30; }
+  if(mode==="saison"){ G.timer = opts.timer ?? 30; G.era = opts.era || "classic"; }
   VIEW = "game"; hostStart();
 }
 async function createGame(){
@@ -271,7 +271,7 @@ function finishGame(){
   const tag = (game.code||"")+":"+game.gameNo; if(L.summaryFor===tag) return; L.summaryFor = tag;
   const multi = game.players.length>1, mode = game.mode, r = {mode, solo:!multi, daily:game.daily, found:[], pepites:[]};
   if(mode==="saison"){
-    const t = myTeam(); r.total = 11;
+    const t = myTeam(); r.total = 11; r.era = game.era || "classic";
     r.detail = SLOTS.map(s => { const e = t[s.id]; return !!e && ["ok","agreed"].includes(e.st); });
     r.score = r.detail.filter(Boolean).length;
     r.found = Object.values(t).filter(e => e.st==="ok").map(e => P[e.i].n);
