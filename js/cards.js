@@ -35,16 +35,37 @@ const miniFor = (p, club, w) => miniPlayer(kitOf(club || mainClub(p)), {w, label
 /* illustrations dessinées par Paul : ids listés dans data/art.js, fichiers dans cards/<id>.webp ; sinon mini-joueur généré */
 const ART = new Set(window.FL_ART || []);
 /* nom court : « Alessandro Del Piero » → « Del Piero » */
-const cardName = n => { const w = n.split(" "); return w.length>1 && n.length>14 ? w.slice(1).join(" ") : n; };
+const cardName = n => { const w = n.split(" "); return w.length>1 ? w.slice(1).join(" ") : n; };
 const RAR = {common:"Commune", rare:"Rare", legend:"Légende"};
 const POS_FR = {GK:"Gardien", DEF:"Défenseur", MID:"Milieu", ATT:"Attaquant"};
+const POS_AB = {GK:"GB", DEF:"DEF", MID:"MIL", ATT:"ATT"};
+const LG_AB = {pl:"PL", l1:"L1", liga:"LIGA", seriea:"SERIE A", europe:"EUROPE"};
+/* numéro de collection : Légendes, puis Rares, puis Communes, par nom (même ordre que les fichiers d'illustration) */
+const CARD_NO = (() => { const o = {legend:0, rare:1, common:2}, m = new Map();
+  [...(window.FL_CARDS||[])].sort((a,b) => o[a.r]-o[b.r] || a.n.localeCompare(b.n,"fr")).forEach((c,i) => m.set(c.id, i+1)); return m; })();
+function shade(hex, k){ const h = hex.replace("#",""), n = [0,2,4].map(i => parseInt(h.slice(i,i+2),16));
+  const t = k<0 ? 0 : 255, a = Math.abs(k); return "#"+n.map(v => Math.round(v+(t-v)*a).toString(16).padStart(2,"0")).join(""); }
+function cardVars(club){
+  const k = kitOf(club); let c1 = k.s; if(isLight(c1)) c1 = isLight(k.t) ? "#3a4180" : k.t;
+  const t = isLight(k.t) ? "rgba(255,255,255,1)" : k.t;
+  const motif = k.p==="stripes" ? `repeating-linear-gradient(90deg,${t} 0 9%,transparent 9% 18%)` : k.p==="hoops" ? `repeating-linear-gradient(0deg,${t} 0 7%,transparent 7% 14%)` : k.p==="halves" ? `linear-gradient(90deg,transparent 50%,${t} 50%)` : `repeating-linear-gradient(135deg,${t} 0 2%,transparent 2% 7%)`;
+  return `--c1:${c1};--c1l:${shade(c1,.28)};--c1d:${shade(c1,-.55)};--motif:${motif}`;
+}
+const rarGlyph = r => r==="legend" ? ICON.star : r==="rare" ? `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l4 7-4 13-4-13z M4 9h16" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>` : "";
 /* carte de collection (catalogue FL_CARDS) ; locked = pas encore obtenue */
 function cardHTML(id, {locked=false, small=false, count=0, tag=""}={}){
   const c = CARD.get(id); if(!c) return "";
-  const r = {common:"c", rare:"p", legend:"l"}[c.r];
-  if(locked) return `<div class="fcard locked${small?" sm":""}"><div class="fc-art">${miniPlayer({s:"#3a4180",t:"#4a5190",sh:"#3a4180",so:"#3a4180",p:"plain"},{w:small?54:70})}<span class="fc-q">?</span></div>
-    <div class="fc-meta"><b>???</b><small>${POS_FR[c.p]}</small></div></div>`;
-  return `<div class="fcard r-${r}${small?" sm":""}">${tag}<div class="fc-top"><span class="fc-rar">${c.r==="legend"?ICON.star:""}${RAR[c.r]}</span><span class="fc-yr">${count>1?`×${count}`:({pl:"PL",l1:"L1",liga:"Liga",seriea:"Serie A",europe:"Europe"}[c.lg]||"")}</span></div>
-    <div class="fc-art" style="--club:${CLUB[c.c]||"#334"}">${ART.has(id)?`<img class="fc-img" src="cards/${id}.webp" alt="Illustration de ${esc(c.n)}" loading="lazy" decoding="async">`:miniPlayer(kitOf(c.c),{w:small?54:70, label:`Mini-joueur de ${c.n}`})}</div>
-    <div class="fc-meta"><b>${esc(cardName(c.n))}</b><small>${esc(c.c)} · ${POS_FR[c.p]}</small></div></div>`;
+  const r = {common:"c", rare:"p", legend:"l"}[c.r], no = String(CARD_NO.get(id)||0).padStart(3,"0"), nm = cardName(c.n);
+  if(locked) return `<div class="fcard locked${small?" sm":""}" aria-label="Carte n°${no} pas encore obtenue"><div class="fc-face"><div class="fc-in">
+    <div class="fc-art">${miniPlayer(DEFAULT_KIT,{w:70})}</div><span class="fc-q">?</span>
+    <div class="fc-pos"><b>${POS_AB[c.p]}</b></div><span class="fc-rk">#${no}</span>
+    <div class="fc-plate"><span class="fc-name">???</span><span class="fc-sub">${esc(c.c)}</span></div></div></div></div>`;
+  const art = ART.has(id) ? `<img class="fc-img" src="cards/${id}.webp" alt="" loading="lazy" decoding="async">` : miniPlayer(kitOf(c.c),{w:70});
+  return `<div class="fcard r-${r}${small?" sm":""}" style="${cardVars(c.c)}" role="img" aria-label="${esc(c.n)}, ${RAR[c.r]}, ${POS_FR[c.p]}, ${esc(c.c)}">${tag}${count>1?`<span class="fc-count">×${count}</span>`:""}
+   <div class="fc-face"><div class="fc-in">
+    <div class="fc-art">${art}</div>
+    <div class="fc-pos"><b>${POS_AB[c.p]}</b><small>${LG_AB[c.lg]||""}</small></div>
+    <span class="fc-rk">${rarGlyph(c.r)}#${no}</span>
+    <div class="fc-plate"><span class="fc-name${nm.length>11?" long":""}">${esc(nm)}</span><span class="fc-sub">${esc(c.c)}</span></div>
+   </div><i class="fc-shine"></i></div></div>`;
 }

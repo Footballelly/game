@@ -70,6 +70,16 @@ function revealFx(from, to){
 }
 function go(v, arg=null){ VIEW = v; VIEW_ARG = arg; L.shareFallback = null; L.packErr = null; if(v==="collection") loadWallet(true); render(true); }
 
+/* ---------- Cartes : inclinaison 3D et reflet qui suit le doigt / la souris ---------- */
+app.addEventListener("pointermove", e => {
+  const c = e.target.closest(".fcard:not(.locked)"); if(!c) return;
+  const b = c.getBoundingClientRect(), x = (e.clientX-b.left)/b.width, y = (e.clientY-b.top)/b.height;
+  c.classList.add("tilting"); c.style.setProperty("--ry", `${(x-.5)*18}deg`); c.style.setProperty("--rx", `${(.5-y)*18}deg`);
+  c.style.setProperty("--mx", `${x*100}%`); c.style.setProperty("--my", `${y*100}%`);
+});
+app.addEventListener("pointerout", e => { const c = e.target.closest(".fcard"); if(!c || c.contains(e.relatedTarget)) return;
+  c.classList.remove("tilting"); ["--rx","--ry","--mx","--my"].forEach(k => c.style.removeProperty(k)); });
+
 /* ---------- Événements ---------- */
 app.addEventListener("submit", e => {
   const f = e.target.dataset.form; if(!f) return; e.preventDefault();
