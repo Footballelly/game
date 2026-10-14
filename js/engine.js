@@ -288,6 +288,7 @@ function finishGame(){
     if(multi){ const best = Math.max(...Object.values(game.pm.scores)); r.won = r.score===best && r.score>0; }
   }
   L.summary = Object.assign(recordGame(r), {r, coins:null, bonus:null});
+  if(L.summary.rec.length) setTimeout(() => celebrate(), 300);
   if(r.daily) submitDaily(r);
   (async () => {
     const s = L.summary, coins = await rewardGame(r.score, r.won);

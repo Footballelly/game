@@ -31,7 +31,7 @@ function ticket(r){ const s = slotById(r.slot); return `<div class="ticket"><spa
 const roundBar = (n, cur) => `<div class="rounds">${Array.from({length:n}, (_,k) => `<i class="${k<cur?"done":k===cur?"now":""}"></i>`).join("")}</div>`;
 function tabbar(){
   const t = [["home","Jouer",ICON.home],["collection","Collection",ICON.cards],["board","Classement",ICON.trophy]];
-  const cur = ["album","pack"].includes(VIEW) ? "collection" : ["pmPick","chronoPick"].includes(VIEW) ? "home" : VIEW;
+  const cur = ["album","pack"].includes(VIEW) ? "collection" : ["pmPick","chronoPick","career"].includes(VIEW) ? "home" : VIEW;
   return `<nav class="tabbar" aria-label="Navigation"><div>${t.map(([v,l,i]) => `<button data-act="nav" data-v="${v}" ${cur===v?'aria-current="page"':""}>${i}<span>${l}</span></button>`).join("")}</div></nav>`;
 }
 function topbar(){
@@ -90,6 +90,7 @@ function screenHome(){
   <div style="margin-top:12px">${dailyCard()}</div>
   <div class="sec-title"><h2>Jouer seul</h2><small>sans limite</small></div>
   <div class="tiles">
+   ${tile("career",ICON.route,"r","Parcours de carrière",`Les clubs tombent un par un : trouve le joueur avant la fin des indices.`, b.career?`Record<br>${b.career}/50`:`<span class="newb">Nouveau</span>`)}
    ${tile("pickpm",ICON.updown,"","Plus ou moins","Premier League ou Ligue des champions : enchaîne sans te tromper.", Math.max(b.pm||0,b.pmLdc||0)?`Record<br>${Math.max(b.pm||0,b.pmLdc||0)}`:"")}
    ${tile("pickchrono",ICON.clock,"b","Chrono",`${LISTS.length} listes : PL, Ligue 1, Liga, Serie A, LDC, Bleus…`, "")}
    ${tile("saison",ICON.pitch,"g","Un joueur par saison","11 postes, 11 saisons de PL, de mémoire.", b.saison?`Record<br>${b.saison}/11`:"")}
@@ -141,16 +142,16 @@ function screenCollection(){
   const f = L.colFilter || "all";
   const shown = own.filter(id => { const c = CARD.get(id); return f==="all" || c.r===f || c.lg===f; })
     .sort((a,b) => ({legend:0,rare:1,common:2}[CARD.get(a).r] - {legend:0,rare:1,common:2}[CARD.get(b).r]) || CARD.get(a).n.localeCompare(CARD.get(b).n));
-  const clubs = {}; CARDS.forEach(c => (clubs[c.c] ||= []).push(c.id));
-  const al = Object.entries(clubs).map(([club, ids]) => ({club, ids, got:ids.filter(id => WALLET.cards[id]).length})).filter(a => a.ids.length>=3)
-    .sort((a,b) => b.got/b.ids.length - a.got/a.ids.length || b.ids.length - a.ids.length);
+  const al = ALBUMS.map(a => ({...a, ...albumState(a)})).sort((a,b) => b.claimable-a.claimable || b.got/b.ids.length - a.got/a.ids.length || b.ids.length - a.ids.length);
+  const nFull = al.filter(a => a.full).length, nClaim = al.filter(a => a.claimable).length;
   const packBtn = k => { const p = PACKS[k], ok = WALLET.loaded && WALLET.coins>=p.price;
     return `<button class="pack pack-${k}" data-act="openpack" data-v="${k}" ${ok&&!L.opening?"":"disabled"}><span class="pk-box">${ICON.pack}</span><span><b>${p.t}</b><small>${p.d}</small></span><span class="pk-price">${ICON.coin}${p.price}</span></button>`; };
   const filters = [["all","Toutes"],["legend","Légendes"],["rare","Rares"],["common","Communes"],["pl","Premier League"],["l1","Ligue 1"],["liga","Liga"],["seriea","Serie A"],["europe","Europe"]];
-  return {key:"collection"+JSON.stringify([own.length, WALLET.coins, WALLET.loaded, WALLET.err, f, L.opening, L.packErr, !!L.allAlbums]), html:`
+  return {key:"collection"+JSON.stringify([own.length, WALLET.coins, WALLET.loaded, WALLET.err, f, L.opening, L.packErr, !!L.allAlbums, WALLET.albums.length, L.claiming]), html:`
   ${topbar()}
   ${WALLET.err?`<div class="empty">${esc(WALLET.err)}</div>`:`
   <div class="stats3"><div class="stat"><b>${own.length}</b><small>cartes sur ${CARDS.length}</small></div><div class="stat"><b>${byR("rare")}</b><small>rares sur ${tot("rare")}</small></div><div class="stat"><b>${byR("legend")}</b><small>légendes sur ${tot("legend")}</small></div></div>
+  ${nClaim?`<button class="claimbar" data-act="album" data-v="${esc(al[0].club)}">${ICON.star}<span><b>${plural(nClaim,"album")} à réclamer</b>Ton bonus de pièces t'attend</span>${ICON.coin}</button>`:""}
   <div class="sec-title"><h2>Boutique</h2><small>tu gagnes des pièces en jouant</small></div>
   <div class="packs">${packBtn("classic")}${packBtn("gold")}</div>
   ${L.packErr?`<div class="err" role="alert" style="margin-top:10px">${esc(L.packErr)}</div>`:""}
@@ -159,31 +160,48 @@ function screenCollection(){
   <div class="chips" role="group" aria-label="Filtrer">${filters.map(([k,l]) => `<button data-act="colfilter" data-v="${k}" aria-pressed="${f===k}">${l}</button>`).join("")}</div>
   ${!WALLET.loaded?`<div class="empty">Chargement de ta collection…</div>`:shown.length?`<div class="fgrid">${shown.map(id => cardHTML(id,{count:WALLET.cards[id]})).join("")}</div>`
     :`<div class="empty">${own.length?"Aucune carte dans ce filtre pour l'instant.":"Ta collection est vide. Ouvre ton premier pack : tu as reçu 150 pièces de bienvenue."}</div>`}
-  <div class="sec-title"><h2>Albums par club</h2><small>${al.filter(a => a.got===a.ids.length).length} complété${al.filter(a => a.got===a.ids.length).length>1?"s":""}</small></div>
-  <div class="albums">${(L.allAlbums?al:al.slice(0,10)).map(a => `<button class="album${a.got===a.ids.length?" full":""}" data-act="album" data-v="${esc(a.club)}">${crest(a.club)}<span><b>${esc(a.club)}</b><span class="xpbar"><i style="width:${Math.round(a.got/a.ids.length*100)}%"></i></span></span><span class="cnt">${a.got}/${a.ids.length}</span></button>`).join("")}</div>${!L.allAlbums&&al.length>10?`<button class="btn ghost" style="margin-top:10px" data-act="allalbums">Voir les ${al.length} albums</button>`:""}`}
+  <div class="sec-title"><h2>Albums par club</h2><small>${nFull}/${al.length} complétés</small></div>
+  <p class="solo-note" style="margin:0 0 10px">Complète un album pour toucher un gros bonus de pièces, une seule fois par club.</p>
+  <div class="albums">${(L.allAlbums?al:al.slice(0,10)).map(a => `<button class="album${a.full?" full":""}${a.claimable?" claim":""}" data-act="album" data-v="${esc(a.club)}">${crest(a.club)}<span><b>${esc(a.club)}</b><span class="xpbar"><i style="width:${Math.round(a.got/a.ids.length*100)}%"></i></span></span><span class="cnt">${a.claimable?`<span class="claimtag">${ICON.coin}+${albumBonus(a.ids.length)}</span>`:a.claimed?`${ICON.star} Complet`:`${a.got}/${a.ids.length}`}</span></button>`).join("")}</div>${!L.allAlbums&&al.length>10?`<button class="btn ghost" style="margin-top:10px" data-act="allalbums">Voir les ${al.length} albums</button>`:""}`}
   ${tabbar()}`};
 }
 
 function screenAlbum(){
-  const ids = CARDS.filter(c => c.c===VIEW_ARG).sort((a,b) => ({legend:0,rare:1,common:2}[a.r]-{legend:0,rare:1,common:2}[b.r]) || a.n.localeCompare(b.n)).map(c => c.id);
-  if(!ids.length){ VIEW = "collection"; return screenCollection(); }
-  const got = ids.filter(id => WALLET.cards[id]).length;
-  return {key:"album"+VIEW_ARG+got, html:`
-  <div class="subhead"><button class="iconbtn" data-act="nav" data-v="collection" aria-label="Retour">${ICON.back}</button>${crest(VIEW_ARG,34)}<h1>${esc(VIEW_ARG)}</h1><span class="chip" style="margin-left:auto">${got}/${ids.length}</span></div>
-  <p class="muted" style="margin:0 0 14px">Les cartes cachées s'obtiennent dans les packs.</p>
-  <div class="fgrid">${ids.map(id => cardHTML(id, {locked:!WALLET.cards[id], small:true, count:WALLET.cards[id]})).join("")}</div>
+  const A = ALBUMS.find(a => a.club===VIEW_ARG);
+  if(!A){ VIEW = "collection"; return screenCollection(); }
+  const ids = [...A.ids].sort((a,b) => ({legend:0,rare:1,common:2}[CARD.get(a).r]-{legend:0,rare:1,common:2}[CARD.get(b).r]) || CARD.get(a).n.localeCompare(CARD.get(b).n));
+  const st = albumState(A), bonus = albumBonus(ids.length);
+  const banner = st.claimable ? `<div class="albumprize ready">${ICON.star}<span><b>Album complété !</b>Récupère ton bonus de ${bonus} pièces.</span><button class="btn ink sm" data-act="claimalbum" data-v="${esc(A.club)}" ${L.claiming?"disabled":""}>${ICON.coin} +${bonus}</button></div>`
+    : st.claimed ? `<div class="albumprize done">${ICON.star}<span><b>Album complété</b>Bonus de ${bonus} pièces récupéré.</span></div>`
+    : `<div class="albumprize">${ICON.coin}<span><b>Bonus : ${bonus} pièces</b>Il te manque ${plural(ids.length-st.got,"carte")}. Elles s'obtiennent dans les packs.</span></div>`;
+  return {key:"album"+VIEW_ARG+st.got+st.claimed+L.claiming, html:`
+  <div class="subhead"><button class="iconbtn" data-act="nav" data-v="collection" aria-label="Retour">${ICON.back}</button>${crest(VIEW_ARG,34)}<h1>${esc(VIEW_ARG)}</h1><span class="chip" style="margin-left:auto">${st.got}/${ids.length}</span></div>
+  ${banner}
+  <div class="fgrid" style="margin-top:14px">${ids.map(id => cardHTML(id, {locked:!WALLET.cards[id], small:true, count:WALLET.cards[id]})).join("")}</div>
   ${tabbar()}`};
 }
 function screenPack(){
   const p = L.pack; if(!p){ VIEW = "collection"; return screenCollection(); }
-  const all = p.shown>=p.cards.length, best = p.cards.reduce((m,c) => Math.max(m, {common:0,rare:1,legend:2}[c.rarity]), 0);
-  return {key:"pack"+p.shown, html:`
-  <div class="pack-stage tier-${["c","r","l"][best]}">
+  const all = p.shown>=p.cards.length, best = p.cards.reduce((m,c) => Math.max(m, {common:0,rare:1,legend:2}[c.rarity]), 0), tier = ["c","r","l"][best];
+  if(!p.torn) return {key:"pack-sealed"+p.kind+p.cards.map(c => c.id).join(), html:`
+  <div class="pack-stage sealed">
+   <span class="eyebrow">${esc(PACKS[p.kind].t)}</span>
+   <button class="bigpack pack-${p.kind} glow-${tier}" data-act="tear" aria-label="Ouvrir le pack">
+    <span class="bp-top"></span><span class="bp-logo">${BALL}<b>FOOTBALL<br>LEGENDS</b></span><span class="bp-name">${esc(PACKS[p.kind].t)}</span><span class="bp-n">3 cartes</span>
+   </button>
+   <p class="muted">Touche le pack pour le déchirer</p>
+  </div>`};
+  const [a0, a1] = p.anim || [0,0];
+  const face = (c,i) => { const anim = i>=a0 && i<a1, legend = c.rarity==="legend";
+    return `<div class="fl3${anim?" turn":""}${legend?" is-l":""}" style="--d:${anim?(i-a0)*260:0}ms">${legend?`<span class="rays" aria-hidden="true"></span>`:""}<div class="fl3-in">
+      <div class="fl3-front">${cardHTML(c.id,{tag:c.new?`<span class="newtag">Nouvelle</span>`:`<span class="duptag">Doublon</span>`})}</div>
+      <div class="fl3-back flip back r-${c.rarity}" aria-hidden="true">${ICON.pack}<span>?</span></div></div></div>`; };
+  return {key:"pack"+p.shown+"-"+p.cards.map(c => c.id).join(), html:`
+  <div class="pack-stage tier-${all?tier:"c"}">
    <span class="eyebrow">${esc(PACKS[p.kind].t)}</span>
    <h1 class="display" style="font-size:clamp(30px,9vw,42px)">${all?(best===2?"Une <span>légende</span> !":best===1?"Une <span>rare</span> !":"Pack <span>ouvert</span>"):"Touche une carte <span>pour la retourner</span>"}</h1>
-   <div class="pack-cards">${p.cards.map((c,i) => i<p.shown
-     ? `<div class="flip in">${cardHTML(c.id,{tag:c.new?`<span class="newtag">Nouvelle</span>`:`<span class="duptag">Doublon</span>`})}</div>`
-     : `<button class="flip back r-${c.rarity}" data-act="reveal" aria-label="Retourner la carte ${i+1}">${ICON.pack}<span>?</span></button>`).join("")}</div>
+   <div class="pack-cards">${p.cards.map((c,i) => i<p.shown ? face(c,i)
+     : `<button class="flip back deal r-${c.rarity}" style="--d:${i*120}ms" data-act="reveal" aria-label="Retourner la carte ${i+1}">${ICON.pack}<span>?</span></button>`).join("")}</div>
    ${all&&p.refund?`<p class="muted" style="text-align:center">Doublons remboursés : <b style="color:var(--flash)">+${p.refund} pièces</b></p>`:""}
   </div>
   ${all?dock(`<button class="btn" data-act="openpack" data-v="${p.kind}" ${WALLET.coins>=PACKS[p.kind].price?"":"disabled"}>Ouvrir un autre ${esc(PACKS[p.kind].t)} (${WALLET.coins} pièces)</button><button class="btn ghost" data-act="nav" data-v="collection">Voir ma collection</button>`)
@@ -214,7 +232,7 @@ function screenBoard(){
    ÉCRANS DE PARTIE
    ====================================================================== */
 function gameTop(title, right=""){
-  const quit = game.daily ? "" : `<button class="iconbtn" data-act="quit" aria-label="Quitter la partie">${ICON.back}</button>`;
+  const quit = game && game.daily ? "" : `<button class="iconbtn" data-act="quit" aria-label="Quitter la partie">${ICON.back}</button>`;
   return `<div class="bar" style="justify-content:flex-start">${quit}<h2 style="flex:1">${title}</h2>${right}</div>`;
 }
 function screenLobby(){

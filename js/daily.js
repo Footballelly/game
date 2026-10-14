@@ -28,6 +28,7 @@ function shareText(key=todayKey()){
 }
 /* texte à partager pour n'importe quelle partie qui vient de se terminer */
 function shareTextGame(){
+  if(VIEW==="career" && L.summary && L.summary.r.mode==="career"){ const r = L.summary.r; return `Football Legends\nParcours de carrière : ${r.points}/50\n${r.detail.map(CAR_EMO).join("")}\nTu fais mieux ? ${SITE_URL}`; }
   if(game && game.daily) return shareText(game.daily);
   const s = L.summary; if(!s) return "";
   const r = s.r; let line, grid = "";

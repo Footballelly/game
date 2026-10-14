@@ -13,6 +13,7 @@ function view(){
     case "chronoPick": return screenChronoPick();
     case "pmPick": return screenPmPick();
     case "pack": return screenPack();
+    case "career": return screenCareer();
     case "friends": return screenFriends();
     case "collection": return screenCollection();
     case "album": return screenAlbum();
@@ -29,6 +30,7 @@ function render(force){
   app.classList.toggle("has-tabs", !!app.querySelector(".tabbar"));
   window.scrollTo(0, sameScreen ? y : 0);
   const cg = document.getElementById("chguess"); if(cg) cg.focus({preventScroll:true});
+  const cg2 = document.getElementById("carguess"); if(cg2) cg2.focus({preventScroll:true});
   const g = document.getElementById("guess"); if(g && !L.mine){ g.focus({preventScroll:true}); const n = g.value.length; try{ g.setSelectionRange(n,n); }catch(e){} }
   tickClock();
 }
@@ -49,12 +51,29 @@ function tickClock(){
 setInterval(tickClock, 250);
 setInterval(() => { if(VIEW!=="game" && document.visibilityState==="visible"){ const k = lastKey; render(); if(k!==lastKey) return; } }, 30000);
 function toast(msg, kind){ const t = document.createElement("div"); t.className = "toast"+(kind?" "+kind:""); t.textContent = msg; t.setAttribute("role","status"); document.body.appendChild(t); setTimeout(() => t.remove(), 2200); }
+/* petites récompenses sensorielles : vibration (si dispo) et confettis */
+function buzz(p){ try{ navigator.vibrate && navigator.vibrate(p); }catch(e){} }
+function celebrate(kind){
+  if(window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const cols = kind==="gold" ? ["#ffd23f","#fff4c2","#e0a800","#ffffff"] : ["#ffd23f","#19c37d","#8fb6ff","#ff4d5e","#ffffff"];
+  const box = document.createElement("div"); box.className = "confetti"; box.setAttribute("aria-hidden","true");
+  for(let k=0;k<70;k++){ const i = document.createElement("i");
+    i.style.cssText = `left:${Math.random()*100}%;background:${cols[k%cols.length]};--x:${(Math.random()-.5)*160}px;--r:${Math.random()*720-360}deg;animation-delay:${Math.random()*.25}s;animation-duration:${1.1+Math.random()*.9}s;${Math.random()<.4?"border-radius:50%;":""}`;
+    box.appendChild(i); }
+  document.body.appendChild(box); buzz(kind==="gold"?[60,40,140]:40); setTimeout(() => box.remove(), 2400);
+}
+function revealFx(from, to){
+  const p = L.pack; p.anim = [from, to]; p.shown = to; render(true);
+  const hasL = p.cards.slice(from, to).findIndex(c => c.rarity==="legend"), hasR = p.cards.slice(from, to).some(c => c.rarity==="rare");
+  if(hasL>=0) setTimeout(() => celebrate("gold"), 450 + hasL*260); else if(hasR) setTimeout(() => buzz(35), 450); else buzz(12);
+}
 function go(v, arg=null){ VIEW = v; VIEW_ARG = arg; L.shareFallback = null; L.packErr = null; if(v==="collection") loadWallet(true); render(true); }
 
 /* ---------- Événements ---------- */
 app.addEventListener("submit", e => {
   const f = e.target.dataset.form; if(!f) return; e.preventDefault();
   if(f==="chrono") return chronoGuess(e.target.querySelector("#chguess"));
+  if(f==="career") return careerGuess(e.target.querySelector("#carguess"));
   if(f==="answer") return submitGuess(e.target.querySelector("#guess").value);
   if(f==="onboard"){ const v = e.target.querySelector("#ob-name").value.replace(/\s+/g," ").trim().slice(0,18);
     if(v.length<2){ L.err = "Choisis un pseudo d'au moins 2 caractères."; return render(true); }
@@ -77,8 +96,15 @@ app.addEventListener("click", e => {
     case "colfilter": L.colFilter = v; render(true); break;
     case "openpack": openPack(v); break;
     case "allalbums": L.allAlbums = true; render(true); break;
-    case "reveal": if(L.pack){ L.pack.shown++; render(true); } break;
-    case "revealall": if(L.pack){ L.pack.shown = L.pack.cards.length; render(true); } break;
+    case "tear": if(L.pack && !L.pack.tearing){ L.pack.tearing = true; el.classList.add("tearing"); buzz([15,30,15,30,40]);
+      setTimeout(() => { if(L.pack){ L.pack.torn = true; render(true); } }, 900); } break;
+    case "reveal": if(L.pack) revealFx(L.pack.shown, L.pack.shown+1); break;
+    case "revealall": if(L.pack) revealFx(L.pack.shown, L.pack.cards.length); break;
+    case "claimalbum": claimAlbum(v); break;
+    case "career": startCareer(); break;
+    case "carhint": careerHint(null); break;
+    case "carskip": if(L.car){ L.car.hist.push(0); L.car.phase = "missed"; L.car.msg = null; render(true); } break;
+    case "carnext": careerNext(); break;
     case "sharegame": shareDaily("game"); break;
     case "pmtheme": if(IS_HOST){ G.pmTheme = v; push(); } break;
     case "saison": startSolo("saison", {timer:45}); break;
