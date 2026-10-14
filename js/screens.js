@@ -142,21 +142,21 @@ function screenCollection(){
   const own = ownedIds(), byR = r => own.filter(id => CARD.get(id).r===r).length, tot = r => CARDS.filter(c => c.r===r).length;
   const f = L.colFilter || "all";
   const shown = own.filter(id => { const c = CARD.get(id); return f==="all" || c.r===f || c.lg===f; })
-    .sort((a,b) => ({legend:0,rare:1,common:2}[CARD.get(a).r] - {legend:0,rare:1,common:2}[CARD.get(b).r]) || CARD.get(a).n.localeCompare(CARD.get(b).n));
+    .sort((a,b) => (RORD[CARD.get(a).r] - RORD[CARD.get(b).r]) || CARD.get(a).n.localeCompare(CARD.get(b).n));
   const al = ALBUMS.map(a => ({...a, ...albumState(a)})).sort((a,b) => b.claimable-a.claimable || b.got/b.ids.length - a.got/a.ids.length || b.ids.length - a.ids.length);
   const nFull = al.filter(a => a.full).length, nClaim = al.filter(a => a.claimable).length;
   const packBtn = k => { const p = PACKS[k], ok = WALLET.loaded && WALLET.coins>=p.price;
     return `<button class="pack pack-${k}" data-act="openpack" data-v="${k}" ${ok&&!L.opening?"":"disabled"}><span class="pk-box">${ICON.pack}</span><span><b>${p.t}</b><small>${p.d}</small></span><span class="pk-price">${ICON.coin}${p.price}</span></button>`; };
-  const filters = [["all","Toutes"],["legend","Légendes"],["rare","Rares"],["common","Communes"],["pl","Premier League"],["l1","Ligue 1"],["liga","Liga"],["seriea","Serie A"],["europe","Europe"]];
+  const filters = [["all","Toutes"],["icon","Icônes"],["legend","Légendes"],["rare","Pépites"],["common","Communes"],["pl","Premier League"],["l1","Ligue 1"],["liga","Liga"],["seriea","Serie A"],["europe","Europe"]];
   return {key:"collection"+JSON.stringify([own.length, WALLET.coins, WALLET.loaded, WALLET.err, f, L.opening, L.packErr, !!L.allAlbums, WALLET.albums.length, L.claiming]), html:`
   ${topbar()}
   ${WALLET.err?`<div class="empty">${esc(WALLET.err)}</div>`:`
-  <div class="stats3"><div class="stat"><b>${own.length}</b><small>cartes sur ${CARDS.length}</small></div><div class="stat"><b>${byR("rare")}</b><small>rares sur ${tot("rare")}</small></div><div class="stat"><b>${byR("legend")}</b><small>légendes sur ${tot("legend")}</small></div></div>
+  <div class="stats3"><div class="stat"><b>${own.length}</b><small>cartes sur ${CARDS.length}</small></div><div class="stat"><b>${byR("legend")}</b><small>légendes sur ${tot("legend")}</small></div><div class="stat icon"><b>${byR("icon")}</b><small>icônes sur ${tot("icon")}</small></div></div>
   ${nClaim?`<button class="claimbar" data-act="album" data-v="${esc(al[0].club)}">${ICON.star}<span><b>${plural(nClaim,"album")} à réclamer</b>Ton bonus de pièces t'attend</span>${ICON.coin}</button>`:""}
   <div class="sec-title"><h2>Boutique</h2><small>tu gagnes des pièces en jouant</small></div>
   <div class="packs">${packBtn("classic")}${packBtn("gold")}</div>
   ${L.packErr?`<div class="err" role="alert" style="margin-top:10px">${esc(L.packErr)}</div>`:""}
-  <p class="solo-note" style="margin-top:8px">Une carte en double te rembourse des pièces : 10 pour une commune, 25 pour une rare, 60 pour une légende.</p>
+  <p class="solo-note" style="margin-top:8px">Une carte en double te rembourse des pièces : 10 pour une commune, 25 pour une pépite, 60 pour une légende, 150 pour une icône.</p>
   <div class="sec-title"><h2>Ma collection</h2><small>${plural(own.length,"carte")}</small></div>
   <div class="chips" role="group" aria-label="Filtrer">${filters.map(([k,l]) => `<button data-act="colfilter" data-v="${k}" aria-pressed="${f===k}">${l}</button>`).join("")}</div>
   ${!WALLET.loaded?`<div class="empty">Chargement de ta collection…</div>`:shown.length?`<div class="fgrid">${shown.map(id => cardHTML(id,{count:WALLET.cards[id]})).join("")}</div>`
@@ -170,7 +170,7 @@ function screenCollection(){
 function screenAlbum(){
   const A = ALBUMS.find(a => a.club===VIEW_ARG);
   if(!A){ VIEW = "collection"; return screenCollection(); }
-  const ids = [...A.ids].sort((a,b) => ({legend:0,rare:1,common:2}[CARD.get(a).r]-{legend:0,rare:1,common:2}[CARD.get(b).r]) || CARD.get(a).n.localeCompare(CARD.get(b).n));
+  const ids = [...A.ids].sort((a,b) => (RORD[CARD.get(a).r]-RORD[CARD.get(b).r]) || CARD.get(a).n.localeCompare(CARD.get(b).n));
   const st = albumState(A), bonus = albumBonus(ids.length);
   const banner = st.claimable ? `<div class="albumprize ready">${ICON.star}<span><b>Album complété !</b>Récupère ton bonus de ${bonus} pièces.</span><button class="btn ink sm" data-act="claimalbum" data-v="${esc(A.club)}" ${L.claiming?"disabled":""}>${ICON.coin} +${bonus}</button></div>`
     : st.claimed ? `<div class="albumprize done">${ICON.star}<span><b>Album complété</b>Bonus de ${bonus} pièces récupéré.</span></div>`
@@ -183,7 +183,7 @@ function screenAlbum(){
 }
 function screenPack(){
   const p = L.pack; if(!p){ VIEW = "collection"; return screenCollection(); }
-  const all = p.shown>=p.cards.length, best = p.cards.reduce((m,c) => Math.max(m, {common:0,rare:1,legend:2}[c.rarity]), 0), tier = ["c","r","l"][best];
+  const all = p.shown>=p.cards.length, best = p.cards.reduce((m,c) => Math.max(m, {common:0,rare:1,legend:2,icon:3}[c.rarity]), 0), tier = ["c","r","l","l"][best];
   if(!p.torn) return {key:"pack-sealed"+p.kind+p.cards.map(c => c.id).join(), html:`
   <div class="pack-stage sealed">
    <span class="eyebrow">${esc(PACKS[p.kind].t)}</span>
@@ -193,14 +193,14 @@ function screenPack(){
    <p class="muted">Touche le pack pour le déchirer</p>
   </div>`};
   const [a0, a1] = p.anim || [0,0];
-  const face = (c,i) => { const anim = i>=a0 && i<a1, legend = c.rarity==="legend";
+  const face = (c,i) => { const anim = i>=a0 && i<a1, legend = c.rarity==="legend" || c.rarity==="icon";
     return `<div class="fl3${anim?" turn":""}${legend?" is-l":""}" style="--d:${anim?(i-a0)*260:0}ms">${legend?`<span class="rays" aria-hidden="true"></span>`:""}<div class="fl3-in">
       <div class="fl3-front">${cardHTML(c.id,{tag:c.new?`<span class="newtag">Nouvelle</span>`:`<span class="duptag">Doublon</span>`})}</div>
       <div class="fl3-back flip back r-${c.rarity}" aria-hidden="true">${ICON.pack}<span>?</span></div></div></div>`; };
   return {key:"pack"+p.shown+"-"+p.cards.map(c => c.id).join(), html:`
   <div class="pack-stage tier-${all?tier:"c"}">
    <span class="eyebrow">${esc(PACKS[p.kind].t)}</span>
-   <h1 class="display" style="font-size:clamp(30px,9vw,42px)">${all?(best===2?"Une <span>légende</span> !":best===1?"Une <span>rare</span> !":"Pack <span>ouvert</span>"):"Touche une carte <span>pour la retourner</span>"}</h1>
+   <h1 class="display" style="font-size:clamp(30px,9vw,42px)">${all?(best===3?"Une <span>icône</span> !!":best===2?"Une <span>légende</span> !":best===1?"Une <span>pépite</span> !":"Pack <span>ouvert</span>"):"Touche une carte <span>pour la retourner</span>"}</h1>
    <div class="pack-cards">${p.cards.map((c,i) => i<p.shown ? face(c,i)
      : `<button class="flip back deal r-${c.rarity}" style="--d:${i*120}ms" data-act="reveal" aria-label="Retourner la carte ${i+1}">${ICON.pack}<span>?</span></button>`).join("")}</div>
    ${all&&p.refund?`<p class="muted" style="text-align:center">Doublons remboursés : <b style="color:var(--flash)">+${p.refund} pièces</b></p>`:""}
@@ -295,9 +295,9 @@ function screenRoundResult(){
    ${roundBar(11, g.round)}${gameTop(`Manche ${g.round+1}/11`, `<span class="chip">${g.solo?"Résultat":"Réponses"}</span>`)}
    ${ticket(r)}
    <div class="picks">${g.players.map(p => { const e = rv[p.id] || {st:"none"};
-     let main = e.st==="ok" ? `<b>${esc(P[e.i].n)}${isGem(g.round, p.id)?`<span class="gem">Pépite</span>`:""}</b><small>${esc(clubAt(P[e.i], r.y))}</small>`
+     let main = e.st==="ok" ? `<b>${esc(P[e.i].n)}${isGem(g.round, p.id)?`<span class="gem">Exclu</span>`:""}</b><small>${esc(clubAt(P[e.i], r.y))}</small>`
        : e.st==="pending" ? `<b>${esc(e.raw)}</b><small>À valider</small>`
-       : e.st==="agreed" ? `<b>${esc(e.raw)}${isGem(g.round, p.id)?`<span class="gem">Pépite</span>`:""}</b><small>Validé par le groupe</small>`
+       : e.st==="agreed" ? `<b>${esc(e.raw)}${isGem(g.round, p.id)?`<span class="gem">Exclu</span>`:""}</b><small>Validé par le groupe</small>`
        : e.st==="refused" ? `<b><s>${esc(e.raw)}</s></b><small>Refusé par le groupe</small>` : `<b>Poste vide</b><small>Pas de réponse valide</small>`;
      const j = e.st==="pending" ? (IS_HOST ? `<div class="judge">Il jouait bien là en ${sLbl(r.y)} ? <button class="yes" data-act="judge" data-p="${p.id}" data-v="ok">Validé</button><button class="no" data-act="judge" data-p="${p.id}" data-v="refused">Refusé</button></div>`
        : `<div class="judge">Débattez : l'hôte valide ou refuse.</div>`) : "";
@@ -354,7 +354,7 @@ function screenResults(){
   const mine = myTeam(), filled = Object.values(mine).filter(e => ["ok","agreed"].includes(e.st)).length;
   return {key:"res-s"+g.gameNo, html:`<div class="stack">
    <div class="hero"><span class="eyebrow">${g.daily?`Défi n°${dayNumber(g.daily)} · `:""}Un joueur par saison</span><h1 class="display" style="font-size:clamp(36px,11vw,52px)">${g.solo?`${filled} <span>sur 11</span>`:tie?`Égalité, <span>débat obligatoire</span>`:`${esc(w.name)} <span>gagne</span>`}</h1></div>
-   ${g.solo?"":`<div class="podium">${res.map((r,k) => `<div class="pod${k===0?" first":""}"><span class="rk">${k+1}</span><span><b>${esc(r.name)}</b><small>${r.filled}/11 postes · ${plural(r.gems,"pépite")}</small></span><span class="sc">${r.avg.toFixed(1)}/10</span></div>`).join("")}</div>`}
+   ${g.solo?"":`<div class="podium">${res.map((r,k) => `<div class="pod${k===0?" first":""}"><span class="rk">${k+1}</span><span><b>${esc(r.name)}</b><small>${r.filled}/11 postes · ${plural(r.gems,"exclu")}</small></span><span class="sc">${r.avg.toFixed(1)}/10</span></div>`).join("")}</div>`}
    <div><div class="eyebrow" style="margin-bottom:8px">${g.solo?"Ton 11":"Carte à partager"}</div>
     <div class="share"><div class="share-top"><div><div class="eyebrow">Un joueur par saison · PL</div><div class="display">${esc(g.solo?PROFILE.name:w.name)}</div></div><span class="badge">${g.solo?`${filled}/11`:w.avg.toFixed(1)}</span></div>
      ${pitch(myTeam(g.solo?ME.id:w.id), true)}<div class="share-foot"><span>De mémoire · 04/05 → 14/15</span><span>FOOTBALL LEGENDS</span></div></div></div>
@@ -424,11 +424,11 @@ function screenChronoResult(){
   return {key:"chres"+g.gameNo, html:`<div class="stack">
    <div class="hero"><span class="eyebrow">${g.daily?`Défi n°${dayNumber(g.daily)} · `:""}Chrono · ${esc(l.t)}</span>
     <h1 class="display" style="font-size:clamp(34px,10vw,50px)">${!multi?`${w.n} <span>sur ${l.items.length}</span>`:tie?`Égalité <span>parfaite</span>`:`${esc(w.p.name)} <span>gagne</span>`}</h1></div>
-   ${multi?`<div class="podium">${res.map((r,k) => `<div class="pod${k===0?" first":""}"><span class="rk">${k+1}</span><span><b>${esc(r.p.name)}</b><small>${plural(r.gems,"pépite")}</small></span><span class="sc">${r.n}/${l.items.length}</span></div>`).join("")}</div>`:""}
+   ${multi?`<div class="podium">${res.map((r,k) => `<div class="pod${k===0?" first":""}"><span class="rk">${k+1}</span><span><b>${esc(r.p.name)}</b><small>${plural(r.gems,"exclu")}</small></span><span class="sc">${r.n}/${l.items.length}</span></div>`).join("")}</div>`:""}
    ${summaryBlock()}
    <div><div class="eyebrow" style="margin-bottom:8px">La liste complète${missed?` · ${missed} ${multi?"oubliés par tout le monde":"oubliés"}`:""}</div>
     <div class="clist">${l.items.map((it,i) => { const f = finders[i];
-      return `<div class="citem${f.length?"":" miss"}"><b>${esc(it.n)}</b><div class="who">${f.length?(multi?f.map(p => `<i title="${esc(p.name)}">${esc(initialsOf(p.name))}</i>`).join("")+(f.length===1?`<span class="gem">Pépite</span>`:""):`<small>Trouvé</small>`):`<small>${multi?"Personne":"Oublié"}</small>`}</div></div>`; }).join("")}</div></div>
+      return `<div class="citem${f.length?"":" miss"}"><b>${esc(it.n)}</b><div class="who">${f.length?(multi?f.map(p => `<i title="${esc(p.name)}">${esc(initialsOf(p.name))}</i>`).join("")+(f.length===1?`<span class="gem">Exclu</span>`:""):`<small>Trouvé</small>`):`<small>${multi?"Personne":"Oublié"}</small>`}</div></div>`; }).join("")}</div></div>
   </div>
   ${game.solo&&!game.daily?dock(`<button class="btn" data-act="chrono" data-v="${l.id}">Rejouer cette liste</button><div class="row2"><button class="btn ghost" data-act="sharegame">${ICON.share} Partager</button><button class="btn ghost" data-act="tohome">Accueil</button></div>`):g.daily?endButtons():IS_HOST?hostDock(`<button class="btn" data-act="start">Rejouer${g.chronoList==="random"?" avec une autre liste":""}</button><button class="btn ghost" data-act="lobby">Retour au salon</button>`):dock(`<p class="muted" style="text-align:center;margin:0">L'hôte peut relancer une partie.</p>`)}`};
 }

@@ -36,12 +36,12 @@ const miniFor = (p, club, w) => miniPlayer(kitOf(club || mainClub(p)), {w, label
 const ART = new Set(window.FL_ART || []);
 /* nom court : « Alessandro Del Piero » → « Del Piero » */
 const cardName = n => { const w = n.split(" "); return w.length>1 ? w.slice(1).join(" ") : n; };
-const RAR = {common:"Commune", rare:"Rare", legend:"Légende"};
+const RAR = {common:"Commune", rare:"Pépite", legend:"Légende", icon:"Icône"};
 const POS_FR = {GK:"Gardien", DEF:"Défenseur", MID:"Milieu", ATT:"Attaquant"};
 const POS_AB = {GK:"GB", DEF:"DEF", MID:"MIL", ATT:"ATT"};
 const LG_AB = {pl:"PL", l1:"L1", liga:"LIGA", seriea:"SERIE A", europe:"EUROPE"};
-/* numéro de collection : Légendes, puis Rares, puis Communes, par nom (même ordre que les fichiers d'illustration) */
-const CARD_NO = (() => { const o = {legend:0, rare:1, common:2}, m = new Map();
+/* numéro de collection : Icônes, Légendes, puis Pépites, puis Communes, par nom (même ordre que les fichiers d'illustration) */
+const CARD_NO = (() => { const o = {icon:0, legend:1, rare:2, common:3}, m = new Map();
   [...(window.FL_CARDS||[])].sort((a,b) => o[a.r]-o[b.r] || a.n.localeCompare(b.n,"fr")).forEach((c,i) => m.set(c.id, i+1)); return m; })();
 function shade(hex, k){ const h = hex.replace("#",""), n = [0,2,4].map(i => parseInt(h.slice(i,i+2),16));
   const t = k<0 ? 0 : 255, a = Math.abs(k); return "#"+n.map(v => Math.round(v+(t-v)*a).toString(16).padStart(2,"0")).join(""); }
@@ -51,11 +51,11 @@ function cardVars(club){
   const motif = k.p==="stripes" ? `repeating-linear-gradient(90deg,${t} 0 9%,transparent 9% 18%)` : k.p==="hoops" ? `repeating-linear-gradient(0deg,${t} 0 7%,transparent 7% 14%)` : k.p==="halves" ? `linear-gradient(90deg,transparent 50%,${t} 50%)` : `repeating-linear-gradient(135deg,${t} 0 2%,transparent 2% 7%)`;
   return `--c1:${c1};--c1l:${shade(c1,.28)};--c1d:${shade(c1,-.55)};--motif:${motif}`;
 }
-const rarGlyph = r => r==="legend" ? ICON.star : r==="rare" ? `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l4 7-4 13-4-13z M4 9h16" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>` : "";
+const rarGlyph = r => r==="icon" ? `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18 5 7l5 5 2-7 2 7 5-5 2 11z" fill="currentColor"/></svg>` : r==="legend" ? ICON.star : r==="rare" ? `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l4 7-4 13-4-13z M4 9h16" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>` : "";
 /* carte de collection (catalogue FL_CARDS) ; locked = pas encore obtenue */
 function cardHTML(id, {locked=false, small=false, count=0, tag=""}={}){
   const c = CARD.get(id); if(!c) return "";
-  const r = {common:"c", rare:"p", legend:"l"}[c.r], no = String(CARD_NO.get(id)||0).padStart(3,"0"), nm = cardName(c.n);
+  const r = {common:"c", rare:"p", legend:"l", icon:"i"}[c.r], no = String(CARD_NO.get(id)||0).padStart(3,"0"), nm = cardName(c.n);
   if(locked) return `<div class="fcard locked${small?" sm":""}" aria-label="Carte n°${no} pas encore obtenue"><div class="fc-face"><div class="fc-in">
     <div class="fc-art">${miniPlayer(DEFAULT_KIT,{w:70})}</div><span class="fc-q">?</span>
     <div class="fc-pos"><b>${POS_AB[c.p]}</b></div><span class="fc-rk">#${no}</span>

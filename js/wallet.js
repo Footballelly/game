@@ -4,10 +4,11 @@
 const CARDS = window.FL_CARDS || [];
 const CARD = new Map(CARDS.map(c => [c.id, c]));
 const PACKS = {
-  classic:{t:"Pack Classique", price:100, d:"3 cartes · 25 % de chances de rare, 5 % de légende"},
-  gold:{t:"Pack Or", price:300, d:"3 cartes dont au moins 1 rare · 15 % de légende"}
+  classic:{t:"Pack Classique", price:100, d:"3 cartes · 25 % de pépites, 4 % de légendes, 1 % d'icônes"},
+  gold:{t:"Pack Or", price:300, d:"3 cartes dont au moins 1 pépite · 11 % de légendes, 4 % d'icônes"}
 };
-const RAR_FR = {common:"Commune", rare:"Rare", legend:"Légende"};
+const RAR_FR = {common:"Commune", rare:"Pépite", legend:"Légende", icon:"Icône"};
+const RORD = {icon:0, legend:1, rare:2, common:3};
 let WALLET = {loaded:false, loading:false, err:null, coins:0, streak:0, best:0, cards:{}, albums:[]};
 
 async function rpc(fn, args){

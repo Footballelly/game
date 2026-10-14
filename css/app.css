@@ -505,3 +505,18 @@ input[type=range]{width:100%;accent-color:var(--kit);height:28px}
 .newcards{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 8px;scrollbar-width:thin}
 .newcards .fcard{width:104px;flex:none}
 @media (prefers-reduced-motion: reduce){.fcard{transform:none}}
+/* Icône : noir et or, la plus rare (vainqueurs du Ballon d'Or) */
+.fcard.r-i .fc-face{padding:4.8cqw;background:linear-gradient(#0b0b12,#0b0b12) padding-box,linear-gradient(135deg,#ffd23f,#fff6c9 25%,#b07a00 50%,#ffe27a 75%,#ffd23f) border-box;border:1.6cqw solid transparent;box-shadow:0 4px 0 rgba(0,0,0,.35),0 0 26px rgba(255,210,63,.75),0 0 60px rgba(255,170,0,.35)}
+.fcard.r-i .fc-in{border:.8cqw solid #c9962a;background:radial-gradient(55% 40% at 50% 40%,rgba(255,226,122,.85),transparent 70%),repeating-conic-gradient(from 0deg at 50% 40%,#16120a 0 7deg,#2a2110 7deg 14deg)}
+.fcard.r-i .fc-in::before{opacity:0}
+.fcard.r-i .fc-in::after{content:"";position:absolute;inset:-20%;z-index:1;pointer-events:none;background:repeating-linear-gradient(115deg,transparent 0%,rgba(255,215,90,.28) 5%,rgba(255,255,255,.18) 9%,transparent 14%);background-size:200% 200%;mix-blend-mode:screen;animation:holo 3s linear infinite}
+.fcard.r-i .fc-plate{background:linear-gradient(180deg,transparent,rgba(0,0,0,.85) 40%,#000)}
+.fcard.r-i .fc-name{background:linear-gradient(180deg,#fffbe6 5%,#ffd23f 50%,#b07a00);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 4px rgba(255,210,63,.6))}
+.fcard.r-i .fc-sub{color:#ffd23f;letter-spacing:.14em}
+.fcard.r-i .fc-rk,.fcard.r-i .fc-pos{color:#ffd23f}
+.fcard.r-i .fc-face::after{content:"";position:absolute;inset:0;z-index:5;pointer-events:none;background:linear-gradient(105deg,transparent 38%,rgba(255,240,190,.7) 48%,transparent 58%);transform:translateX(-120%);animation:sweep 2.6s ease-in-out infinite}
+.flip.back.r-icon{background:repeating-linear-gradient(45deg,#16120a 0 10px,#2a2110 10px 20px);color:#ffd23f;border-color:#ffd23f;box-shadow:0 0 30px rgba(255,210,63,1),0 5px 0 rgba(0,0,0,.3)}
+.flip.back.r-icon.deal{animation:deal .45s cubic-bezier(.2,1.4,.5,1) backwards var(--d),pulseL .8s ease-in-out infinite calc(var(--d) + .5s)}
+.stat.icon{background:linear-gradient(135deg,#16120a,#3a2c0e);border:1px solid #ffd23f}
+.stat.icon b{color:#ffd23f}
+.mode.diff-easy .lgtag{background:var(--green)}

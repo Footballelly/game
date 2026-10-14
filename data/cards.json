@@ -1,1 +1,5314 @@
-[{"id":"adrian","n":"Adrián","c":"West Ham","p":"GK","r":"common","lg":"pl"},{"id":"ali-al-habsi","n":"Ali Al-Habsi","c":"Wigan","p":"GK","r":"common","lg":"pl"},{"id":"allan-mcgregor","n":"Allan McGregor","c":"Hull","p":"GK","r":"common","lg":"pl"},{"id":"asmir-begovic","n":"Asmir Begović","c":"Stoke","p":"GK","r":"common","lg":"pl"},{"id":"ben-foster","n":"Ben Foster","c":"West Brom","p":"GK","r":"common","lg":"pl"},{"id":"brad-friedel","n":"Brad Friedel","c":"Blackburn","p":"GK","r":"common","lg":"pl"},{"id":"brad-guzan","n":"Brad Guzan","c":"Aston Villa","p":"GK","r":"common","lg":"pl"},{"id":"carlo-cudicini","n":"Carlo Cudicini","c":"Chelsea","p":"GK","r":"common","lg":"pl"},{"id":"chris-kirkland","n":"Chris Kirkland","c":"Wigan","p":"GK","r":"common","lg":"pl"},{"id":"craig-gordon","n":"Craig Gordon","c":"Sunderland","p":"GK","r":"common","lg":"pl"},{"id":"david-james","n":"David James","c":"Portsmouth","p":"GK","r":"common","lg":"pl"},{"id":"david-marshall","n":"David Marshall","c":"Cardiff","p":"GK","r":"common","lg":"pl"},{"id":"david-ospina","n":"David Ospina","c":"Arsenal","p":"GK","r":"common","lg":"pl"},{"id":"david-de-gea","n":"David de Gea","c":"Man Utd","p":"GK","r":"common","lg":"pl"},{"id":"edwin-van-der-sar","n":"Edwin van der Sar","c":"Man Utd","p":"GK","r":"legend","lg":"pl"},{"id":"fraser-forster","n":"Fraser Forster","c":"Southampton","p":"GK","r":"common","lg":"pl"},{"id":"heurelho-gomes","n":"Heurelho Gomes","c":"Tottenham","p":"GK","r":"common","lg":"pl"},{"id":"hugo-lloris","n":"Hugo Lloris","c":"Tottenham","p":"GK","r":"rare","lg":"pl"},{"id":"jens-lehmann","n":"Jens Lehmann","c":"Arsenal","p":"GK","r":"common","lg":"pl"},{"id":"jerzy-dudek","n":"Jerzy Dudek","c":"Liverpool","p":"GK","r":"common","lg":"pl"},{"id":"joe-hart","n":"Joe Hart","c":"Man City","p":"GK","r":"common","lg":"pl"},{"id":"john-ruddy","n":"John Ruddy","c":"Norwich","p":"GK","r":"common","lg":"pl"},{"id":"julian-speroni","n":"Julián Speroni","c":"Crystal Palace","p":"GK","r":"common","lg":"pl"},{"id":"jussi-jaaskelainen","n":"Jussi Jääskeläinen","c":"Bolton","p":"GK","r":"common","lg":"pl"},{"id":"julio-cesar","n":"Júlio César","c":"QPR","p":"GK","r":"common","lg":"pl"},{"id":"kasper-schmeichel","n":"Kasper Schmeichel","c":"Leicester","p":"GK","r":"common","lg":"pl"},{"id":"manuel-almunia","n":"Manuel Almunia","c":"Arsenal","p":"GK","r":"common","lg":"pl"},{"id":"marcus-hahnemann","n":"Marcus Hahnemann","c":"Reading","p":"GK","r":"common","lg":"pl"},{"id":"mark-schwarzer","n":"Mark Schwarzer","c":"Middlesbrough","p":"GK","r":"common","lg":"pl"},{"id":"michel-vorm","n":"Michel Vorm","c":"Tottenham","p":"GK","r":"common","lg":"pl"},{"id":"paul-robinson","n":"Paul Robinson","c":"Tottenham","p":"GK","r":"common","lg":"pl"},{"id":"pepe-reina","n":"Pepe Reina","c":"Liverpool","p":"GK","r":"common","lg":"pl"},{"id":"petr-cech","n":"Petr Čech","c":"Chelsea","p":"GK","r":"legend","lg":"pl"},{"id":"robert-green","n":"Robert Green","c":"West Ham","p":"GK","r":"common","lg":"pl"},{"id":"scott-carson","n":"Scott Carson","c":"West Brom","p":"GK","r":"common","lg":"pl"},{"id":"shay-given","n":"Shay Given","c":"Newcastle","p":"GK","r":"common","lg":"pl"},{"id":"simon-mignolet","n":"Simon Mignolet","c":"Liverpool","p":"GK","r":"common","lg":"pl"},{"id":"thibaut-courtois","n":"Thibaut Courtois","c":"Chelsea","p":"GK","r":"common","lg":"pl"},{"id":"thomas-s-rensen","n":"Thomas Sørensen","c":"Aston Villa","p":"GK","r":"common","lg":"pl"},{"id":"tim-howard","n":"Tim Howard","c":"Everton","p":"GK","r":"common","lg":"pl"},{"id":"tim-krul","n":"Tim Krul","c":"Newcastle","p":"GK","r":"common","lg":"pl"},{"id":"tom-heaton","n":"Tom Heaton","c":"Burnley","p":"GK","r":"common","lg":"pl"},{"id":"tomasz-kuszczak","n":"Tomasz Kuszczak","c":"Man Utd","p":"GK","r":"common","lg":"pl"},{"id":"wojciech-szczesny","n":"Wojciech Szczęsny","c":"Arsenal","p":"GK","r":"common","lg":"pl"},{"id":"lukasz-fabianski","n":"Łukasz Fabiański","c":"Arsenal","p":"GK","r":"common","lg":"pl"},{"id":"aaron-cresswell","n":"Aaron Cresswell","c":"West Ham","p":"DEF","r":"common","lg":"pl"},{"id":"aaron-hughes","n":"Aaron Hughes","c":"Newcastle","p":"DEF","r":"common","lg":"pl"},{"id":"alan-hutton","n":"Alan Hutton","c":"Tottenham","p":"DEF","r":"common","lg":"pl"},{"id":"alberto-moreno","n":"Alberto Moreno","c":"Liverpool","p":"DEF","r":"common","lg":"pl"},{"id":"aleksandar-kolarov","n":"Aleksandar Kolarov","c":"Man City","p":"DEF","r":"common","lg":"pl"},{"id":"anton-ferdinand","n":"Anton Ferdinand","c":"West Ham","p":"DEF","r":"common","lg":"pl"},{"id":"ashley-cole","n":"Ashley Cole","c":"Chelsea","p":"DEF","r":"legend","lg":"pl"},{"id":"ashley-williams","n":"Ashley Williams","c":"Swansea","p":"DEF","r":"common","lg":"pl"},{"id":"bacary-sagna","n":"Bacary Sagna","c":"Arsenal","p":"DEF","r":"common","lg":"pl"},{"id":"benoit-assou-ekotto","n":"Benoît Assou-Ekotto","c":"Tottenham","p":"DEF","r":"common","lg":"pl"},{"id":"branislav-ivanovic","n":"Branislav Ivanović","c":"Chelsea","p":"DEF","r":"common","lg":"pl"},{"id":"brede-hangeland","n":"Brede Hangeland","c":"Fulham","p":"DEF","r":"common","lg":"pl"},{"id":"calum-chambers","n":"Calum Chambers","c":"Arsenal","p":"DEF","r":"common","lg":"pl"},{"id":"chico-flores","n":"Chico Flores","c":"Swansea","p":"DEF","r":"common","lg":"pl"},{"id":"chris-smalling","n":"Chris Smalling","c":"Man Utd","p":"DEF","r":"common","lg":"pl"},{"id":"christopher-samba","n":"Christopher Samba","c":"Blackburn","p":"DEF","r":"common","lg":"pl"},{"id":"curtis-davies","n":"Curtis Davies","c":"Aston Villa","p":"DEF","r":"common","lg":"pl"},{"id":"cesar-azpilicueta","n":"César Azpilicueta","c":"Chelsea","p":"DEF","r":"common","lg":"pl"},{"id":"daley-blind","n":"Daley Blind","c":"Man Utd","p":"DEF","r":"common","lg":"pl"},{"id":"daniel-agger","n":"Daniel Agger","c":"Liverpool","p":"DEF","r":"common","lg":"pl"},{"id":"danny-gabbidon","n":"Danny Gabbidon","c":"West Ham","p":"DEF","r":"common","lg":"pl"},{"id":"danny-rose","n":"Danny Rose","c":"Tottenham","p":"DEF","r":"common","lg":"pl"},{"id":"david-luiz","n":"David Luiz","c":"Chelsea","p":"DEF","r":"common","lg":"pl"},{"id":"davide-santon","n":"Davide Santon","c":"Newcastle","p":"DEF","r":"common","lg":"pl"},{"id":"dejan-lovren","n":"Dejan Lovren","c":"Liverpool","p":"DEF","r":"common","lg":"pl"},{"id":"eliaquim-mangala","n":"Eliaquim Mangala","c":"Man City","p":"DEF","r":"common","lg":"pl"},{"id":"emanuel-pogatetz","n":"Emanuel Pogatetz","c":"Middlesbrough","p":"DEF","r":"common","lg":"pl"},{"id":"emmanuel-eboue","n":"Emmanuel Eboué","c":"Arsenal","p":"DEF","r":"common","lg":"pl"},{"id":"emmerson-boyce","n":"Emmerson Boyce","c":"Wigan","p":"DEF","r":"common","lg":"pl"},{"id":"erik-pieters","n":"Erik Pieters","c":"Stoke","p":"DEF","r":"common","lg":"pl"},{"id":"fabricio-coloccini","n":"Fabricio Coloccini","c":"Newcastle","p":"DEF","r":"common","lg":"pl"},{"id":"filipe-luis","n":"Filipe Luís","c":"Chelsea","p":"DEF","r":"common","lg":"pl"},{"id":"fabio-aurelio","n":"Fábio Aurélio","c":"Liverpool","p":"DEF","r":"common","lg":"pl"},{"id":"gabriel-heinze","n":"Gabriel Heinze","c":"Man Utd","p":"DEF","r":"common","lg":"pl"},{"id":"gareth-mcauley","n":"Gareth McAuley","c":"West Brom","p":"DEF","r":"common","lg":"pl"},{"id":"gareth-southgate","n":"Gareth Southgate","c":"Aston Villa","p":"DEF","r":"common","lg":"pl"},{"id":"gary-cahill","n":"Gary Cahill","c":"Chelsea","p":"DEF","r":"common","lg":"pl"},{"id":"gary-neville","n":"Gary Neville","c":"Man Utd","p":"DEF","r":"legend","lg":"pl"},{"id":"gael-clichy","n":"Gaël Clichy","c":"Arsenal","p":"DEF","r":"common","lg":"pl"},{"id":"glen-johnson","n":"Glen Johnson","c":"Liverpool","p":"DEF","r":"common","lg":"pl"},{"id":"hermann-hrei-arsson","n":"Hermann Hreiðarsson","c":"Charlton","p":"DEF","r":"common","lg":"pl"},{"id":"hector-bellerin","n":"Héctor Bellerín","c":"Arsenal","p":"DEF","r":"common","lg":"pl"},{"id":"james-collins","n":"James Collins","c":"West Ham","p":"DEF","r":"common","lg":"pl"},{"id":"james-tomkins","n":"James Tomkins","c":"West Ham","p":"DEF","r":"common","lg":"pl"},{"id":"jamie-carragher","n":"Jamie Carragher","c":"Liverpool","p":"DEF","r":"legend","lg":"pl"},{"id":"jan-vertonghen","n":"Jan Vertonghen","c":"Tottenham","p":"DEF","r":"common","lg":"pl"},{"id":"jean-alain-boumsong","n":"Jean-Alain Boumsong","c":"Newcastle","p":"DEF","r":"common","lg":"pl"},{"id":"joel-ward","n":"Joel Ward","c":"Crystal Palace","p":"DEF","r":"common","lg":"pl"},{"id":"johan-djourou","n":"Johan Djourou","c":"Arsenal","p":"DEF","r":"common","lg":"pl"},{"id":"john-arne-riise","n":"John Arne Riise","c":"Liverpool","p":"DEF","r":"common","lg":"pl"},{"id":"john-heitinga","n":"John Heitinga","c":"Everton","p":"DEF","r":"common","lg":"pl"},{"id":"john-o-shea","n":"John O'Shea","c":"Man Utd","p":"DEF","r":"common","lg":"pl"},{"id":"john-terry","n":"John Terry","c":"Chelsea","p":"DEF","r":"legend","lg":"pl"},{"id":"joleon-lescott","n":"Joleon Lescott","c":"Man City","p":"DEF","r":"common","lg":"pl"},{"id":"jonas-olsson","n":"Jonas Olsson","c":"West Brom","p":"DEF","r":"common","lg":"pl"},{"id":"jonathan-woodgate","n":"Jonathan Woodgate","c":"Tottenham","p":"DEF","r":"common","lg":"pl"},{"id":"jonny-evans","n":"Jonny Evans","c":"Man Utd","p":"DEF","r":"common","lg":"pl"},{"id":"joseph-yobo","n":"Joseph Yobo","c":"Everton","p":"DEF","r":"common","lg":"pl"},{"id":"jose-bosingwa","n":"José Bosingwa","c":"Chelsea","p":"DEF","r":"common","lg":"pl"},{"id":"jose-enrique","n":"José Enrique","c":"Liverpool","p":"DEF","r":"common","lg":"pl"},{"id":"jose-fonte","n":"José Fonte","c":"Southampton","p":"DEF","r":"common","lg":"pl"},{"id":"juliano-belletti","n":"Juliano Belletti","c":"Chelsea","p":"DEF","r":"common","lg":"pl"},{"id":"khalid-boulahrouz","n":"Khalid Boulahrouz","c":"Chelsea","p":"DEF","r":"common","lg":"pl"},{"id":"kieran-gibbs","n":"Kieran Gibbs","c":"Arsenal","p":"DEF","r":"common","lg":"pl"},{"id":"kieran-trippier","n":"Kieran Trippier","c":"Tottenham","p":"DEF","r":"common","lg":"pl"},{"id":"kolo-toure","n":"Kolo Touré","c":"Arsenal","p":"DEF","r":"common","lg":"pl"},{"id":"kurt-zouma","n":"Kurt Zouma","c":"Chelsea","p":"DEF","r":"common","lg":"pl"},{"id":"kyle-walker","n":"Kyle Walker","c":"Tottenham","p":"DEF","r":"common","lg":"pl"},{"id":"lauren","n":"Lauren","c":"Arsenal","p":"DEF","r":"common","lg":"pl"},{"id":"laurent-koscielny","n":"Laurent Koscielny","c":"Arsenal","p":"DEF","r":"common","lg":"pl"},{"id":"ledley-king","n":"Ledley King","c":"Tottenham","p":"DEF","r":"common","lg":"pl"},{"id":"leighton-baines","n":"Leighton Baines","c":"Everton","p":"DEF","r":"common","lg":"pl"},{"id":"liam-ridgewell","n":"Liam Ridgewell","c":"Aston Villa","p":"DEF","r":"common","lg":"pl"},{"id":"lucas-neill","n":"Lucas Neill","c":"Blackburn","p":"DEF","r":"common","lg":"pl"},{"id":"luke-shaw","n":"Luke Shaw","c":"Man Utd","p":"DEF","r":"common","lg":"pl"},{"id":"luke-young","n":"Luke Young","c":"Charlton","p":"DEF","r":"common","lg":"pl"},{"id":"mamadou-sakho","n":"Mamadou Sakho","c":"Liverpool","p":"DEF","r":"common","lg":"pl"},{"id":"marcos-rojo","n":"Marcos Rojo","c":"Man Utd","p":"DEF","r":"common","lg":"pl"},{"id":"mario-melchiot","n":"Mario Melchiot","c":"Chelsea","p":"DEF","r":"common","lg":"pl"},{"id":"martin-laursen","n":"Martin Laursen","c":"Aston Villa","p":"DEF","r":"common","lg":"pl"},{"id":"martin-skrtel","n":"Martin Škrtel","c":"Liverpool","p":"DEF","r":"common","lg":"pl"},{"id":"mathieu-debuchy","n":"Mathieu Debuchy","c":"Arsenal","p":"DEF","r":"common","lg":"pl"},{"id":"matthew-upson","n":"Matthew Upson","c":"West Ham","p":"DEF","r":"common","lg":"pl"},{"id":"maynor-figueroa","n":"Maynor Figueroa","c":"Wigan","p":"DEF","r":"common","lg":"pl"},{"id":"micah-richards","n":"Micah Richards","c":"Man City","p":"DEF","r":"common","lg":"pl"},{"id":"michael-dawson","n":"Michael Dawson","c":"Tottenham","p":"DEF","r":"common","lg":"pl"},{"id":"michael-turner","n":"Michael Turner","c":"Sunderland","p":"DEF","r":"common","lg":"pl"},{"id":"mikael-silvestre","n":"Mikaël Silvestre","c":"Man Utd","p":"DEF","r":"common","lg":"pl"},{"id":"nacho-monreal","n":"Nacho Monreal","c":"Arsenal","p":"DEF","r":"common","lg":"pl"},{"id":"nathaniel-clyne","n":"Nathaniel Clyne","c":"Liverpool","p":"DEF","r":"common","lg":"pl"},{"id":"neil-taylor","n":"Neil Taylor","c":"Swansea","p":"DEF","r":"common","lg":"pl"},{"id":"nemanja-vidic","n":"Nemanja Vidić","c":"Man Utd","p":"DEF","r":"legend","lg":"pl"},{"id":"olof-mellberg","n":"Olof Mellberg","c":"Aston Villa","p":"DEF","r":"common","lg":"pl"},{"id":"pablo-zabaleta","n":"Pablo Zabaleta","c":"Man City","p":"DEF","r":"common","lg":"pl"},{"id":"pascal-chimbonda","n":"Pascal Chimbonda","c":"Tottenham","p":"DEF","r":"common","lg":"pl"},{"id":"patrice-evra","n":"Patrice Evra","c":"Man Utd","p":"DEF","r":"common","lg":"pl"},{"id":"paul-konchesky","n":"Paul Konchesky","c":"Fulham","p":"DEF","r":"common","lg":"pl"},{"id":"paul-scharner","n":"Paul Scharner","c":"Wigan","p":"DEF","r":"common","lg":"pl"},{"id":"paulo-ferreira","n":"Paulo Ferreira","c":"Chelsea","p":"DEF","r":"common","lg":"pl"},{"id":"per-mertesacker","n":"Per Mertesacker","c":"Arsenal","p":"DEF","r":"common","lg":"pl"},{"id":"phil-bardsley","n":"Phil Bardsley","c":"Sunderland","p":"DEF","r":"common","lg":"pl"},{"id":"phil-jagielka","n":"Phil Jagielka","c":"Everton","p":"DEF","r":"common","lg":"pl"},{"id":"phil-jones","n":"Phil Jones","c":"Man Utd","p":"DEF","r":"common","lg":"pl"},{"id":"philippe-senderos","n":"Philippe Senderos","c":"Arsenal","p":"DEF","r":"common","lg":"pl"},{"id":"rafael-da-silva","n":"Rafael da Silva","c":"Man Utd","p":"DEF","r":"common","lg":"pl"},{"id":"ricardo-carvalho","n":"Ricardo Carvalho","c":"Chelsea","p":"DEF","r":"common","lg":"pl"},{"id":"richard-dunne","n":"Richard Dunne","c":"Man City","p":"DEF","r":"common","lg":"pl"},{"id":"rio-ferdinand","n":"Rio Ferdinand","c":"Man Utd","p":"DEF","r":"legend","lg":"pl"},{"id":"robert-huth","n":"Robert Huth","c":"Stoke","p":"DEF","r":"common","lg":"pl"},{"id":"roger-johnson","n":"Roger Johnson","c":"Birmingham","p":"DEF","r":"common","lg":"pl"},{"id":"ron-vlaar","n":"Ron Vlaar","c":"Aston Villa","p":"DEF","r":"common","lg":"pl"},{"id":"russell-martin","n":"Russell Martin","c":"Norwich","p":"DEF","r":"common","lg":"pl"},{"id":"ryan-nelsen","n":"Ryan Nelsen","c":"Blackburn","p":"DEF","r":"common","lg":"pl"},{"id":"ryan-shawcross","n":"Ryan Shawcross","c":"Stoke","p":"DEF","r":"common","lg":"pl"},{"id":"sami-hyypia","n":"Sami Hyypiä","c":"Liverpool","p":"DEF","r":"common","lg":"pl"},{"id":"scott-dann","n":"Scott Dann","c":"Crystal Palace","p":"DEF","r":"common","lg":"pl"},{"id":"seamus-coleman","n":"Seamus Coleman","c":"Everton","p":"DEF","r":"common","lg":"pl"},{"id":"sol-campbell","n":"Sol Campbell","c":"Arsenal","p":"DEF","r":"legend","lg":"pl"},{"id":"stephen-warnock","n":"Stephen Warnock","c":"Liverpool","p":"DEF","r":"common","lg":"pl"},{"id":"steve-finnan","n":"Steve Finnan","c":"Liverpool","p":"DEF","r":"common","lg":"pl"},{"id":"steven-caulker","n":"Steven Caulker","c":"Swansea","p":"DEF","r":"common","lg":"pl"},{"id":"steven-taylor","n":"Steven Taylor","c":"Newcastle","p":"DEF","r":"common","lg":"pl"},{"id":"sylvain-distin","n":"Sylvain Distin","c":"Everton","p":"DEF","r":"common","lg":"pl"},{"id":"tal-ben-haim","n":"Tal Ben Haim","c":"Bolton","p":"DEF","r":"common","lg":"pl"},{"id":"thomas-vermaelen","n":"Thomas Vermaelen","c":"Arsenal","p":"DEF","r":"common","lg":"pl"},{"id":"titus-bramble","n":"Titus Bramble","c":"Newcastle","p":"DEF","r":"common","lg":"pl"},{"id":"tony-hibbert","n":"Tony Hibbert","c":"Everton","p":"DEF","r":"common","lg":"pl"},{"id":"vedran-corluka","n":"Vedran Ćorluka","c":"Tottenham","p":"DEF","r":"common","lg":"pl"},{"id":"vincent-kompany","n":"Vincent Kompany","c":"Man City","p":"DEF","r":"legend","lg":"pl"},{"id":"wayne-bridge","n":"Wayne Bridge","c":"Chelsea","p":"DEF","r":"common","lg":"pl"},{"id":"wes-brown","n":"Wes Brown","c":"Man Utd","p":"DEF","r":"common","lg":"pl"},{"id":"wes-morgan","n":"Wes Morgan","c":"Leicester","p":"DEF","r":"common","lg":"pl"},{"id":"william-gallas","n":"William Gallas","c":"Chelsea","p":"DEF","r":"common","lg":"pl"},{"id":"winston-reid","n":"Winston Reid","c":"West Ham","p":"DEF","r":"common","lg":"pl"},{"id":"younes-kaboul","n":"Younès Kaboul","c":"Tottenham","p":"DEF","r":"common","lg":"pl"},{"id":"yuri-zhirkov","n":"Yuri Zhirkov","c":"Chelsea","p":"DEF","r":"common","lg":"pl"},{"id":"angel-rangel","n":"Àngel Rangel","c":"Swansea","p":"DEF","r":"common","lg":"pl"},{"id":"alvaro-arbeloa","n":"Álvaro Arbeloa","c":"Liverpool","p":"DEF","r":"common","lg":"pl"},{"id":"aaron-lennon","n":"Aaron Lennon","c":"Tottenham","p":"MID","r":"common","lg":"pl"},{"id":"aaron-ramsey","n":"Aaron Ramsey","c":"Arsenal","p":"MID","r":"common","lg":"pl"},{"id":"abou-diaby","n":"Abou Diaby","c":"Arsenal","p":"MID","r":"common","lg":"pl"},{"id":"adam-lallana","n":"Adam Lallana","c":"Liverpool","p":"MID","r":"common","lg":"pl"},{"id":"adel-taarabt","n":"Adel Taarabt","c":"QPR","p":"MID","r":"common","lg":"pl"},{"id":"ahmed-elmohamady","n":"Ahmed Elmohamady","c":"Hull","p":"MID","r":"common","lg":"pl"},{"id":"alberto-aquilani","n":"Alberto Aquilani","c":"Liverpool","p":"MID","r":"common","lg":"pl"},{"id":"alex-oxlade-chamberlain","n":"Alex Oxlade-Chamberlain","c":"Arsenal","p":"MID","r":"common","lg":"pl"},{"id":"alexander-hleb","n":"Alexander Hleb","c":"Arsenal","p":"MID","r":"common","lg":"pl"},{"id":"alexandre-song","n":"Alexandre Song","c":"Arsenal","p":"MID","r":"common","lg":"pl"},{"id":"ander-herrera","n":"Ander Herrera","c":"Man Utd","p":"MID","r":"common","lg":"pl"},{"id":"anderson","n":"Anderson","c":"Man Utd","p":"MID","r":"common","lg":"pl"},{"id":"antonio-valencia","n":"Antonio Valencia","c":"Man Utd","p":"MID","r":"common","lg":"pl"},{"id":"ashley-westwood","n":"Ashley Westwood","c":"Aston Villa","p":"MID","r":"common","lg":"pl"},{"id":"ashley-young","n":"Ashley Young","c":"Man Utd","p":"MID","r":"common","lg":"pl"},{"id":"barry-ferguson","n":"Barry Ferguson","c":"Blackburn","p":"MID","r":"common","lg":"pl"},{"id":"bolo-zenden","n":"Bolo Zenden","c":"Chelsea","p":"MID","r":"common","lg":"pl"},{"id":"bradley-johnson","n":"Bradley Johnson","c":"Norwich","p":"MID","r":"common","lg":"pl"},{"id":"brett-emerton","n":"Brett Emerton","c":"Blackburn","p":"MID","r":"common","lg":"pl"},{"id":"cesc-fabregas","n":"Cesc Fàbregas","c":"Arsenal","p":"MID","r":"legend","lg":"pl"},{"id":"charles-n-zogbia","n":"Charles N'Zogbia","c":"Newcastle","p":"MID","r":"common","lg":"pl"},{"id":"charlie-adam","n":"Charlie Adam","c":"Stoke","p":"MID","r":"common","lg":"pl"},{"id":"cheick-tiote","n":"Cheick Tioté","c":"Newcastle","p":"MID","r":"common","lg":"pl"},{"id":"cheikhou-kouyate","n":"Cheikhou Kouyaté","c":"West Ham","p":"MID","r":"common","lg":"pl"},{"id":"chris-brunt","n":"Chris Brunt","c":"West Brom","p":"MID","r":"common","lg":"pl"},{"id":"christian-eriksen","n":"Christian Eriksen","c":"Tottenham","p":"MID","r":"common","lg":"pl"},{"id":"claude-makelele","n":"Claude Makélélé","c":"Chelsea","p":"MID","r":"legend","lg":"pl"},{"id":"craig-gardner","n":"Craig Gardner","c":"Aston Villa","p":"MID","r":"common","lg":"pl"},{"id":"damien-duff","n":"Damien Duff","c":"Fulham","p":"MID","r":"common","lg":"pl"},{"id":"danny-drinkwater","n":"Danny Drinkwater","c":"Leicester","p":"MID","r":"common","lg":"pl"},{"id":"danny-murphy","n":"Danny Murphy","c":"Liverpool","p":"MID","r":"common","lg":"pl"},{"id":"darren-fletcher","n":"Darren Fletcher","c":"Man Utd","p":"MID","r":"common","lg":"pl"},{"id":"david-bentley","n":"David Bentley","c":"Blackburn","p":"MID","r":"common","lg":"pl"},{"id":"david-silva","n":"David Silva","c":"Man City","p":"MID","r":"legend","lg":"pl"},{"id":"deco","n":"Deco","c":"Chelsea","p":"MID","r":"common","lg":"pl"},{"id":"dennis-rommedahl","n":"Dennis Rommedahl","c":"Charlton","p":"MID","r":"common","lg":"pl"},{"id":"denilson","n":"Denílson","c":"Arsenal","p":"MID","r":"common","lg":"pl"},{"id":"didier-zokora","n":"Didier Zokora","c":"Tottenham","p":"MID","r":"common","lg":"pl"},{"id":"dietmar-hamann","n":"Dietmar Hamann","c":"Liverpool","p":"MID","r":"common","lg":"pl"},{"id":"dusan-tadic","n":"Dušan Tadić","c":"Southampton","p":"MID","r":"common","lg":"pl"},{"id":"edgar-davids","n":"Edgar Davids","c":"Tottenham","p":"MID","r":"common","lg":"pl"},{"id":"edu","n":"Edu","c":"Arsenal","p":"MID","r":"common","lg":"pl"},{"id":"elano","n":"Elano","c":"Man City","p":"MID","r":"common","lg":"pl"},{"id":"emre-belozoglu","n":"Emre Belözoğlu","c":"Newcastle","p":"MID","r":"common","lg":"pl"},{"id":"emre-can","n":"Emre Can","c":"Liverpool","p":"MID","r":"common","lg":"pl"},{"id":"esteban-cambiasso","n":"Esteban Cambiasso","c":"Leicester","p":"MID","r":"common","lg":"pl"},{"id":"fabian-delph","n":"Fabian Delph","c":"Aston Villa","p":"MID","r":"common","lg":"pl"},{"id":"fabrice-muamba","n":"Fabrice Muamba","c":"Bolton","p":"MID","r":"common","lg":"pl"},{"id":"fernandinho","n":"Fernandinho","c":"Man City","p":"MID","r":"common","lg":"pl"},{"id":"florent-malouda","n":"Florent Malouda","c":"Chelsea","p":"MID","r":"common","lg":"pl"},{"id":"frank-lampard","n":"Frank Lampard","c":"Chelsea","p":"MID","r":"legend","lg":"pl"},{"id":"freddie-ljungberg","n":"Freddie Ljungberg","c":"Arsenal","p":"MID","r":"common","lg":"pl"},{"id":"gaizka-mendieta","n":"Gaizka Mendieta","c":"Middlesbrough","p":"MID","r":"common","lg":"pl"},{"id":"gareth-bale","n":"Gareth Bale","c":"Tottenham","p":"MID","r":"legend","lg":"pl"},{"id":"gareth-barry","n":"Gareth Barry","c":"Aston Villa","p":"MID","r":"common","lg":"pl"},{"id":"gary-medel","n":"Gary Medel","c":"Cardiff","p":"MID","r":"common","lg":"pl"},{"id":"gary-speed","n":"Gary Speed","c":"Newcastle","p":"MID","r":"common","lg":"pl"},{"id":"gaston-ramirez","n":"Gastón Ramírez","c":"Southampton","p":"MID","r":"common","lg":"pl"},{"id":"george-boateng","n":"George Boateng","c":"Middlesbrough","p":"MID","r":"common","lg":"pl"},{"id":"geremi","n":"Geremi","c":"Chelsea","p":"MID","r":"common","lg":"pl"},{"id":"gilberto-silva","n":"Gilberto Silva","c":"Arsenal","p":"MID","r":"common","lg":"pl"},{"id":"glenn-whelan","n":"Glenn Whelan","c":"Stoke","p":"MID","r":"common","lg":"pl"},{"id":"gylfi-sigur-sson","n":"Gylfi Sigurðsson","c":"Swansea","p":"MID","r":"common","lg":"pl"},{"id":"harry-kewell","n":"Harry Kewell","c":"Liverpool","p":"MID","r":"common","lg":"pl"},{"id":"hatem-ben-arfa","n":"Hatem Ben Arfa","c":"Newcastle","p":"MID","r":"common","lg":"pl"},{"id":"ivan-campo","n":"Iván Campo","c":"Bolton","p":"MID","r":"common","lg":"pl"},{"id":"jack-rodwell","n":"Jack Rodwell","c":"Everton","p":"MID","r":"common","lg":"pl"},{"id":"jack-wilshere","n":"Jack Wilshere","c":"Arsenal","p":"MID","r":"common","lg":"pl"},{"id":"jake-livermore","n":"Jake Livermore","c":"Hull","p":"MID","r":"common","lg":"pl"},{"id":"james-mccarthy","n":"James McCarthy","c":"Everton","p":"MID","r":"common","lg":"pl"},{"id":"james-mcfadden","n":"James McFadden","c":"Everton","p":"MID","r":"common","lg":"pl"},{"id":"james-milner","n":"James Milner","c":"Liverpool","p":"MID","r":"common","lg":"pl"},{"id":"james-morrison","n":"James Morrison","c":"West Brom","p":"MID","r":"common","lg":"pl"},{"id":"james-ward-prowse","n":"James Ward-Prowse","c":"Southampton","p":"MID","r":"common","lg":"pl"},{"id":"jamie-o-hara","n":"Jamie O'Hara","c":"Tottenham","p":"MID","r":"common","lg":"pl"},{"id":"jason-puncheon","n":"Jason Puncheon","c":"Crystal Palace","p":"MID","r":"common","lg":"pl"},{"id":"javi-garcia","n":"Javi García","c":"Man City","p":"MID","r":"common","lg":"pl"},{"id":"javier-mascherano","n":"Javier Mascherano","c":"Liverpool","p":"MID","r":"common","lg":"pl"},{"id":"jay-jay-okocha","n":"Jay-Jay Okocha","c":"Bolton","p":"MID","r":"common","lg":"pl"},{"id":"jermaine-jenas","n":"Jermaine Jenas","c":"Tottenham","p":"MID","r":"common","lg":"pl"},{"id":"jermaine-pennant","n":"Jermaine Pennant","c":"Liverpool","p":"MID","r":"common","lg":"pl"},{"id":"jerome-thomas","n":"Jerome Thomas","c":"West Brom","p":"MID","r":"common","lg":"pl"},{"id":"jesus-navas","n":"Jesús Navas","c":"Man City","p":"MID","r":"common","lg":"pl"},{"id":"ji-sung-park","n":"Ji-sung Park","c":"Man Utd","p":"MID","r":"common","lg":"pl"},{"id":"jimmy-bullard","n":"Jimmy Bullard","c":"Fulham","p":"MID","r":"common","lg":"pl"},{"id":"joe-allen","n":"Joe Allen","c":"Liverpool","p":"MID","r":"common","lg":"pl"},{"id":"joe-cole","n":"Joe Cole","c":"Chelsea","p":"MID","r":"common","lg":"pl"},{"id":"joey-barton","n":"Joey Barton","c":"Man City","p":"MID","r":"common","lg":"pl"},{"id":"john-obi-mikel","n":"John Obi Mikel","c":"Chelsea","p":"MID","r":"common","lg":"pl"},{"id":"jonjo-shelvey","n":"Jonjo Shelvey","c":"Newcastle","p":"MID","r":"common","lg":"pl"},{"id":"jonas-gutierrez","n":"Jonás Gutiérrez","c":"Newcastle","p":"MID","r":"common","lg":"pl"},{"id":"jordan-henderson","n":"Jordan Henderson","c":"Liverpool","p":"MID","r":"common","lg":"pl"},{"id":"juan-mata","n":"Juan Mata","c":"Man Utd","p":"MID","r":"common","lg":"pl"},{"id":"kevin-kilbane","n":"Kevin Kilbane","c":"Everton","p":"MID","r":"common","lg":"pl"},{"id":"kevin-nolan","n":"Kevin Nolan","c":"Bolton","p":"MID","r":"common","lg":"pl"},{"id":"kevin-prince-boateng","n":"Kevin-Prince Boateng","c":"Tottenham","p":"MID","r":"common","lg":"pl"},{"id":"ki-sung-yueng","n":"Ki Sung-yueng","c":"Swansea","p":"MID","r":"common","lg":"pl"},{"id":"kieran-richardson","n":"Kieran Richardson","c":"Sunderland","p":"MID","r":"common","lg":"pl"},{"id":"kieron-dyer","n":"Kieron Dyer","c":"Newcastle","p":"MID","r":"common","lg":"pl"},{"id":"kleberson","n":"Kléberson","c":"Man Utd","p":"MID","r":"common","lg":"pl"},{"id":"lee-carsley","n":"Lee Carsley","c":"Everton","p":"MID","r":"common","lg":"pl"},{"id":"lee-cattermole","n":"Lee Cattermole","c":"Sunderland","p":"MID","r":"common","lg":"pl"},{"id":"lee-chung-yong","n":"Lee Chung-yong","c":"Bolton","p":"MID","r":"common","lg":"pl"},{"id":"leon-britton","n":"Leon Britton","c":"Swansea","p":"MID","r":"common","lg":"pl"},{"id":"leon-osman","n":"Leon Osman","c":"Everton","p":"MID","r":"common","lg":"pl"},{"id":"lucas-leiva","n":"Lucas Leiva","c":"Liverpool","p":"MID","r":"common","lg":"pl"},{"id":"luis-garcia","n":"Luis García","c":"Liverpool","p":"MID","r":"common","lg":"pl"},{"id":"luka-modric","n":"Luka Modrić","c":"Tottenham","p":"MID","r":"legend","lg":"pl"},{"id":"marc-albrighton","n":"Marc Albrighton","c":"Leicester","p":"MID","r":"common","lg":"pl"},{"id":"mark-noble","n":"Mark Noble","c":"West Ham","p":"MID","r":"common","lg":"pl"},{"id":"marouane-fellaini","n":"Marouane Fellaini","c":"Man Utd","p":"MID","r":"common","lg":"pl"},{"id":"martin-petrov","n":"Martin Petrov","c":"Man City","p":"MID","r":"common","lg":"pl"},{"id":"mathieu-flamini","n":"Mathieu Flamini","c":"Arsenal","p":"MID","r":"common","lg":"pl"},{"id":"matt-jarvis","n":"Matt Jarvis","c":"Wolves","p":"MID","r":"common","lg":"pl"},{"id":"matt-taylor","n":"Matt Taylor","c":"Portsmouth","p":"MID","r":"common","lg":"pl"},{"id":"matthew-etherington","n":"Matthew Etherington","c":"Stoke","p":"MID","r":"common","lg":"pl"},{"id":"maxi-rodriguez","n":"Maxi Rodríguez","c":"Liverpool","p":"MID","r":"common","lg":"pl"},{"id":"mesut-ozil","n":"Mesut Özil","c":"Arsenal","p":"MID","r":"common","lg":"pl"},{"id":"michael-ballack","n":"Michael Ballack","c":"Chelsea","p":"MID","r":"common","lg":"pl"},{"id":"michael-carrick","n":"Michael Carrick","c":"Man Utd","p":"MID","r":"common","lg":"pl"},{"id":"michael-essien","n":"Michael Essien","c":"Chelsea","p":"MID","r":"common","lg":"pl"},{"id":"mikel-arteta","n":"Mikel Arteta","c":"Everton","p":"MID","r":"common","lg":"pl"},{"id":"mile-jedinak","n":"Mile Jedinak","c":"Crystal Palace","p":"MID","r":"common","lg":"pl"},{"id":"mohamed-diame","n":"Mohamed Diamé","c":"Wigan","p":"MID","r":"common","lg":"pl"},{"id":"momo-sissoko","n":"Momo Sissoko","c":"Liverpool","p":"MID","r":"common","lg":"pl"},{"id":"morgan-schneiderlin","n":"Morgan Schneiderlin","c":"Everton","p":"MID","r":"common","lg":"pl"},{"id":"morten-gamst-pedersen","n":"Morten Gamst Pedersen","c":"Blackburn","p":"MID","r":"common","lg":"pl"},{"id":"mousa-dembele","n":"Mousa Dembélé","c":"Tottenham","p":"MID","r":"common","lg":"pl"},{"id":"moussa-sissoko","n":"Moussa Sissoko","c":"Tottenham","p":"MID","r":"common","lg":"pl"},{"id":"nacer-chadli","n":"Nacer Chadli","c":"Tottenham","p":"MID","r":"common","lg":"pl"},{"id":"nani","n":"Nani","c":"Man Utd","p":"MID","r":"common","lg":"pl"},{"id":"nathan-dyer","n":"Nathan Dyer","c":"Swansea","p":"MID","r":"common","lg":"pl"},{"id":"nemanja-matic","n":"Nemanja Matić","c":"Man Utd","p":"MID","r":"common","lg":"pl"},{"id":"nicky-butt","n":"Nicky Butt","c":"Man Utd","p":"MID","r":"common","lg":"pl"},{"id":"nigel-reo-coker","n":"Nigel Reo-Coker","c":"Aston Villa","p":"MID","r":"common","lg":"pl"},{"id":"nigel-de-jong","n":"Nigel de Jong","c":"Man City","p":"MID","r":"common","lg":"pl"},{"id":"niko-kranjcar","n":"Niko Kranjčar","c":"Portsmouth","p":"MID","r":"common","lg":"pl"},{"id":"oscar","n":"Oscar","c":"Chelsea","p":"MID","r":"common","lg":"pl"},{"id":"owen-hargreaves","n":"Owen Hargreaves","c":"Man Utd","p":"MID","r":"common","lg":"pl"},{"id":"papa-bouba-diop","n":"Papa Bouba Diop","c":"Fulham","p":"MID","r":"common","lg":"pl"},{"id":"patrick-vieira","n":"Patrick Vieira","c":"Arsenal","p":"MID","r":"legend","lg":"pl"},{"id":"paul-scholes","n":"Paul Scholes","c":"Man Utd","p":"MID","r":"legend","lg":"pl"},{"id":"paulinho","n":"Paulinho","c":"Tottenham","p":"MID","r":"common","lg":"pl"},{"id":"pedro-mendes","n":"Pedro Mendes","c":"Portsmouth","p":"MID","r":"common","lg":"pl"},{"id":"phil-neville","n":"Phil Neville","c":"Man Utd","p":"MID","r":"common","lg":"pl"},{"id":"philippe-coutinho","n":"Philippe Coutinho","c":"Liverpool","p":"MID","r":"common","lg":"pl"},{"id":"rafael-van-der-vaart","n":"Rafael van der Vaart","c":"Tottenham","p":"MID","r":"common","lg":"pl"},{"id":"ramires","n":"Ramires","c":"Chelsea","p":"MID","r":"common","lg":"pl"},{"id":"raul-meireles","n":"Raul Meireles","c":"Liverpool","p":"MID","r":"common","lg":"pl"},{"id":"robbie-savage","n":"Robbie Savage","c":"Blackburn","p":"MID","r":"common","lg":"pl"},{"id":"robert-pires","n":"Robert Pirès","c":"Arsenal","p":"MID","r":"legend","lg":"pl"},{"id":"robert-snodgrass","n":"Robert Snodgrass","c":"Norwich","p":"MID","r":"common","lg":"pl"},{"id":"rory-delap","n":"Rory Delap","c":"Stoke","p":"MID","r":"common","lg":"pl"},{"id":"ross-barkley","n":"Ross Barkley","c":"Everton","p":"MID","r":"common","lg":"pl"},{"id":"roy-keane","n":"Roy Keane","c":"Man Utd","p":"MID","r":"legend","lg":"pl"},{"id":"ryan-giggs","n":"Ryan Giggs","c":"Man Utd","p":"MID","r":"legend","lg":"pl"},{"id":"samir-nasri","n":"Samir Nasri","c":"Man City","p":"MID","r":"common","lg":"pl"},{"id":"sandro","n":"Sandro","c":"Tottenham","p":"MID","r":"common","lg":"pl"},{"id":"santi-cazorla","n":"Santi Cazorla","c":"Arsenal","p":"MID","r":"common","lg":"pl"},{"id":"scott-parker","n":"Scott Parker","c":"West Ham","p":"MID","r":"common","lg":"pl"},{"id":"sebastian-larsson","n":"Sebastian Larsson","c":"Sunderland","p":"MID","r":"common","lg":"pl"},{"id":"shaun-maloney","n":"Shaun Maloney","c":"Wigan","p":"MID","r":"common","lg":"pl"},{"id":"shaun-wright-phillips","n":"Shaun Wright-Phillips","c":"Man City","p":"MID","r":"common","lg":"pl"},{"id":"shinji-kagawa","n":"Shinji Kagawa","c":"Man Utd","p":"MID","r":"common","lg":"pl"},{"id":"steed-malbranque","n":"Steed Malbranque","c":"Fulham","p":"MID","r":"common","lg":"pl"},{"id":"stelios-giannakopoulos","n":"Stelios Giannakopoulos","c":"Bolton","p":"MID","r":"common","lg":"pl"},{"id":"stephen-hunt","n":"Stephen Hunt","c":"Reading","p":"MID","r":"common","lg":"pl"},{"id":"stephen-ireland","n":"Stephen Ireland","c":"Man City","p":"MID","r":"common","lg":"pl"},{"id":"steve-sidwell","n":"Steve Sidwell","c":"Fulham","p":"MID","r":"common","lg":"pl"},{"id":"steven-gerrard","n":"Steven Gerrard","c":"Liverpool","p":"MID","r":"legend","lg":"pl"},{"id":"steven-n-zonzi","n":"Steven N'Zonzi","c":"Blackburn","p":"MID","r":"common","lg":"pl"},{"id":"steven-pienaar","n":"Steven Pienaar","c":"Everton","p":"MID","r":"common","lg":"pl"},{"id":"stewart-downing","n":"Stewart Downing","c":"Middlesbrough","p":"MID","r":"common","lg":"pl"},{"id":"stiliyan-petrov","n":"Stiliyan Petrov","c":"Aston Villa","p":"MID","r":"common","lg":"pl"},{"id":"stephane-sessegnon","n":"Stéphane Sessègnon","c":"Sunderland","p":"MID","r":"common","lg":"pl"},{"id":"sulley-muntari","n":"Sulley Muntari","c":"Portsmouth","p":"MID","r":"common","lg":"pl"},{"id":"thomas-gravesen","n":"Thomas Gravesen","c":"Everton","p":"MID","r":"common","lg":"pl"},{"id":"tiago-mendes","n":"Tiago Mendes","c":"Chelsea","p":"MID","r":"common","lg":"pl"},{"id":"tim-cahill","n":"Tim Cahill","c":"Everton","p":"MID","r":"common","lg":"pl"},{"id":"tom-huddlestone","n":"Tom Huddlestone","c":"Tottenham","p":"MID","r":"common","lg":"pl"},{"id":"tomas-rosicky","n":"Tomáš Rosický","c":"Arsenal","p":"MID","r":"common","lg":"pl"},{"id":"tugay-kerimoglu","n":"Tugay Kerimoğlu","c":"Blackburn","p":"MID","r":"common","lg":"pl"},{"id":"victor-wanyama","n":"Victor Wanyama","c":"Tottenham","p":"MID","r":"common","lg":"pl"},{"id":"wayne-routledge","n":"Wayne Routledge","c":"Swansea","p":"MID","r":"common","lg":"pl"},{"id":"wes-hoolahan","n":"Wes Hoolahan","c":"Norwich","p":"MID","r":"common","lg":"pl"},{"id":"wilson-palacios","n":"Wilson Palacios","c":"Tottenham","p":"MID","r":"common","lg":"pl"},{"id":"xabi-alonso","n":"Xabi Alonso","c":"Liverpool","p":"MID","r":"legend","lg":"pl"},{"id":"yaya-toure","n":"Yaya Touré","c":"Man City","p":"MID","r":"legend","lg":"pl"},{"id":"yohan-cabaye","n":"Yohan Cabaye","c":"Newcastle","p":"MID","r":"common","lg":"pl"},{"id":"yossi-benayoun","n":"Yossi Benayoun","c":"West Ham","p":"MID","r":"common","lg":"pl"},{"id":"youssouf-mulumbu","n":"Youssouf Mulumbu","c":"West Brom","p":"MID","r":"common","lg":"pl"},{"id":"etienne-capoue","n":"Étienne Capoue","c":"Watford","p":"MID","r":"common","lg":"pl"},{"id":"adam-johnson","n":"Adam Johnson","c":"Middlesbrough","p":"ATT","r":"common","lg":"pl"},{"id":"afonso-alves","n":"Afonso Alves","c":"Middlesbrough","p":"ATT","r":"common","lg":"pl"},{"id":"alan-shearer","n":"Alan Shearer","c":"Newcastle","p":"ATT","r":"legend","lg":"pl"},{"id":"alan-smith","n":"Alan Smith","c":"Newcastle","p":"ATT","r":"common","lg":"pl"},{"id":"alexis-sanchez","n":"Alexis Sánchez","c":"Arsenal","p":"ATT","r":"common","lg":"pl"},{"id":"andreas-weimann","n":"Andreas Weimann","c":"Aston Villa","p":"ATT","r":"common","lg":"pl"},{"id":"andrei-arshavin","n":"Andrei Arshavin","c":"Arsenal","p":"ATT","r":"common","lg":"pl"},{"id":"andriy-shevchenko","n":"Andriy Shevchenko","c":"Chelsea","p":"ATT","r":"legend","lg":"pl"},{"id":"andre-schurrle","n":"André Schürrle","c":"Chelsea","p":"ATT","r":"common","lg":"pl"},{"id":"andy-carroll","n":"Andy Carroll","c":"West Ham","p":"ATT","r":"common","lg":"pl"},{"id":"andy-cole","n":"Andy Cole","c":"Man Utd","p":"ATT","r":"rare","lg":"pl"},{"id":"andy-johnson","n":"Andy Johnson","c":"Fulham","p":"ATT","r":"common","lg":"pl"},{"id":"arjen-robben","n":"Arjen Robben","c":"Chelsea","p":"ATT","r":"rare","lg":"pl"},{"id":"arouna-kone","n":"Arouna Koné","c":"Everton","p":"ATT","r":"common","lg":"pl"},{"id":"asamoah-gyan","n":"Asamoah Gyan","c":"Sunderland","p":"ATT","r":"common","lg":"pl"},{"id":"ashley-barnes","n":"Ashley Barnes","c":"Burnley","p":"ATT","r":"common","lg":"pl"},{"id":"ayoze-perez","n":"Ayoze Pérez","c":"Newcastle","p":"ATT","r":"common","lg":"pl"},{"id":"bafetimbi-gomis","n":"Bafétimbi Gomis","c":"Swansea","p":"ATT","r":"common","lg":"pl"},{"id":"benjani","n":"Benjani","c":"Man City","p":"ATT","r":"common","lg":"pl"},{"id":"benni-mccarthy","n":"Benni McCarthy","c":"Blackburn","p":"ATT","r":"common","lg":"pl"},{"id":"bobby-zamora","n":"Bobby Zamora","c":"Fulham","p":"ATT","r":"common","lg":"pl"},{"id":"brian-mcbride","n":"Brian McBride","c":"Fulham","p":"ATT","r":"common","lg":"pl"},{"id":"carlos-tevez","n":"Carlos Tevez","c":"Man City","p":"ATT","r":"rare","lg":"pl"},{"id":"carlos-vela","n":"Carlos Vela","c":"Arsenal","p":"ATT","r":"common","lg":"pl"},{"id":"carlton-cole","n":"Carlton Cole","c":"West Ham","p":"ATT","r":"common","lg":"pl"},{"id":"charlie-austin","n":"Charlie Austin","c":"Southampton","p":"ATT","r":"common","lg":"pl"},{"id":"christian-benteke","n":"Christian Benteke","c":"Aston Villa","p":"ATT","r":"common","lg":"pl"},{"id":"claudio-pizarro","n":"Claudio Pizarro","c":"Chelsea","p":"ATT","r":"common","lg":"pl"},{"id":"clint-dempsey","n":"Clint Dempsey","c":"Fulham","p":"ATT","r":"common","lg":"pl"},{"id":"cristiano-ronaldo","n":"Cristiano Ronaldo","c":"Man Utd","p":"ATT","r":"legend","lg":"pl"},{"id":"dj-campbell","n":"DJ Campbell","c":"Blackpool","p":"ATT","r":"common","lg":"pl"},{"id":"daniel-sturridge","n":"Daniel Sturridge","c":"Liverpool","p":"ATT","r":"common","lg":"pl"},{"id":"danny-graham","n":"Danny Graham","c":"Swansea","p":"ATT","r":"common","lg":"pl"},{"id":"danny-ings","n":"Danny Ings","c":"Liverpool","p":"ATT","r":"common","lg":"pl"},{"id":"danny-welbeck","n":"Danny Welbeck","c":"Arsenal","p":"ATT","r":"common","lg":"pl"},{"id":"darius-vassell","n":"Darius Vassell","c":"Aston Villa","p":"ATT","r":"common","lg":"pl"},{"id":"darren-bent","n":"Darren Bent","c":"Aston Villa","p":"ATT","r":"rare","lg":"pl"},{"id":"dean-ashton","n":"Dean Ashton","c":"West Ham","p":"ATT","r":"common","lg":"pl"},{"id":"demba-ba","n":"Demba Ba","c":"Newcastle","p":"ATT","r":"common","lg":"pl"},{"id":"dennis-bergkamp","n":"Dennis Bergkamp","c":"Arsenal","p":"ATT","r":"legend","lg":"pl"},{"id":"diafra-sakho","n":"Diafra Sakho","c":"West Ham","p":"ATT","r":"common","lg":"pl"},{"id":"didier-drogba","n":"Didier Drogba","c":"Chelsea","p":"ATT","r":"legend","lg":"pl"},{"id":"diego-costa","n":"Diego Costa","c":"Chelsea","p":"ATT","r":"common","lg":"pl"},{"id":"dimitar-berbatov","n":"Dimitar Berbatov","c":"Man Utd","p":"ATT","r":"rare","lg":"pl"},{"id":"dirk-kuyt","n":"Dirk Kuyt","c":"Liverpool","p":"ATT","r":"common","lg":"pl"},{"id":"djibril-cisse","n":"Djibril Cissé","c":"Liverpool","p":"ATT","r":"rare","lg":"pl"},{"id":"duncan-ferguson","n":"Duncan Ferguson","c":"Everton","p":"ATT","r":"common","lg":"pl"},{"id":"dwight-gayle","n":"Dwight Gayle","c":"Crystal Palace","p":"ATT","r":"common","lg":"pl"},{"id":"eden-hazard","n":"Eden Hazard","c":"Chelsea","p":"ATT","r":"legend","lg":"pl"},{"id":"edin-dzeko","n":"Edin Džeko","c":"Man City","p":"ATT","r":"rare","lg":"pl"},{"id":"eduardo-da-silva","n":"Eduardo da Silva","c":"Arsenal","p":"ATT","r":"common","lg":"pl"},{"id":"ei-ur-gu-johnsen","n":"Eiður Guðjohnsen","c":"Chelsea","p":"ATT","r":"common","lg":"pl"},{"id":"el-hadji-diouf","n":"El-Hadji Diouf","c":"Bolton","p":"ATT","r":"common","lg":"pl"},{"id":"emile-heskey","n":"Emile Heskey","c":"Aston Villa","p":"ATT","r":"rare","lg":"pl"},{"id":"emmanuel-adebayor","n":"Emmanuel Adebayor","c":"Arsenal","p":"ATT","r":"rare","lg":"pl"},{"id":"enner-valencia","n":"Enner Valencia","c":"West Ham","p":"ATT","r":"common","lg":"pl"},{"id":"erik-lamela","n":"Erik Lamela","c":"Tottenham","p":"ATT","r":"common","lg":"pl"},{"id":"fernando-torres","n":"Fernando Torres","c":"Liverpool","p":"ATT","r":"legend","lg":"pl"},{"id":"fraizer-campbell","n":"Fraizer Campbell","c":"Sunderland","p":"ATT","r":"common","lg":"pl"},{"id":"franco-di-santo","n":"Franco Di Santo","c":"Wigan","p":"ATT","r":"common","lg":"pl"},{"id":"gabriel-agbonlahor","n":"Gabriel Agbonlahor","c":"Aston Villa","p":"ATT","r":"common","lg":"pl"},{"id":"gerard-deulofeu","n":"Gerard Deulofeu","c":"Everton","p":"ATT","r":"common","lg":"pl"},{"id":"gervinho","n":"Gervinho","c":"Arsenal","p":"ATT","r":"common","lg":"pl"},{"id":"glenn-murray","n":"Glenn Murray","c":"Brighton","p":"ATT","r":"common","lg":"pl"},{"id":"grant-holt","n":"Grant Holt","c":"Norwich","p":"ATT","r":"common","lg":"pl"},{"id":"graziano-pelle","n":"Graziano Pellè","c":"Southampton","p":"ATT","r":"common","lg":"pl"},{"id":"harry-kane","n":"Harry Kane","c":"Tottenham","p":"ATT","r":"legend","lg":"pl"},{"id":"henri-camara","n":"Henri Camara","c":"Wigan","p":"ATT","r":"common","lg":"pl"},{"id":"hernan-crespo","n":"Hernán Crespo","c":"Chelsea","p":"ATT","r":"rare","lg":"pl"},{"id":"hugo-rodallega","n":"Hugo Rodallega","c":"Wigan","p":"ATT","r":"common","lg":"pl"},{"id":"james-beattie","n":"James Beattie","c":"Everton","p":"ATT","r":"rare","lg":"pl"},{"id":"jamie-vardy","n":"Jamie Vardy","c":"Leicester","p":"ATT","r":"legend","lg":"pl"},{"id":"jason-roberts","n":"Jason Roberts","c":"Blackburn","p":"ATT","r":"common","lg":"pl"},{"id":"javier-hernandez","n":"Javier Hernández","c":"Man Utd","p":"ATT","r":"common","lg":"pl"},{"id":"jay-rodriguez","n":"Jay Rodriguez","c":"Southampton","p":"ATT","r":"common","lg":"pl"},{"id":"jermain-defoe","n":"Jermain Defoe","c":"Tottenham","p":"ATT","r":"rare","lg":"pl"},{"id":"jimmy-floyd-hasselbaink","n":"Jimmy Floyd Hasselbaink","c":"Chelsea","p":"ATT","r":"rare","lg":"pl"},{"id":"johan-elmander","n":"Johan Elmander","c":"Bolton","p":"ATT","r":"common","lg":"pl"},{"id":"john-carew","n":"John Carew","c":"Aston Villa","p":"ATT","r":"common","lg":"pl"},{"id":"john-utaka","n":"John Utaka","c":"Portsmouth","p":"ATT","r":"common","lg":"pl"},{"id":"jonathan-walters","n":"Jonathan Walters","c":"Stoke","p":"ATT","r":"common","lg":"pl"},{"id":"jose-antonio-reyes","n":"José Antonio Reyes","c":"Arsenal","p":"ATT","r":"common","lg":"pl"},{"id":"juan-pablo-angel","n":"Juan Pablo Ángel","c":"Aston Villa","p":"ATT","r":"common","lg":"pl"},{"id":"kenwyne-jones","n":"Kenwyne Jones","c":"Sunderland","p":"ATT","r":"common","lg":"pl"},{"id":"kevin-davies","n":"Kevin Davies","c":"Bolton","p":"ATT","r":"rare","lg":"pl"},{"id":"kevin-doyle","n":"Kevin Doyle","c":"Wolves","p":"ATT","r":"common","lg":"pl"},{"id":"kevin-mirallas","n":"Kevin Mirallas","c":"Everton","p":"ATT","r":"common","lg":"pl"},{"id":"leonardo-ulloa","n":"Leonardo Ulloa","c":"Leicester","p":"ATT","r":"common","lg":"pl"},{"id":"louis-saha","n":"Louis Saha","c":"Man Utd","p":"ATT","r":"common","lg":"pl"},{"id":"loic-remy","n":"Loïc Rémy","c":"Chelsea","p":"ATT","r":"common","lg":"pl"},{"id":"luis-suarez","n":"Luis Suárez","c":"Liverpool","p":"ATT","r":"legend","lg":"pl"},{"id":"lukas-podolski","n":"Lukas Podolski","c":"Arsenal","p":"ATT","r":"common","lg":"pl"},{"id":"luis-boa-morte","n":"Luís Boa Morte","c":"Fulham","p":"ATT","r":"common","lg":"pl"},{"id":"marcus-bent","n":"Marcus Bent","c":"Everton","p":"ATT","r":"common","lg":"pl"},{"id":"mario-balotelli","n":"Mario Balotelli","c":"Man City","p":"ATT","r":"common","lg":"pl"},{"id":"mark-viduka","n":"Mark Viduka","c":"Leeds","p":"ATT","r":"rare","lg":"pl"},{"id":"marko-arnautovic","n":"Marko Arnautović","c":"Stoke","p":"ATT","r":"common","lg":"pl"},{"id":"marlon-harewood","n":"Marlon Harewood","c":"West Ham","p":"ATT","r":"common","lg":"pl"},{"id":"marouane-chamakh","n":"Marouane Chamakh","c":"Arsenal","p":"ATT","r":"common","lg":"pl"},{"id":"mateja-kezman","n":"Mateja Kežman","c":"Chelsea","p":"ATT","r":"common","lg":"pl"},{"id":"michael-owen","n":"Michael Owen","c":"Newcastle","p":"ATT","r":"legend","lg":"pl"},{"id":"michu","n":"Michu","c":"Swansea","p":"ATT","r":"common","lg":"pl"},{"id":"milan-baros","n":"Milan Baroš","c":"Liverpool","p":"ATT","r":"common","lg":"pl"},{"id":"nicklas-bendtner","n":"Nicklas Bendtner","c":"Arsenal","p":"ATT","r":"common","lg":"pl"},{"id":"nicolas-anelka","n":"Nicolas Anelka","c":"Chelsea","p":"ATT","r":"rare","lg":"pl"},{"id":"nikica-jelavic","n":"Nikica Jelavić","c":"Everton","p":"ATT","r":"common","lg":"pl"},{"id":"nikola-zigic","n":"Nikola Žigić","c":"Birmingham","p":"ATT","r":"common","lg":"pl"},{"id":"nwankwo-kanu","n":"Nwankwo Kanu","c":"Arsenal","p":"ATT","r":"common","lg":"pl"},{"id":"obafemi-martins","n":"Obafemi Martins","c":"Newcastle","p":"ATT","r":"common","lg":"pl"},{"id":"olivier-giroud","n":"Olivier Giroud","c":"Arsenal","p":"ATT","r":"rare","lg":"pl"},{"id":"pablo-hernandez","n":"Pablo Hernández","c":"Swansea","p":"ATT","r":"common","lg":"pl"},{"id":"papiss-cisse","n":"Papiss Cissé","c":"Newcastle","p":"ATT","r":"common","lg":"pl"},{"id":"peter-crouch","n":"Peter Crouch","c":"Stoke","p":"ATT","r":"rare","lg":"pl"},{"id":"peter-odemwingie","n":"Peter Odemwingie","c":"West Brom","p":"ATT","r":"common","lg":"pl"},{"id":"radamel-falcao","n":"Radamel Falcao","c":"Man Utd","p":"ATT","r":"common","lg":"pl"},{"id":"raheem-sterling","n":"Raheem Sterling","c":"Man City","p":"ATT","r":"common","lg":"pl"},{"id":"ricardo-fuller","n":"Ricardo Fuller","c":"Stoke","p":"ATT","r":"common","lg":"pl"},{"id":"rickie-lambert","n":"Rickie Lambert","c":"Southampton","p":"ATT","r":"common","lg":"pl"},{"id":"riyad-mahrez","n":"Riyad Mahrez","c":"Man City","p":"ATT","r":"common","lg":"pl"},{"id":"robbie-fowler","n":"Robbie Fowler","c":"Liverpool","p":"ATT","r":"legend","lg":"pl"},{"id":"robbie-keane","n":"Robbie Keane","c":"Tottenham","p":"ATT","r":"rare","lg":"pl"},{"id":"roberto-soldado","n":"Roberto Soldado","c":"Tottenham","p":"ATT","r":"common","lg":"pl"},{"id":"robin-van-persie","n":"Robin van Persie","c":"Arsenal","p":"ATT","r":"legend","lg":"pl"},{"id":"robinho","n":"Robinho","c":"Man City","p":"ATT","r":"common","lg":"pl"},{"id":"roman-pavlyuchenko","n":"Roman Pavlyuchenko","c":"Tottenham","p":"ATT","r":"common","lg":"pl"},{"id":"romelu-lukaku","n":"Romelu Lukaku","c":"Everton","p":"ATT","r":"rare","lg":"pl"},{"id":"roque-santa-cruz","n":"Roque Santa Cruz","c":"Blackburn","p":"ATT","r":"common","lg":"pl"},{"id":"ruud-van-nistelrooy","n":"Ruud van Nistelrooy","c":"Man Utd","p":"ATT","r":"legend","lg":"pl"},{"id":"ryan-babel","n":"Ryan Babel","c":"Liverpool","p":"ATT","r":"common","lg":"pl"},{"id":"sadio-mane","n":"Sadio Mané","c":"Liverpool","p":"ATT","r":"rare","lg":"pl"},{"id":"saido-berahino","n":"Saido Berahino","c":"West Brom","p":"ATT","r":"common","lg":"pl"},{"id":"salomon-kalou","n":"Salomon Kalou","c":"Chelsea","p":"ATT","r":"common","lg":"pl"},{"id":"samuel-eto-o","n":"Samuel Eto'o","c":"Chelsea","p":"ATT","r":"rare","lg":"pl"},{"id":"scott-sinclair","n":"Scott Sinclair","c":"Swansea","p":"ATT","r":"common","lg":"pl"},{"id":"sergio-aguero","n":"Sergio Agüero","c":"Man City","p":"ATT","r":"legend","lg":"pl"},{"id":"shane-long","n":"Shane Long","c":"Southampton","p":"ATT","r":"common","lg":"pl"},{"id":"shola-ameobi","n":"Shola Ameobi","c":"Newcastle","p":"ATT","r":"common","lg":"pl"},{"id":"stevan-jovetic","n":"Stevan Jovetić","c":"Man City","p":"ATT","r":"common","lg":"pl"},{"id":"steven-fletcher","n":"Steven Fletcher","c":"Sunderland","p":"ATT","r":"common","lg":"pl"},{"id":"sylvan-ebanks-blake","n":"Sylvan Ebanks-Blake","c":"Wolves","p":"ATT","r":"common","lg":"pl"},{"id":"teddy-sheringham","n":"Teddy Sheringham","c":"Tottenham","p":"ATT","r":"rare","lg":"pl"},{"id":"theo-walcott","n":"Theo Walcott","c":"Arsenal","p":"ATT","r":"common","lg":"pl"},{"id":"thierry-henry","n":"Thierry Henry","c":"Arsenal","p":"ATT","r":"legend","lg":"pl"},{"id":"tomasz-radzinski","n":"Tomasz Radzinski","c":"Everton","p":"ATT","r":"common","lg":"pl"},{"id":"tuncay-sanl","n":"Tuncay Şanlı","c":"Middlesbrough","p":"ATT","r":"common","lg":"pl"},{"id":"victor-anichebe","n":"Victor Anichebe","c":"Everton","p":"ATT","r":"common","lg":"pl"},{"id":"victor-moses","n":"Victor Moses","c":"Wigan","p":"ATT","r":"common","lg":"pl"},{"id":"wayne-rooney","n":"Wayne Rooney","c":"Man Utd","p":"ATT","r":"legend","lg":"pl"},{"id":"wilfried-bony","n":"Wilfried Bony","c":"Swansea","p":"ATT","r":"common","lg":"pl"},{"id":"wilfried-zaha","n":"Wilfried Zaha","c":"Crystal Palace","p":"ATT","r":"common","lg":"pl"},{"id":"willian","n":"Willian","c":"Chelsea","p":"ATT","r":"common","lg":"pl"},{"id":"yakubu","n":"Yakubu","c":"Everton","p":"ATT","r":"rare","lg":"pl"},{"id":"yannick-bolasie","n":"Yannick Bolasie","c":"Crystal Palace","p":"ATT","r":"common","lg":"pl"},{"id":"yoan-gouffran","n":"Yoan Gouffran","c":"Newcastle","p":"ATT","r":"common","lg":"pl"},{"id":"alvaro-negredo","n":"Álvaro Negredo","c":"Man City","p":"ATT","r":"common","lg":"pl"},{"id":"angel-di-maria","n":"Ángel Di María","c":"Man Utd","p":"ATT","r":"common","lg":"pl"},{"id":"adil-rami","n":"Adil Rami","c":"Marseille","p":"DEF","r":"rare","lg":"l1"},{"id":"alain-boghossian","n":"Alain Boghossian","c":"Sampdoria","p":"MID","r":"rare","lg":"seriea"},{"id":"alen-boksic","n":"Alen Bokšić","c":"Marseille","p":"ATT","r":"rare","lg":"l1"},{"id":"alessandro-del-piero","n":"Alessandro Del Piero","c":"Juventus","p":"ATT","r":"legend","lg":"seriea"},{"id":"alexander-frei","n":"Alexander Frei","c":"Rennes","p":"ATT","r":"rare","lg":"l1"},{"id":"alexandre-lacazette","n":"Alexandre Lacazette","c":"Lyon","p":"ATT","r":"rare","lg":"l1"},{"id":"alfredo-di-stefano","n":"Alfredo Di Stéfano","c":"Real Madrid","p":"ATT","r":"legend","lg":"liga"},{"id":"alphonse-areola","n":"Alphonse Areola","c":"PSG","p":"GK","r":"rare","lg":"l1"},{"id":"andre-pierre-gignac","n":"André-Pierre Gignac","c":"Marseille","p":"ATT","r":"rare","lg":"l1"},{"id":"antoine-griezmann","n":"Antoine Griezmann","c":"Atlético Madrid","p":"ATT","r":"rare","lg":"liga"},{"id":"antonio-di-natale","n":"Antonio Di Natale","c":"Udinese","p":"ATT","r":"rare","lg":"seriea"},{"id":"artem-dovbyk","n":"Artem Dovbyk","c":"Girona","p":"ATT","r":"rare","lg":"liga"},{"id":"bebeto","n":"Bebeto","c":"Deportivo","p":"ATT","r":"rare","lg":"liga"},{"id":"benjamin-mendy","n":"Benjamin Mendy","c":"Man City","p":"DEF","r":"rare","lg":"pl"},{"id":"benjamin-pavard","n":"Benjamin Pavard","c":"Bayern Munich","p":"DEF","r":"rare","lg":"europe"},{"id":"bernard-diomede","n":"Bernard Diomède","c":"Auxerre","p":"MID","r":"rare","lg":"l1"},{"id":"bernard-lama","n":"Bernard Lama","c":"PSG","p":"GK","r":"rare","lg":"l1"},{"id":"bixente-lizarazu","n":"Bixente Lizarazu","c":"Bayern Munich","p":"DEF","r":"rare","lg":"europe"},{"id":"blaise-matuidi","n":"Blaise Matuidi","c":"PSG","p":"MID","r":"rare","lg":"l1"},{"id":"chris-sutton","n":"Chris Sutton","c":"Blackburn","p":"ATT","r":"rare","lg":"pl"},{"id":"christian-karembeu","n":"Christian Karembeu","c":"Real Madrid","p":"MID","r":"rare","lg":"liga"},{"id":"christian-vieri","n":"Christian Vieri","c":"Inter Milan","p":"ATT","r":"rare","lg":"seriea"},{"id":"christophe-dugarry","n":"Christophe Dugarry","c":"Bordeaux","p":"ATT","r":"rare","lg":"l1"},{"id":"ciro-immobile","n":"Ciro Immobile","c":"Lazio","p":"ATT","r":"rare","lg":"seriea"},{"id":"corentin-tolisso","n":"Corentin Tolisso","c":"Lyon","p":"MID","r":"rare","lg":"l1"},{"id":"cristiano-lucarelli","n":"Cristiano Lucarelli","c":"Livourne","p":"ATT","r":"rare","lg":"seriea"},{"id":"dani-guiza","n":"Dani Güiza","c":"Mallorca","p":"ATT","r":"rare","lg":"liga"},{"id":"dario-hubner","n":"Dario Hübner","c":"Piacenza","p":"ATT","r":"rare","lg":"seriea"},{"id":"david-trezeguet","n":"David Trezeguet","c":"Juventus","p":"ATT","r":"rare","lg":"seriea"},{"id":"didier-deschamps","n":"Didier Deschamps","c":"Juventus","p":"MID","r":"legend","lg":"seriea"},{"id":"diego-forlan","n":"Diego Forlán","c":"Atlético Madrid","p":"ATT","r":"rare","lg":"liga"},{"id":"diego-tristan","n":"Diego Tristán","c":"Deportivo","p":"ATT","r":"rare","lg":"liga"},{"id":"dion-dublin","n":"Dion Dublin","c":"Aston Villa","p":"ATT","r":"rare","lg":"pl"},{"id":"djibril-sidibe","n":"Djibril Sidibé","c":"Monaco","p":"DEF","r":"rare","lg":"l1"},{"id":"dwight-yorke","n":"Dwight Yorke","c":"Man Utd","p":"ATT","r":"rare","lg":"pl"},{"id":"edinson-cavani","n":"Edinson Cavani","c":"PSG","p":"ATT","r":"rare","lg":"l1"},{"id":"emilio-butragueno","n":"Emilio Butragueño","c":"Real Madrid","p":"ATT","r":"rare","lg":"liga"},{"id":"emmanuel-petit","n":"Emmanuel Petit","c":"Arsenal","p":"MID","r":"rare","lg":"pl"},{"id":"erling-haaland","n":"Erling Haaland","c":"Man City","p":"ATT","r":"legend","lg":"pl"},{"id":"esteban-lepaul","n":"Esteban Lepaul","c":"Rennes","p":"ATT","r":"rare","lg":"l1"},{"id":"eusebio","n":"Eusébio","c":"Benfica","p":"ATT","r":"legend","lg":"europe"},{"id":"fabien-barthez","n":"Fabien Barthez","c":"Monaco","p":"GK","r":"legend","lg":"l1"},{"id":"fabio-cannavaro","n":"Fabio Cannavaro","c":"Juventus","p":"DEF","r":"legend","lg":"seriea"},{"id":"fabio-quagliarella","n":"Fabio Quagliarella","c":"Sampdoria","p":"ATT","r":"rare","lg":"seriea"},{"id":"ferenc-puskas","n":"Ferenc Puskás","c":"Real Madrid","p":"ATT","r":"legend","lg":"liga"},{"id":"fernando-morientes","n":"Fernando Morientes","c":"Real Madrid","p":"ATT","r":"rare","lg":"liga"},{"id":"filippo-inzaghi","n":"Filippo Inzaghi","c":"AC Milan","p":"ATT","r":"rare","lg":"seriea"},{"id":"florian-thauvin","n":"Florian Thauvin","c":"Marseille","p":"MID","r":"rare","lg":"l1"},{"id":"francesco-totti","n":"Francesco Totti","c":"AS Rome","p":"ATT","r":"legend","lg":"seriea"},{"id":"frank-leboeuf","n":"Frank Lebœuf","c":"Chelsea","p":"DEF","r":"rare","lg":"pl"},{"id":"gabriel-batistuta","n":"Gabriel Batistuta","c":"Fiorentina","p":"ATT","r":"legend","lg":"seriea"},{"id":"george-weah","n":"George Weah","c":"AC Milan","p":"ATT","r":"legend","lg":"seriea"},{"id":"gerd-muller","n":"Gerd Müller","c":"Bayern Munich","p":"ATT","r":"legend","lg":"europe"},{"id":"gianluca-vialli","n":"Gianluca Vialli","c":"Sampdoria","p":"ATT","r":"rare","lg":"seriea"},{"id":"giuseppe-signori","n":"Giuseppe Signori","c":"Lazio","p":"ATT","r":"rare","lg":"seriea"},{"id":"gonzalo-higuain","n":"Gonzalo Higuaín","c":"Naples","p":"ATT","r":"rare","lg":"seriea"},{"id":"hristo-stoichkov","n":"Hristo Stoichkov","c":"FC Barcelone","p":"ATT","r":"legend","lg":"liga"},{"id":"ian-wright","n":"Ian Wright","c":"Arsenal","p":"ATT","r":"legend","lg":"pl"},{"id":"igor-protti","n":"Igor Protti","c":"Bari","p":"ATT","r":"rare","lg":"seriea"},{"id":"ivan-zamorano","n":"Iván Zamorano","c":"Real Madrid","p":"ATT","r":"rare","lg":"liga"},{"id":"jean-pierre-papin","n":"Jean-Pierre Papin","c":"Marseille","p":"ATT","r":"rare","lg":"l1"},{"id":"juan-antonio-pizzi","n":"Juan Antonio Pizzi","c":"Tenerife","p":"ATT","r":"rare","lg":"liga"},{"id":"kaka","n":"Kaká","c":"AC Milan","p":"MID","r":"legend","lg":"seriea"},{"id":"karim-benzema","n":"Karim Benzema","c":"Real Madrid","p":"ATT","r":"legend","lg":"liga"},{"id":"kevin-phillips","n":"Kevin Phillips","c":"Sunderland","p":"ATT","r":"rare","lg":"pl"},{"id":"kylian-mbappe","n":"Kylian Mbappé","c":"PSG","p":"ATT","r":"legend","lg":"l1"},{"id":"laurent-blanc","n":"Laurent Blanc","c":"Montpellier","p":"DEF","r":"rare","lg":"l1"},{"id":"lautaro-martinez","n":"Lautaro Martínez","c":"Inter Milan","p":"ATT","r":"rare","lg":"seriea"},{"id":"les-ferdinand","n":"Les Ferdinand","c":"Newcastle","p":"ATT","r":"rare","lg":"pl"},{"id":"lilian-thuram","n":"Lilian Thuram","c":"Juventus","p":"DEF","r":"legend","lg":"seriea"},{"id":"lionel-charbonnier","n":"Lionel Charbonnier","c":"Auxerre","p":"GK","r":"rare","lg":"l1"},{"id":"lionel-messi","n":"Lionel Messi","c":"FC Barcelone","p":"ATT","r":"legend","lg":"liga"},{"id":"lothar-matthaus","n":"Lothar Matthäus","c":"Bayern Munich","p":"MID","r":"legend","lg":"europe"},{"id":"luca-toni","n":"Luca Toni","c":"Fiorentina","p":"ATT","r":"rare","lg":"seriea"},{"id":"lucas-hernandez","n":"Lucas Hernandez","c":"Bayern Munich","p":"DEF","r":"rare","lg":"europe"},{"id":"luis-figo","n":"Luís Figo","c":"Real Madrid","p":"MID","r":"legend","lg":"liga"},{"id":"mamadou-niang","n":"Mamadou Niang","c":"Marseille","p":"ATT","r":"rare","lg":"l1"},{"id":"manolo","n":"Manolo","c":"Atlético Madrid","p":"ATT","r":"rare","lg":"liga"},{"id":"marcel-desailly","n":"Marcel Desailly","c":"Chelsea","p":"DEF","r":"legend","lg":"pl"},{"id":"marco-van-basten","n":"Marco van Basten","c":"AC Milan","p":"ATT","r":"legend","lg":"seriea"},{"id":"mario-gomez","n":"Mario Gómez","c":"Bayern Munich","p":"ATT","r":"rare","lg":"europe"},{"id":"mason-greenwood","n":"Mason Greenwood","c":"Marseille","p":"ATT","r":"rare","lg":"l1"},{"id":"mateo-retegui","n":"Mateo Retegui","c":"Atalanta","p":"ATT","r":"rare","lg":"seriea"},{"id":"matt-le-tissier","n":"Matt Le Tissier","c":"Southampton","p":"ATT","r":"rare","lg":"pl"},{"id":"matthias-sammer","n":"Matthias Sammer","c":"Dortmund","p":"DEF","r":"legend","lg":"europe"},{"id":"mauro-icardi","n":"Mauro Icardi","c":"Inter Milan","p":"ATT","r":"rare","lg":"seriea"},{"id":"mohamed-salah","n":"Mohamed Salah","c":"Liverpool","p":"ATT","r":"legend","lg":"pl"},{"id":"moussa-sow","n":"Moussa Sow","c":"Lille","p":"ATT","r":"rare","lg":"l1"},{"id":"marcio-amoroso","n":"Márcio Amoroso","c":"Udinese","p":"ATT","r":"rare","lg":"seriea"},{"id":"mario-jardel","n":"Mário Jardel","c":"Porto","p":"ATT","r":"rare","lg":"europe"},{"id":"n-golo-kante","n":"N'Golo Kanté","c":"Chelsea","p":"MID","r":"legend","lg":"pl"},{"id":"nabil-fekir","n":"Nabil Fekir","c":"Lyon","p":"MID","r":"rare","lg":"l1"},{"id":"nene","n":"Nenê","c":"PSG","p":"ATT","r":"rare","lg":"l1"},{"id":"neymar","n":"Neymar","c":"FC Barcelone","p":"ATT","r":"legend","lg":"liga"},{"id":"nicolas-ouedec","n":"Nicolas Ouédec","c":"Nantes","p":"ATT","r":"rare","lg":"l1"},{"id":"ole-gunnar-solskjaer","n":"Ole Gunnar Solskjær","c":"Man Utd","p":"ATT","r":"legend","lg":"pl"},{"id":"oliver-bierhoff","n":"Oliver Bierhoff","c":"Udinese","p":"ATT","r":"rare","lg":"seriea"},{"id":"ousmane-dembele","n":"Ousmane Dembélé","c":"PSG","p":"ATT","r":"rare","lg":"l1"},{"id":"paco-gento","n":"Paco Gento","c":"Real Madrid","p":"MID","r":"rare","lg":"liga"},{"id":"patrice-loko","n":"Patrice Loko","c":"Nantes","p":"ATT","r":"rare","lg":"l1"},{"id":"patrick-kluivert","n":"Patrick Kluivert","c":"Ajax","p":"ATT","r":"rare","lg":"europe"},{"id":"paul-pogba","n":"Paul Pogba","c":"Man Utd","p":"MID","r":"rare","lg":"pl"},{"id":"pauleta","n":"Pauleta","c":"PSG","p":"ATT","r":"rare","lg":"l1"},{"id":"pavel-nedved","n":"Pavel Nedvěd","c":"Juventus","p":"MID","r":"legend","lg":"seriea"},{"id":"pierre-emerick-aubameyang","n":"Pierre-Emerick Aubameyang","c":"Arsenal","p":"ATT","r":"rare","lg":"pl"},{"id":"presnel-kimpembe","n":"Presnel Kimpembe","c":"PSG","p":"DEF","r":"rare","lg":"l1"},{"id":"raphael-varane","n":"Raphaël Varane","c":"Real Madrid","p":"DEF","r":"rare","lg":"liga"},{"id":"raul","n":"Raúl","c":"Real Madrid","p":"ATT","r":"legend","lg":"liga"},{"id":"rivaldo","n":"Rivaldo","c":"FC Barcelone","p":"MID","r":"legend","lg":"liga"},{"id":"robert-lewandowski","n":"Robert Lewandowski","c":"Bayern Munich","p":"ATT","r":"legend","lg":"europe"},{"id":"roberto-baggio","n":"Roberto Baggio","c":"Juventus","p":"ATT","r":"legend","lg":"seriea"},{"id":"rodri","n":"Rodri","c":"Man City","p":"MID","r":"rare","lg":"pl"},{"id":"roger-boli","n":"Roger Boli","c":"Lens","p":"ATT","r":"rare","lg":"l1"},{"id":"romario","n":"Romário","c":"FC Barcelone","p":"ATT","r":"legend","lg":"liga"},{"id":"ronaldinho","n":"Ronaldinho","c":"FC Barcelone","p":"MID","r":"legend","lg":"liga"},{"id":"ronaldo-nazario","n":"Ronaldo Nazário","c":"Real Madrid","p":"ATT","r":"legend","lg":"liga"},{"id":"roy-makaay","n":"Roy Makaay","c":"Deportivo","p":"ATT","r":"rare","lg":"liga"},{"id":"salva","n":"Salva","c":"Racing Santander","p":"ATT","r":"rare","lg":"liga"},{"id":"samuel-umtiti","n":"Samuel Umtiti","c":"FC Barcelone","p":"DEF","r":"rare","lg":"liga"},{"id":"shabani-nonda","n":"Shabani Nonda","c":"Monaco","p":"ATT","r":"rare","lg":"l1"},{"id":"son-heung-min","n":"Son Heung-min","c":"Tottenham","p":"ATT","r":"rare","lg":"pl"},{"id":"sonny-anderson","n":"Sonny Anderson","c":"Lyon","p":"ATT","r":"rare","lg":"l1"},{"id":"steve-mandanda","n":"Steve Mandanda","c":"Marseille","p":"GK","r":"rare","lg":"l1"},{"id":"stephane-guivarc-h","n":"Stéphane Guivarc'h","c":"Auxerre","p":"ATT","r":"rare","lg":"l1"},{"id":"sylvain-wiltord","n":"Sylvain Wiltord","c":"Bordeaux","p":"ATT","r":"rare","lg":"l1"},{"id":"thomas-lemar","n":"Thomas Lemar","c":"Monaco","p":"MID","r":"rare","lg":"l1"},{"id":"thomas-muller","n":"Thomas Müller","c":"Bayern Munich","p":"MID","r":"legend","lg":"europe"},{"id":"victor-osimhen","n":"Victor Osimhen","c":"Naples","p":"ATT","r":"rare","lg":"seriea"},{"id":"vincent-candela","n":"Vincent Candela","c":"AS Rome","p":"DEF","r":"rare","lg":"seriea"},{"id":"wissam-ben-yedder","n":"Wissam Ben Yedder","c":"Monaco","p":"ATT","r":"rare","lg":"l1"},{"id":"youri-djorkaeff","n":"Youri Djorkaeff","c":"Monaco","p":"ATT","r":"rare","lg":"l1"},{"id":"zinedine-zidane","n":"Zinédine Zidane","c":"Real Madrid","p":"MID","r":"legend","lg":"liga"},{"id":"zlatan-ibrahimovic","n":"Zlatan Ibrahimović","c":"PSG","p":"ATT","r":"legend","lg":"l1"}]
+[
+{
+"id": "adrian",
+"n": "Adrián",
+"c": "West Ham",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "ali-al-habsi",
+"n": "Ali Al-Habsi",
+"c": "Wigan",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "allan-mcgregor",
+"n": "Allan McGregor",
+"c": "Hull",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "asmir-begovic",
+"n": "Asmir Begović",
+"c": "Stoke",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "ben-foster",
+"n": "Ben Foster",
+"c": "West Brom",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "brad-friedel",
+"n": "Brad Friedel",
+"c": "Blackburn",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "brad-guzan",
+"n": "Brad Guzan",
+"c": "Aston Villa",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "carlo-cudicini",
+"n": "Carlo Cudicini",
+"c": "Chelsea",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "chris-kirkland",
+"n": "Chris Kirkland",
+"c": "Wigan",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "craig-gordon",
+"n": "Craig Gordon",
+"c": "Sunderland",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "david-james",
+"n": "David James",
+"c": "Portsmouth",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "david-marshall",
+"n": "David Marshall",
+"c": "Cardiff",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "david-ospina",
+"n": "David Ospina",
+"c": "Arsenal",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "david-de-gea",
+"n": "David de Gea",
+"c": "Man Utd",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "edwin-van-der-sar",
+"n": "Edwin van der Sar",
+"c": "Man Utd",
+"p": "GK",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "fraser-forster",
+"n": "Fraser Forster",
+"c": "Southampton",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "heurelho-gomes",
+"n": "Heurelho Gomes",
+"c": "Tottenham",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "hugo-lloris",
+"n": "Hugo Lloris",
+"c": "Tottenham",
+"p": "GK",
+"r": "rare",
+"lg": "pl"
+},
+{
+"id": "jens-lehmann",
+"n": "Jens Lehmann",
+"c": "Arsenal",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "jerzy-dudek",
+"n": "Jerzy Dudek",
+"c": "Liverpool",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "joe-hart",
+"n": "Joe Hart",
+"c": "Man City",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "john-ruddy",
+"n": "John Ruddy",
+"c": "Norwich",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "julian-speroni",
+"n": "Julián Speroni",
+"c": "Crystal Palace",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "jussi-jaaskelainen",
+"n": "Jussi Jääskeläinen",
+"c": "Bolton",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "julio-cesar",
+"n": "Júlio César",
+"c": "QPR",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "kasper-schmeichel",
+"n": "Kasper Schmeichel",
+"c": "Leicester",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "manuel-almunia",
+"n": "Manuel Almunia",
+"c": "Arsenal",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "marcus-hahnemann",
+"n": "Marcus Hahnemann",
+"c": "Reading",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "mark-schwarzer",
+"n": "Mark Schwarzer",
+"c": "Middlesbrough",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "michel-vorm",
+"n": "Michel Vorm",
+"c": "Tottenham",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "paul-robinson",
+"n": "Paul Robinson",
+"c": "Tottenham",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "pepe-reina",
+"n": "Pepe Reina",
+"c": "Liverpool",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "petr-cech",
+"n": "Petr Čech",
+"c": "Chelsea",
+"p": "GK",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "robert-green",
+"n": "Robert Green",
+"c": "West Ham",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "scott-carson",
+"n": "Scott Carson",
+"c": "West Brom",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "shay-given",
+"n": "Shay Given",
+"c": "Newcastle",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "simon-mignolet",
+"n": "Simon Mignolet",
+"c": "Liverpool",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "thibaut-courtois",
+"n": "Thibaut Courtois",
+"c": "Chelsea",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "thomas-s-rensen",
+"n": "Thomas Sørensen",
+"c": "Aston Villa",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "tim-howard",
+"n": "Tim Howard",
+"c": "Everton",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "tim-krul",
+"n": "Tim Krul",
+"c": "Newcastle",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "tom-heaton",
+"n": "Tom Heaton",
+"c": "Burnley",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "tomasz-kuszczak",
+"n": "Tomasz Kuszczak",
+"c": "Man Utd",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "wojciech-szczesny",
+"n": "Wojciech Szczęsny",
+"c": "Arsenal",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "lukasz-fabianski",
+"n": "Łukasz Fabiański",
+"c": "Arsenal",
+"p": "GK",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "aaron-cresswell",
+"n": "Aaron Cresswell",
+"c": "West Ham",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "aaron-hughes",
+"n": "Aaron Hughes",
+"c": "Newcastle",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "alan-hutton",
+"n": "Alan Hutton",
+"c": "Tottenham",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "alberto-moreno",
+"n": "Alberto Moreno",
+"c": "Liverpool",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "aleksandar-kolarov",
+"n": "Aleksandar Kolarov",
+"c": "Man City",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "anton-ferdinand",
+"n": "Anton Ferdinand",
+"c": "West Ham",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "ashley-cole",
+"n": "Ashley Cole",
+"c": "Chelsea",
+"p": "DEF",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "ashley-williams",
+"n": "Ashley Williams",
+"c": "Swansea",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "bacary-sagna",
+"n": "Bacary Sagna",
+"c": "Arsenal",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "benoit-assou-ekotto",
+"n": "Benoît Assou-Ekotto",
+"c": "Tottenham",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "branislav-ivanovic",
+"n": "Branislav Ivanović",
+"c": "Chelsea",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "brede-hangeland",
+"n": "Brede Hangeland",
+"c": "Fulham",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "calum-chambers",
+"n": "Calum Chambers",
+"c": "Arsenal",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "chico-flores",
+"n": "Chico Flores",
+"c": "Swansea",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "chris-smalling",
+"n": "Chris Smalling",
+"c": "Man Utd",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "christopher-samba",
+"n": "Christopher Samba",
+"c": "Blackburn",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "curtis-davies",
+"n": "Curtis Davies",
+"c": "Aston Villa",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "cesar-azpilicueta",
+"n": "César Azpilicueta",
+"c": "Chelsea",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "daley-blind",
+"n": "Daley Blind",
+"c": "Man Utd",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "daniel-agger",
+"n": "Daniel Agger",
+"c": "Liverpool",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "danny-gabbidon",
+"n": "Danny Gabbidon",
+"c": "West Ham",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "danny-rose",
+"n": "Danny Rose",
+"c": "Tottenham",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "david-luiz",
+"n": "David Luiz",
+"c": "Chelsea",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "davide-santon",
+"n": "Davide Santon",
+"c": "Newcastle",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "dejan-lovren",
+"n": "Dejan Lovren",
+"c": "Liverpool",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "eliaquim-mangala",
+"n": "Eliaquim Mangala",
+"c": "Man City",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "emanuel-pogatetz",
+"n": "Emanuel Pogatetz",
+"c": "Middlesbrough",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "emmanuel-eboue",
+"n": "Emmanuel Eboué",
+"c": "Arsenal",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "emmerson-boyce",
+"n": "Emmerson Boyce",
+"c": "Wigan",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "erik-pieters",
+"n": "Erik Pieters",
+"c": "Stoke",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "fabricio-coloccini",
+"n": "Fabricio Coloccini",
+"c": "Newcastle",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "filipe-luis",
+"n": "Filipe Luís",
+"c": "Chelsea",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "fabio-aurelio",
+"n": "Fábio Aurélio",
+"c": "Liverpool",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "gabriel-heinze",
+"n": "Gabriel Heinze",
+"c": "Man Utd",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "gareth-mcauley",
+"n": "Gareth McAuley",
+"c": "West Brom",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "gareth-southgate",
+"n": "Gareth Southgate",
+"c": "Aston Villa",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "gary-cahill",
+"n": "Gary Cahill",
+"c": "Chelsea",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "gary-neville",
+"n": "Gary Neville",
+"c": "Man Utd",
+"p": "DEF",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "gael-clichy",
+"n": "Gaël Clichy",
+"c": "Arsenal",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "glen-johnson",
+"n": "Glen Johnson",
+"c": "Liverpool",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "hermann-hrei-arsson",
+"n": "Hermann Hreiðarsson",
+"c": "Charlton",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "hector-bellerin",
+"n": "Héctor Bellerín",
+"c": "Arsenal",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "james-collins",
+"n": "James Collins",
+"c": "West Ham",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "james-tomkins",
+"n": "James Tomkins",
+"c": "West Ham",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "jamie-carragher",
+"n": "Jamie Carragher",
+"c": "Liverpool",
+"p": "DEF",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "jan-vertonghen",
+"n": "Jan Vertonghen",
+"c": "Tottenham",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "jean-alain-boumsong",
+"n": "Jean-Alain Boumsong",
+"c": "Newcastle",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "joel-ward",
+"n": "Joel Ward",
+"c": "Crystal Palace",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "johan-djourou",
+"n": "Johan Djourou",
+"c": "Arsenal",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "john-arne-riise",
+"n": "John Arne Riise",
+"c": "Liverpool",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "john-heitinga",
+"n": "John Heitinga",
+"c": "Everton",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "john-o-shea",
+"n": "John O'Shea",
+"c": "Man Utd",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "john-terry",
+"n": "John Terry",
+"c": "Chelsea",
+"p": "DEF",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "joleon-lescott",
+"n": "Joleon Lescott",
+"c": "Man City",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "jonas-olsson",
+"n": "Jonas Olsson",
+"c": "West Brom",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "jonathan-woodgate",
+"n": "Jonathan Woodgate",
+"c": "Tottenham",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "jonny-evans",
+"n": "Jonny Evans",
+"c": "Man Utd",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "joseph-yobo",
+"n": "Joseph Yobo",
+"c": "Everton",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "jose-bosingwa",
+"n": "José Bosingwa",
+"c": "Chelsea",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "jose-enrique",
+"n": "José Enrique",
+"c": "Liverpool",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "jose-fonte",
+"n": "José Fonte",
+"c": "Southampton",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "juliano-belletti",
+"n": "Juliano Belletti",
+"c": "Chelsea",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "khalid-boulahrouz",
+"n": "Khalid Boulahrouz",
+"c": "Chelsea",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "kieran-gibbs",
+"n": "Kieran Gibbs",
+"c": "Arsenal",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "kieran-trippier",
+"n": "Kieran Trippier",
+"c": "Tottenham",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "kolo-toure",
+"n": "Kolo Touré",
+"c": "Arsenal",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "kurt-zouma",
+"n": "Kurt Zouma",
+"c": "Chelsea",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "kyle-walker",
+"n": "Kyle Walker",
+"c": "Tottenham",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "lauren",
+"n": "Lauren",
+"c": "Arsenal",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "laurent-koscielny",
+"n": "Laurent Koscielny",
+"c": "Arsenal",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "ledley-king",
+"n": "Ledley King",
+"c": "Tottenham",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "leighton-baines",
+"n": "Leighton Baines",
+"c": "Everton",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "liam-ridgewell",
+"n": "Liam Ridgewell",
+"c": "Aston Villa",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "lucas-neill",
+"n": "Lucas Neill",
+"c": "Blackburn",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "luke-shaw",
+"n": "Luke Shaw",
+"c": "Man Utd",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "luke-young",
+"n": "Luke Young",
+"c": "Charlton",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "mamadou-sakho",
+"n": "Mamadou Sakho",
+"c": "Liverpool",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "marcos-rojo",
+"n": "Marcos Rojo",
+"c": "Man Utd",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "mario-melchiot",
+"n": "Mario Melchiot",
+"c": "Chelsea",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "martin-laursen",
+"n": "Martin Laursen",
+"c": "Aston Villa",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "martin-skrtel",
+"n": "Martin Škrtel",
+"c": "Liverpool",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "mathieu-debuchy",
+"n": "Mathieu Debuchy",
+"c": "Arsenal",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "matthew-upson",
+"n": "Matthew Upson",
+"c": "West Ham",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "maynor-figueroa",
+"n": "Maynor Figueroa",
+"c": "Wigan",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "micah-richards",
+"n": "Micah Richards",
+"c": "Man City",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "michael-dawson",
+"n": "Michael Dawson",
+"c": "Tottenham",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "michael-turner",
+"n": "Michael Turner",
+"c": "Sunderland",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "mikael-silvestre",
+"n": "Mikaël Silvestre",
+"c": "Man Utd",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "nacho-monreal",
+"n": "Nacho Monreal",
+"c": "Arsenal",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "nathaniel-clyne",
+"n": "Nathaniel Clyne",
+"c": "Liverpool",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "neil-taylor",
+"n": "Neil Taylor",
+"c": "Swansea",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "nemanja-vidic",
+"n": "Nemanja Vidić",
+"c": "Man Utd",
+"p": "DEF",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "olof-mellberg",
+"n": "Olof Mellberg",
+"c": "Aston Villa",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "pablo-zabaleta",
+"n": "Pablo Zabaleta",
+"c": "Man City",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "pascal-chimbonda",
+"n": "Pascal Chimbonda",
+"c": "Tottenham",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "patrice-evra",
+"n": "Patrice Evra",
+"c": "Man Utd",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "paul-konchesky",
+"n": "Paul Konchesky",
+"c": "Fulham",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "paul-scharner",
+"n": "Paul Scharner",
+"c": "Wigan",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "paulo-ferreira",
+"n": "Paulo Ferreira",
+"c": "Chelsea",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "per-mertesacker",
+"n": "Per Mertesacker",
+"c": "Arsenal",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "phil-bardsley",
+"n": "Phil Bardsley",
+"c": "Sunderland",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "phil-jagielka",
+"n": "Phil Jagielka",
+"c": "Everton",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "phil-jones",
+"n": "Phil Jones",
+"c": "Man Utd",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "philippe-senderos",
+"n": "Philippe Senderos",
+"c": "Arsenal",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "rafael-da-silva",
+"n": "Rafael da Silva",
+"c": "Man Utd",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "ricardo-carvalho",
+"n": "Ricardo Carvalho",
+"c": "Chelsea",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "richard-dunne",
+"n": "Richard Dunne",
+"c": "Man City",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "rio-ferdinand",
+"n": "Rio Ferdinand",
+"c": "Man Utd",
+"p": "DEF",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "robert-huth",
+"n": "Robert Huth",
+"c": "Stoke",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "roger-johnson",
+"n": "Roger Johnson",
+"c": "Birmingham",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "ron-vlaar",
+"n": "Ron Vlaar",
+"c": "Aston Villa",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "russell-martin",
+"n": "Russell Martin",
+"c": "Norwich",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "ryan-nelsen",
+"n": "Ryan Nelsen",
+"c": "Blackburn",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "ryan-shawcross",
+"n": "Ryan Shawcross",
+"c": "Stoke",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "sami-hyypia",
+"n": "Sami Hyypiä",
+"c": "Liverpool",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "scott-dann",
+"n": "Scott Dann",
+"c": "Crystal Palace",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "seamus-coleman",
+"n": "Seamus Coleman",
+"c": "Everton",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "sol-campbell",
+"n": "Sol Campbell",
+"c": "Arsenal",
+"p": "DEF",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "stephen-warnock",
+"n": "Stephen Warnock",
+"c": "Liverpool",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "steve-finnan",
+"n": "Steve Finnan",
+"c": "Liverpool",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "steven-caulker",
+"n": "Steven Caulker",
+"c": "Swansea",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "steven-taylor",
+"n": "Steven Taylor",
+"c": "Newcastle",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "sylvain-distin",
+"n": "Sylvain Distin",
+"c": "Everton",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "tal-ben-haim",
+"n": "Tal Ben Haim",
+"c": "Bolton",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "thomas-vermaelen",
+"n": "Thomas Vermaelen",
+"c": "Arsenal",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "titus-bramble",
+"n": "Titus Bramble",
+"c": "Newcastle",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "tony-hibbert",
+"n": "Tony Hibbert",
+"c": "Everton",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "vedran-corluka",
+"n": "Vedran Ćorluka",
+"c": "Tottenham",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "vincent-kompany",
+"n": "Vincent Kompany",
+"c": "Man City",
+"p": "DEF",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "wayne-bridge",
+"n": "Wayne Bridge",
+"c": "Chelsea",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "wes-brown",
+"n": "Wes Brown",
+"c": "Man Utd",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "wes-morgan",
+"n": "Wes Morgan",
+"c": "Leicester",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "william-gallas",
+"n": "William Gallas",
+"c": "Chelsea",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "winston-reid",
+"n": "Winston Reid",
+"c": "West Ham",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "younes-kaboul",
+"n": "Younès Kaboul",
+"c": "Tottenham",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "yuri-zhirkov",
+"n": "Yuri Zhirkov",
+"c": "Chelsea",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "angel-rangel",
+"n": "Àngel Rangel",
+"c": "Swansea",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "alvaro-arbeloa",
+"n": "Álvaro Arbeloa",
+"c": "Liverpool",
+"p": "DEF",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "aaron-lennon",
+"n": "Aaron Lennon",
+"c": "Tottenham",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "aaron-ramsey",
+"n": "Aaron Ramsey",
+"c": "Arsenal",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "abou-diaby",
+"n": "Abou Diaby",
+"c": "Arsenal",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "adam-lallana",
+"n": "Adam Lallana",
+"c": "Liverpool",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "adel-taarabt",
+"n": "Adel Taarabt",
+"c": "QPR",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "ahmed-elmohamady",
+"n": "Ahmed Elmohamady",
+"c": "Hull",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "alberto-aquilani",
+"n": "Alberto Aquilani",
+"c": "Liverpool",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "alex-oxlade-chamberlain",
+"n": "Alex Oxlade-Chamberlain",
+"c": "Arsenal",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "alexander-hleb",
+"n": "Alexander Hleb",
+"c": "Arsenal",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "alexandre-song",
+"n": "Alexandre Song",
+"c": "Arsenal",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "ander-herrera",
+"n": "Ander Herrera",
+"c": "Man Utd",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "anderson",
+"n": "Anderson",
+"c": "Man Utd",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "antonio-valencia",
+"n": "Antonio Valencia",
+"c": "Man Utd",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "ashley-westwood",
+"n": "Ashley Westwood",
+"c": "Aston Villa",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "ashley-young",
+"n": "Ashley Young",
+"c": "Man Utd",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "barry-ferguson",
+"n": "Barry Ferguson",
+"c": "Blackburn",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "bolo-zenden",
+"n": "Bolo Zenden",
+"c": "Chelsea",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "bradley-johnson",
+"n": "Bradley Johnson",
+"c": "Norwich",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "brett-emerton",
+"n": "Brett Emerton",
+"c": "Blackburn",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "cesc-fabregas",
+"n": "Cesc Fàbregas",
+"c": "Arsenal",
+"p": "MID",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "charles-n-zogbia",
+"n": "Charles N'Zogbia",
+"c": "Newcastle",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "charlie-adam",
+"n": "Charlie Adam",
+"c": "Stoke",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "cheick-tiote",
+"n": "Cheick Tioté",
+"c": "Newcastle",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "cheikhou-kouyate",
+"n": "Cheikhou Kouyaté",
+"c": "West Ham",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "chris-brunt",
+"n": "Chris Brunt",
+"c": "West Brom",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "christian-eriksen",
+"n": "Christian Eriksen",
+"c": "Tottenham",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "claude-makelele",
+"n": "Claude Makélélé",
+"c": "Chelsea",
+"p": "MID",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "craig-gardner",
+"n": "Craig Gardner",
+"c": "Aston Villa",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "damien-duff",
+"n": "Damien Duff",
+"c": "Fulham",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "danny-drinkwater",
+"n": "Danny Drinkwater",
+"c": "Leicester",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "danny-murphy",
+"n": "Danny Murphy",
+"c": "Liverpool",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "darren-fletcher",
+"n": "Darren Fletcher",
+"c": "Man Utd",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "david-bentley",
+"n": "David Bentley",
+"c": "Blackburn",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "david-silva",
+"n": "David Silva",
+"c": "Man City",
+"p": "MID",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "deco",
+"n": "Deco",
+"c": "Chelsea",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "dennis-rommedahl",
+"n": "Dennis Rommedahl",
+"c": "Charlton",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "denilson",
+"n": "Denílson",
+"c": "Arsenal",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "didier-zokora",
+"n": "Didier Zokora",
+"c": "Tottenham",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "dietmar-hamann",
+"n": "Dietmar Hamann",
+"c": "Liverpool",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "dusan-tadic",
+"n": "Dušan Tadić",
+"c": "Southampton",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "edgar-davids",
+"n": "Edgar Davids",
+"c": "Tottenham",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "edu",
+"n": "Edu",
+"c": "Arsenal",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "elano",
+"n": "Elano",
+"c": "Man City",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "emre-belozoglu",
+"n": "Emre Belözoğlu",
+"c": "Newcastle",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "emre-can",
+"n": "Emre Can",
+"c": "Liverpool",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "esteban-cambiasso",
+"n": "Esteban Cambiasso",
+"c": "Leicester",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "fabian-delph",
+"n": "Fabian Delph",
+"c": "Aston Villa",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "fabrice-muamba",
+"n": "Fabrice Muamba",
+"c": "Bolton",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "fernandinho",
+"n": "Fernandinho",
+"c": "Man City",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "florent-malouda",
+"n": "Florent Malouda",
+"c": "Chelsea",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "frank-lampard",
+"n": "Frank Lampard",
+"c": "Chelsea",
+"p": "MID",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "freddie-ljungberg",
+"n": "Freddie Ljungberg",
+"c": "Arsenal",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "gaizka-mendieta",
+"n": "Gaizka Mendieta",
+"c": "Middlesbrough",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "gareth-bale",
+"n": "Gareth Bale",
+"c": "Tottenham",
+"p": "MID",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "gareth-barry",
+"n": "Gareth Barry",
+"c": "Aston Villa",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "gary-medel",
+"n": "Gary Medel",
+"c": "Cardiff",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "gary-speed",
+"n": "Gary Speed",
+"c": "Newcastle",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "gaston-ramirez",
+"n": "Gastón Ramírez",
+"c": "Southampton",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "george-boateng",
+"n": "George Boateng",
+"c": "Middlesbrough",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "geremi",
+"n": "Geremi",
+"c": "Chelsea",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "gilberto-silva",
+"n": "Gilberto Silva",
+"c": "Arsenal",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "glenn-whelan",
+"n": "Glenn Whelan",
+"c": "Stoke",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "gylfi-sigur-sson",
+"n": "Gylfi Sigurðsson",
+"c": "Swansea",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "harry-kewell",
+"n": "Harry Kewell",
+"c": "Liverpool",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "hatem-ben-arfa",
+"n": "Hatem Ben Arfa",
+"c": "Newcastle",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "ivan-campo",
+"n": "Iván Campo",
+"c": "Bolton",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "jack-rodwell",
+"n": "Jack Rodwell",
+"c": "Everton",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "jack-wilshere",
+"n": "Jack Wilshere",
+"c": "Arsenal",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "jake-livermore",
+"n": "Jake Livermore",
+"c": "Hull",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "james-mccarthy",
+"n": "James McCarthy",
+"c": "Everton",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "james-mcfadden",
+"n": "James McFadden",
+"c": "Everton",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "james-milner",
+"n": "James Milner",
+"c": "Liverpool",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "james-morrison",
+"n": "James Morrison",
+"c": "West Brom",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "james-ward-prowse",
+"n": "James Ward-Prowse",
+"c": "Southampton",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "jamie-o-hara",
+"n": "Jamie O'Hara",
+"c": "Tottenham",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "jason-puncheon",
+"n": "Jason Puncheon",
+"c": "Crystal Palace",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "javi-garcia",
+"n": "Javi García",
+"c": "Man City",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "javier-mascherano",
+"n": "Javier Mascherano",
+"c": "Liverpool",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "jay-jay-okocha",
+"n": "Jay-Jay Okocha",
+"c": "Bolton",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "jermaine-jenas",
+"n": "Jermaine Jenas",
+"c": "Tottenham",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "jermaine-pennant",
+"n": "Jermaine Pennant",
+"c": "Liverpool",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "jerome-thomas",
+"n": "Jerome Thomas",
+"c": "West Brom",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "jesus-navas",
+"n": "Jesús Navas",
+"c": "Man City",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "ji-sung-park",
+"n": "Ji-sung Park",
+"c": "Man Utd",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "jimmy-bullard",
+"n": "Jimmy Bullard",
+"c": "Fulham",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "joe-allen",
+"n": "Joe Allen",
+"c": "Liverpool",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "joe-cole",
+"n": "Joe Cole",
+"c": "Chelsea",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "joey-barton",
+"n": "Joey Barton",
+"c": "Man City",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "john-obi-mikel",
+"n": "John Obi Mikel",
+"c": "Chelsea",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "jonjo-shelvey",
+"n": "Jonjo Shelvey",
+"c": "Newcastle",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "jonas-gutierrez",
+"n": "Jonás Gutiérrez",
+"c": "Newcastle",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "jordan-henderson",
+"n": "Jordan Henderson",
+"c": "Liverpool",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "juan-mata",
+"n": "Juan Mata",
+"c": "Man Utd",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "kevin-kilbane",
+"n": "Kevin Kilbane",
+"c": "Everton",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "kevin-nolan",
+"n": "Kevin Nolan",
+"c": "Bolton",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "kevin-prince-boateng",
+"n": "Kevin-Prince Boateng",
+"c": "Tottenham",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "ki-sung-yueng",
+"n": "Ki Sung-yueng",
+"c": "Swansea",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "kieran-richardson",
+"n": "Kieran Richardson",
+"c": "Sunderland",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "kieron-dyer",
+"n": "Kieron Dyer",
+"c": "Newcastle",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "kleberson",
+"n": "Kléberson",
+"c": "Man Utd",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "lee-carsley",
+"n": "Lee Carsley",
+"c": "Everton",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "lee-cattermole",
+"n": "Lee Cattermole",
+"c": "Sunderland",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "lee-chung-yong",
+"n": "Lee Chung-yong",
+"c": "Bolton",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "leon-britton",
+"n": "Leon Britton",
+"c": "Swansea",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "leon-osman",
+"n": "Leon Osman",
+"c": "Everton",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "lucas-leiva",
+"n": "Lucas Leiva",
+"c": "Liverpool",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "luis-garcia",
+"n": "Luis García",
+"c": "Liverpool",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "luka-modric",
+"n": "Luka Modrić",
+"c": "Tottenham",
+"p": "MID",
+"r": "icon",
+"lg": "pl"
+},
+{
+"id": "marc-albrighton",
+"n": "Marc Albrighton",
+"c": "Leicester",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "mark-noble",
+"n": "Mark Noble",
+"c": "West Ham",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "marouane-fellaini",
+"n": "Marouane Fellaini",
+"c": "Man Utd",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "martin-petrov",
+"n": "Martin Petrov",
+"c": "Man City",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "mathieu-flamini",
+"n": "Mathieu Flamini",
+"c": "Arsenal",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "matt-jarvis",
+"n": "Matt Jarvis",
+"c": "Wolves",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "matt-taylor",
+"n": "Matt Taylor",
+"c": "Portsmouth",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "matthew-etherington",
+"n": "Matthew Etherington",
+"c": "Stoke",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "maxi-rodriguez",
+"n": "Maxi Rodríguez",
+"c": "Liverpool",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "mesut-ozil",
+"n": "Mesut Özil",
+"c": "Arsenal",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "michael-ballack",
+"n": "Michael Ballack",
+"c": "Chelsea",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "michael-carrick",
+"n": "Michael Carrick",
+"c": "Man Utd",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "michael-essien",
+"n": "Michael Essien",
+"c": "Chelsea",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "mikel-arteta",
+"n": "Mikel Arteta",
+"c": "Everton",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "mile-jedinak",
+"n": "Mile Jedinak",
+"c": "Crystal Palace",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "mohamed-diame",
+"n": "Mohamed Diamé",
+"c": "Wigan",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "momo-sissoko",
+"n": "Momo Sissoko",
+"c": "Liverpool",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "morgan-schneiderlin",
+"n": "Morgan Schneiderlin",
+"c": "Everton",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "morten-gamst-pedersen",
+"n": "Morten Gamst Pedersen",
+"c": "Blackburn",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "mousa-dembele",
+"n": "Mousa Dembélé",
+"c": "Tottenham",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "moussa-sissoko",
+"n": "Moussa Sissoko",
+"c": "Tottenham",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "nacer-chadli",
+"n": "Nacer Chadli",
+"c": "Tottenham",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "nani",
+"n": "Nani",
+"c": "Man Utd",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "nathan-dyer",
+"n": "Nathan Dyer",
+"c": "Swansea",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "nemanja-matic",
+"n": "Nemanja Matić",
+"c": "Man Utd",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "nicky-butt",
+"n": "Nicky Butt",
+"c": "Man Utd",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "nigel-reo-coker",
+"n": "Nigel Reo-Coker",
+"c": "Aston Villa",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "nigel-de-jong",
+"n": "Nigel de Jong",
+"c": "Man City",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "niko-kranjcar",
+"n": "Niko Kranjčar",
+"c": "Portsmouth",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "oscar",
+"n": "Oscar",
+"c": "Chelsea",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "owen-hargreaves",
+"n": "Owen Hargreaves",
+"c": "Man Utd",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "papa-bouba-diop",
+"n": "Papa Bouba Diop",
+"c": "Fulham",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "patrick-vieira",
+"n": "Patrick Vieira",
+"c": "Arsenal",
+"p": "MID",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "paul-scholes",
+"n": "Paul Scholes",
+"c": "Man Utd",
+"p": "MID",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "paulinho",
+"n": "Paulinho",
+"c": "Tottenham",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "pedro-mendes",
+"n": "Pedro Mendes",
+"c": "Portsmouth",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "phil-neville",
+"n": "Phil Neville",
+"c": "Man Utd",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "philippe-coutinho",
+"n": "Philippe Coutinho",
+"c": "Liverpool",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "rafael-van-der-vaart",
+"n": "Rafael van der Vaart",
+"c": "Tottenham",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "ramires",
+"n": "Ramires",
+"c": "Chelsea",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "raul-meireles",
+"n": "Raul Meireles",
+"c": "Liverpool",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "robbie-savage",
+"n": "Robbie Savage",
+"c": "Blackburn",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "robert-pires",
+"n": "Robert Pirès",
+"c": "Arsenal",
+"p": "MID",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "robert-snodgrass",
+"n": "Robert Snodgrass",
+"c": "Norwich",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "rory-delap",
+"n": "Rory Delap",
+"c": "Stoke",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "ross-barkley",
+"n": "Ross Barkley",
+"c": "Everton",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "roy-keane",
+"n": "Roy Keane",
+"c": "Man Utd",
+"p": "MID",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "ryan-giggs",
+"n": "Ryan Giggs",
+"c": "Man Utd",
+"p": "MID",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "samir-nasri",
+"n": "Samir Nasri",
+"c": "Man City",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "sandro",
+"n": "Sandro",
+"c": "Tottenham",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "santi-cazorla",
+"n": "Santi Cazorla",
+"c": "Arsenal",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "scott-parker",
+"n": "Scott Parker",
+"c": "West Ham",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "sebastian-larsson",
+"n": "Sebastian Larsson",
+"c": "Sunderland",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "shaun-maloney",
+"n": "Shaun Maloney",
+"c": "Wigan",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "shaun-wright-phillips",
+"n": "Shaun Wright-Phillips",
+"c": "Man City",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "shinji-kagawa",
+"n": "Shinji Kagawa",
+"c": "Man Utd",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "steed-malbranque",
+"n": "Steed Malbranque",
+"c": "Fulham",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "stelios-giannakopoulos",
+"n": "Stelios Giannakopoulos",
+"c": "Bolton",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "stephen-hunt",
+"n": "Stephen Hunt",
+"c": "Reading",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "stephen-ireland",
+"n": "Stephen Ireland",
+"c": "Man City",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "steve-sidwell",
+"n": "Steve Sidwell",
+"c": "Fulham",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "steven-gerrard",
+"n": "Steven Gerrard",
+"c": "Liverpool",
+"p": "MID",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "steven-n-zonzi",
+"n": "Steven N'Zonzi",
+"c": "Blackburn",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "steven-pienaar",
+"n": "Steven Pienaar",
+"c": "Everton",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "stewart-downing",
+"n": "Stewart Downing",
+"c": "Middlesbrough",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "stiliyan-petrov",
+"n": "Stiliyan Petrov",
+"c": "Aston Villa",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "stephane-sessegnon",
+"n": "Stéphane Sessègnon",
+"c": "Sunderland",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "sulley-muntari",
+"n": "Sulley Muntari",
+"c": "Portsmouth",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "thomas-gravesen",
+"n": "Thomas Gravesen",
+"c": "Everton",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "tiago-mendes",
+"n": "Tiago Mendes",
+"c": "Chelsea",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "tim-cahill",
+"n": "Tim Cahill",
+"c": "Everton",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "tom-huddlestone",
+"n": "Tom Huddlestone",
+"c": "Tottenham",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "tomas-rosicky",
+"n": "Tomáš Rosický",
+"c": "Arsenal",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "tugay-kerimoglu",
+"n": "Tugay Kerimoğlu",
+"c": "Blackburn",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "victor-wanyama",
+"n": "Victor Wanyama",
+"c": "Tottenham",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "wayne-routledge",
+"n": "Wayne Routledge",
+"c": "Swansea",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "wes-hoolahan",
+"n": "Wes Hoolahan",
+"c": "Norwich",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "wilson-palacios",
+"n": "Wilson Palacios",
+"c": "Tottenham",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "xabi-alonso",
+"n": "Xabi Alonso",
+"c": "Liverpool",
+"p": "MID",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "yaya-toure",
+"n": "Yaya Touré",
+"c": "Man City",
+"p": "MID",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "yohan-cabaye",
+"n": "Yohan Cabaye",
+"c": "Newcastle",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "yossi-benayoun",
+"n": "Yossi Benayoun",
+"c": "West Ham",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "youssouf-mulumbu",
+"n": "Youssouf Mulumbu",
+"c": "West Brom",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "etienne-capoue",
+"n": "Étienne Capoue",
+"c": "Watford",
+"p": "MID",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "adam-johnson",
+"n": "Adam Johnson",
+"c": "Middlesbrough",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "afonso-alves",
+"n": "Afonso Alves",
+"c": "Middlesbrough",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "alan-shearer",
+"n": "Alan Shearer",
+"c": "Newcastle",
+"p": "ATT",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "alan-smith",
+"n": "Alan Smith",
+"c": "Newcastle",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "alexis-sanchez",
+"n": "Alexis Sánchez",
+"c": "Arsenal",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "andreas-weimann",
+"n": "Andreas Weimann",
+"c": "Aston Villa",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "andrei-arshavin",
+"n": "Andrei Arshavin",
+"c": "Arsenal",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "andriy-shevchenko",
+"n": "Andriy Shevchenko",
+"c": "Chelsea",
+"p": "ATT",
+"r": "icon",
+"lg": "pl"
+},
+{
+"id": "andre-schurrle",
+"n": "André Schürrle",
+"c": "Chelsea",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "andy-carroll",
+"n": "Andy Carroll",
+"c": "West Ham",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "andy-cole",
+"n": "Andy Cole",
+"c": "Man Utd",
+"p": "ATT",
+"r": "rare",
+"lg": "pl"
+},
+{
+"id": "andy-johnson",
+"n": "Andy Johnson",
+"c": "Fulham",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "arjen-robben",
+"n": "Arjen Robben",
+"c": "Chelsea",
+"p": "ATT",
+"r": "rare",
+"lg": "pl"
+},
+{
+"id": "arouna-kone",
+"n": "Arouna Koné",
+"c": "Everton",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "asamoah-gyan",
+"n": "Asamoah Gyan",
+"c": "Sunderland",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "ashley-barnes",
+"n": "Ashley Barnes",
+"c": "Burnley",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "ayoze-perez",
+"n": "Ayoze Pérez",
+"c": "Newcastle",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "bafetimbi-gomis",
+"n": "Bafétimbi Gomis",
+"c": "Swansea",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "benjani",
+"n": "Benjani",
+"c": "Man City",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "benni-mccarthy",
+"n": "Benni McCarthy",
+"c": "Blackburn",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "bobby-zamora",
+"n": "Bobby Zamora",
+"c": "Fulham",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "brian-mcbride",
+"n": "Brian McBride",
+"c": "Fulham",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "carlos-tevez",
+"n": "Carlos Tevez",
+"c": "Man City",
+"p": "ATT",
+"r": "rare",
+"lg": "pl"
+},
+{
+"id": "carlos-vela",
+"n": "Carlos Vela",
+"c": "Arsenal",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "carlton-cole",
+"n": "Carlton Cole",
+"c": "West Ham",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "charlie-austin",
+"n": "Charlie Austin",
+"c": "Southampton",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "christian-benteke",
+"n": "Christian Benteke",
+"c": "Aston Villa",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "claudio-pizarro",
+"n": "Claudio Pizarro",
+"c": "Chelsea",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "clint-dempsey",
+"n": "Clint Dempsey",
+"c": "Fulham",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "cristiano-ronaldo",
+"n": "Cristiano Ronaldo",
+"c": "Man Utd",
+"p": "ATT",
+"r": "icon",
+"lg": "pl"
+},
+{
+"id": "dj-campbell",
+"n": "DJ Campbell",
+"c": "Blackpool",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "daniel-sturridge",
+"n": "Daniel Sturridge",
+"c": "Liverpool",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "danny-graham",
+"n": "Danny Graham",
+"c": "Swansea",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "danny-ings",
+"n": "Danny Ings",
+"c": "Liverpool",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "danny-welbeck",
+"n": "Danny Welbeck",
+"c": "Arsenal",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "darius-vassell",
+"n": "Darius Vassell",
+"c": "Aston Villa",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "darren-bent",
+"n": "Darren Bent",
+"c": "Aston Villa",
+"p": "ATT",
+"r": "rare",
+"lg": "pl"
+},
+{
+"id": "dean-ashton",
+"n": "Dean Ashton",
+"c": "West Ham",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "demba-ba",
+"n": "Demba Ba",
+"c": "Newcastle",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "dennis-bergkamp",
+"n": "Dennis Bergkamp",
+"c": "Arsenal",
+"p": "ATT",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "diafra-sakho",
+"n": "Diafra Sakho",
+"c": "West Ham",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "didier-drogba",
+"n": "Didier Drogba",
+"c": "Chelsea",
+"p": "ATT",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "diego-costa",
+"n": "Diego Costa",
+"c": "Chelsea",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "dimitar-berbatov",
+"n": "Dimitar Berbatov",
+"c": "Man Utd",
+"p": "ATT",
+"r": "rare",
+"lg": "pl"
+},
+{
+"id": "dirk-kuyt",
+"n": "Dirk Kuyt",
+"c": "Liverpool",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "djibril-cisse",
+"n": "Djibril Cissé",
+"c": "Liverpool",
+"p": "ATT",
+"r": "rare",
+"lg": "pl"
+},
+{
+"id": "duncan-ferguson",
+"n": "Duncan Ferguson",
+"c": "Everton",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "dwight-gayle",
+"n": "Dwight Gayle",
+"c": "Crystal Palace",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "eden-hazard",
+"n": "Eden Hazard",
+"c": "Chelsea",
+"p": "ATT",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "edin-dzeko",
+"n": "Edin Džeko",
+"c": "Man City",
+"p": "ATT",
+"r": "rare",
+"lg": "pl"
+},
+{
+"id": "eduardo-da-silva",
+"n": "Eduardo da Silva",
+"c": "Arsenal",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "ei-ur-gu-johnsen",
+"n": "Eiður Guðjohnsen",
+"c": "Chelsea",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "el-hadji-diouf",
+"n": "El-Hadji Diouf",
+"c": "Bolton",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "emile-heskey",
+"n": "Emile Heskey",
+"c": "Aston Villa",
+"p": "ATT",
+"r": "rare",
+"lg": "pl"
+},
+{
+"id": "emmanuel-adebayor",
+"n": "Emmanuel Adebayor",
+"c": "Arsenal",
+"p": "ATT",
+"r": "rare",
+"lg": "pl"
+},
+{
+"id": "enner-valencia",
+"n": "Enner Valencia",
+"c": "West Ham",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "erik-lamela",
+"n": "Erik Lamela",
+"c": "Tottenham",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "fernando-torres",
+"n": "Fernando Torres",
+"c": "Liverpool",
+"p": "ATT",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "fraizer-campbell",
+"n": "Fraizer Campbell",
+"c": "Sunderland",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "franco-di-santo",
+"n": "Franco Di Santo",
+"c": "Wigan",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "gabriel-agbonlahor",
+"n": "Gabriel Agbonlahor",
+"c": "Aston Villa",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "gerard-deulofeu",
+"n": "Gerard Deulofeu",
+"c": "Everton",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "gervinho",
+"n": "Gervinho",
+"c": "Arsenal",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "glenn-murray",
+"n": "Glenn Murray",
+"c": "Brighton",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "grant-holt",
+"n": "Grant Holt",
+"c": "Norwich",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "graziano-pelle",
+"n": "Graziano Pellè",
+"c": "Southampton",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "harry-kane",
+"n": "Harry Kane",
+"c": "Tottenham",
+"p": "ATT",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "henri-camara",
+"n": "Henri Camara",
+"c": "Wigan",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "hernan-crespo",
+"n": "Hernán Crespo",
+"c": "Chelsea",
+"p": "ATT",
+"r": "rare",
+"lg": "pl"
+},
+{
+"id": "hugo-rodallega",
+"n": "Hugo Rodallega",
+"c": "Wigan",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "james-beattie",
+"n": "James Beattie",
+"c": "Everton",
+"p": "ATT",
+"r": "rare",
+"lg": "pl"
+},
+{
+"id": "jamie-vardy",
+"n": "Jamie Vardy",
+"c": "Leicester",
+"p": "ATT",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "jason-roberts",
+"n": "Jason Roberts",
+"c": "Blackburn",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "javier-hernandez",
+"n": "Javier Hernández",
+"c": "Man Utd",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "jay-rodriguez",
+"n": "Jay Rodriguez",
+"c": "Southampton",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "jermain-defoe",
+"n": "Jermain Defoe",
+"c": "Tottenham",
+"p": "ATT",
+"r": "rare",
+"lg": "pl"
+},
+{
+"id": "jimmy-floyd-hasselbaink",
+"n": "Jimmy Floyd Hasselbaink",
+"c": "Chelsea",
+"p": "ATT",
+"r": "rare",
+"lg": "pl"
+},
+{
+"id": "johan-elmander",
+"n": "Johan Elmander",
+"c": "Bolton",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "john-carew",
+"n": "John Carew",
+"c": "Aston Villa",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "john-utaka",
+"n": "John Utaka",
+"c": "Portsmouth",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "jonathan-walters",
+"n": "Jonathan Walters",
+"c": "Stoke",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "jose-antonio-reyes",
+"n": "José Antonio Reyes",
+"c": "Arsenal",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "juan-pablo-angel",
+"n": "Juan Pablo Ángel",
+"c": "Aston Villa",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "kenwyne-jones",
+"n": "Kenwyne Jones",
+"c": "Sunderland",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "kevin-davies",
+"n": "Kevin Davies",
+"c": "Bolton",
+"p": "ATT",
+"r": "rare",
+"lg": "pl"
+},
+{
+"id": "kevin-doyle",
+"n": "Kevin Doyle",
+"c": "Wolves",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "kevin-mirallas",
+"n": "Kevin Mirallas",
+"c": "Everton",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "leonardo-ulloa",
+"n": "Leonardo Ulloa",
+"c": "Leicester",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "louis-saha",
+"n": "Louis Saha",
+"c": "Man Utd",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "loic-remy",
+"n": "Loïc Rémy",
+"c": "Chelsea",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "luis-suarez",
+"n": "Luis Suárez",
+"c": "Liverpool",
+"p": "ATT",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "lukas-podolski",
+"n": "Lukas Podolski",
+"c": "Arsenal",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "luis-boa-morte",
+"n": "Luís Boa Morte",
+"c": "Fulham",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "marcus-bent",
+"n": "Marcus Bent",
+"c": "Everton",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "mario-balotelli",
+"n": "Mario Balotelli",
+"c": "Man City",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "mark-viduka",
+"n": "Mark Viduka",
+"c": "Leeds",
+"p": "ATT",
+"r": "rare",
+"lg": "pl"
+},
+{
+"id": "marko-arnautovic",
+"n": "Marko Arnautović",
+"c": "Stoke",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "marlon-harewood",
+"n": "Marlon Harewood",
+"c": "West Ham",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "marouane-chamakh",
+"n": "Marouane Chamakh",
+"c": "Arsenal",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "mateja-kezman",
+"n": "Mateja Kežman",
+"c": "Chelsea",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "michael-owen",
+"n": "Michael Owen",
+"c": "Newcastle",
+"p": "ATT",
+"r": "icon",
+"lg": "pl"
+},
+{
+"id": "michu",
+"n": "Michu",
+"c": "Swansea",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "milan-baros",
+"n": "Milan Baroš",
+"c": "Liverpool",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "nicklas-bendtner",
+"n": "Nicklas Bendtner",
+"c": "Arsenal",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "nicolas-anelka",
+"n": "Nicolas Anelka",
+"c": "Chelsea",
+"p": "ATT",
+"r": "rare",
+"lg": "pl"
+},
+{
+"id": "nikica-jelavic",
+"n": "Nikica Jelavić",
+"c": "Everton",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "nikola-zigic",
+"n": "Nikola Žigić",
+"c": "Birmingham",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "nwankwo-kanu",
+"n": "Nwankwo Kanu",
+"c": "Arsenal",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "obafemi-martins",
+"n": "Obafemi Martins",
+"c": "Newcastle",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "olivier-giroud",
+"n": "Olivier Giroud",
+"c": "Arsenal",
+"p": "ATT",
+"r": "rare",
+"lg": "pl"
+},
+{
+"id": "pablo-hernandez",
+"n": "Pablo Hernández",
+"c": "Swansea",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "papiss-cisse",
+"n": "Papiss Cissé",
+"c": "Newcastle",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "peter-crouch",
+"n": "Peter Crouch",
+"c": "Stoke",
+"p": "ATT",
+"r": "rare",
+"lg": "pl"
+},
+{
+"id": "peter-odemwingie",
+"n": "Peter Odemwingie",
+"c": "West Brom",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "radamel-falcao",
+"n": "Radamel Falcao",
+"c": "Man Utd",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "raheem-sterling",
+"n": "Raheem Sterling",
+"c": "Man City",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "ricardo-fuller",
+"n": "Ricardo Fuller",
+"c": "Stoke",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "rickie-lambert",
+"n": "Rickie Lambert",
+"c": "Southampton",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "riyad-mahrez",
+"n": "Riyad Mahrez",
+"c": "Man City",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "robbie-fowler",
+"n": "Robbie Fowler",
+"c": "Liverpool",
+"p": "ATT",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "robbie-keane",
+"n": "Robbie Keane",
+"c": "Tottenham",
+"p": "ATT",
+"r": "rare",
+"lg": "pl"
+},
+{
+"id": "roberto-soldado",
+"n": "Roberto Soldado",
+"c": "Tottenham",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "robin-van-persie",
+"n": "Robin van Persie",
+"c": "Arsenal",
+"p": "ATT",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "robinho",
+"n": "Robinho",
+"c": "Man City",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "roman-pavlyuchenko",
+"n": "Roman Pavlyuchenko",
+"c": "Tottenham",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "romelu-lukaku",
+"n": "Romelu Lukaku",
+"c": "Everton",
+"p": "ATT",
+"r": "rare",
+"lg": "pl"
+},
+{
+"id": "roque-santa-cruz",
+"n": "Roque Santa Cruz",
+"c": "Blackburn",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "ruud-van-nistelrooy",
+"n": "Ruud van Nistelrooy",
+"c": "Man Utd",
+"p": "ATT",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "ryan-babel",
+"n": "Ryan Babel",
+"c": "Liverpool",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "sadio-mane",
+"n": "Sadio Mané",
+"c": "Liverpool",
+"p": "ATT",
+"r": "rare",
+"lg": "pl"
+},
+{
+"id": "saido-berahino",
+"n": "Saido Berahino",
+"c": "West Brom",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "salomon-kalou",
+"n": "Salomon Kalou",
+"c": "Chelsea",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "samuel-eto-o",
+"n": "Samuel Eto'o",
+"c": "Chelsea",
+"p": "ATT",
+"r": "rare",
+"lg": "pl"
+},
+{
+"id": "scott-sinclair",
+"n": "Scott Sinclair",
+"c": "Swansea",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "sergio-aguero",
+"n": "Sergio Agüero",
+"c": "Man City",
+"p": "ATT",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "shane-long",
+"n": "Shane Long",
+"c": "Southampton",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "shola-ameobi",
+"n": "Shola Ameobi",
+"c": "Newcastle",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "stevan-jovetic",
+"n": "Stevan Jovetić",
+"c": "Man City",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "steven-fletcher",
+"n": "Steven Fletcher",
+"c": "Sunderland",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "sylvan-ebanks-blake",
+"n": "Sylvan Ebanks-Blake",
+"c": "Wolves",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "teddy-sheringham",
+"n": "Teddy Sheringham",
+"c": "Tottenham",
+"p": "ATT",
+"r": "rare",
+"lg": "pl"
+},
+{
+"id": "theo-walcott",
+"n": "Theo Walcott",
+"c": "Arsenal",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "thierry-henry",
+"n": "Thierry Henry",
+"c": "Arsenal",
+"p": "ATT",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "tomasz-radzinski",
+"n": "Tomasz Radzinski",
+"c": "Everton",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "tuncay-sanl",
+"n": "Tuncay Şanlı",
+"c": "Middlesbrough",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "victor-anichebe",
+"n": "Victor Anichebe",
+"c": "Everton",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "victor-moses",
+"n": "Victor Moses",
+"c": "Wigan",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "wayne-rooney",
+"n": "Wayne Rooney",
+"c": "Man Utd",
+"p": "ATT",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "wilfried-bony",
+"n": "Wilfried Bony",
+"c": "Swansea",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "wilfried-zaha",
+"n": "Wilfried Zaha",
+"c": "Crystal Palace",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "willian",
+"n": "Willian",
+"c": "Chelsea",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "yakubu",
+"n": "Yakubu",
+"c": "Everton",
+"p": "ATT",
+"r": "rare",
+"lg": "pl"
+},
+{
+"id": "yannick-bolasie",
+"n": "Yannick Bolasie",
+"c": "Crystal Palace",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "yoan-gouffran",
+"n": "Yoan Gouffran",
+"c": "Newcastle",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "alvaro-negredo",
+"n": "Álvaro Negredo",
+"c": "Man City",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "angel-di-maria",
+"n": "Ángel Di María",
+"c": "Man Utd",
+"p": "ATT",
+"r": "common",
+"lg": "pl"
+},
+{
+"id": "adil-rami",
+"n": "Adil Rami",
+"c": "Marseille",
+"p": "DEF",
+"r": "rare",
+"lg": "l1"
+},
+{
+"id": "alain-boghossian",
+"n": "Alain Boghossian",
+"c": "Sampdoria",
+"p": "MID",
+"r": "rare",
+"lg": "seriea"
+},
+{
+"id": "alen-boksic",
+"n": "Alen Bokšić",
+"c": "Marseille",
+"p": "ATT",
+"r": "rare",
+"lg": "l1"
+},
+{
+"id": "alessandro-del-piero",
+"n": "Alessandro Del Piero",
+"c": "Juventus",
+"p": "ATT",
+"r": "legend",
+"lg": "seriea"
+},
+{
+"id": "alexander-frei",
+"n": "Alexander Frei",
+"c": "Rennes",
+"p": "ATT",
+"r": "rare",
+"lg": "l1"
+},
+{
+"id": "alexandre-lacazette",
+"n": "Alexandre Lacazette",
+"c": "Lyon",
+"p": "ATT",
+"r": "rare",
+"lg": "l1"
+},
+{
+"id": "alfredo-di-stefano",
+"n": "Alfredo Di Stéfano",
+"c": "Real Madrid",
+"p": "ATT",
+"r": "legend",
+"lg": "liga"
+},
+{
+"id": "alphonse-areola",
+"n": "Alphonse Areola",
+"c": "PSG",
+"p": "GK",
+"r": "rare",
+"lg": "l1"
+},
+{
+"id": "andre-pierre-gignac",
+"n": "André-Pierre Gignac",
+"c": "Marseille",
+"p": "ATT",
+"r": "rare",
+"lg": "l1"
+},
+{
+"id": "antoine-griezmann",
+"n": "Antoine Griezmann",
+"c": "Atlético Madrid",
+"p": "ATT",
+"r": "rare",
+"lg": "liga"
+},
+{
+"id": "antonio-di-natale",
+"n": "Antonio Di Natale",
+"c": "Udinese",
+"p": "ATT",
+"r": "rare",
+"lg": "seriea"
+},
+{
+"id": "artem-dovbyk",
+"n": "Artem Dovbyk",
+"c": "Girona",
+"p": "ATT",
+"r": "rare",
+"lg": "liga"
+},
+{
+"id": "bebeto",
+"n": "Bebeto",
+"c": "Deportivo",
+"p": "ATT",
+"r": "rare",
+"lg": "liga"
+},
+{
+"id": "benjamin-mendy",
+"n": "Benjamin Mendy",
+"c": "Man City",
+"p": "DEF",
+"r": "rare",
+"lg": "pl"
+},
+{
+"id": "benjamin-pavard",
+"n": "Benjamin Pavard",
+"c": "Bayern Munich",
+"p": "DEF",
+"r": "rare",
+"lg": "europe"
+},
+{
+"id": "bernard-diomede",
+"n": "Bernard Diomède",
+"c": "Auxerre",
+"p": "MID",
+"r": "rare",
+"lg": "l1"
+},
+{
+"id": "bernard-lama",
+"n": "Bernard Lama",
+"c": "PSG",
+"p": "GK",
+"r": "rare",
+"lg": "l1"
+},
+{
+"id": "bixente-lizarazu",
+"n": "Bixente Lizarazu",
+"c": "Bayern Munich",
+"p": "DEF",
+"r": "rare",
+"lg": "europe"
+},
+{
+"id": "blaise-matuidi",
+"n": "Blaise Matuidi",
+"c": "PSG",
+"p": "MID",
+"r": "rare",
+"lg": "l1"
+},
+{
+"id": "chris-sutton",
+"n": "Chris Sutton",
+"c": "Blackburn",
+"p": "ATT",
+"r": "rare",
+"lg": "pl"
+},
+{
+"id": "christian-karembeu",
+"n": "Christian Karembeu",
+"c": "Real Madrid",
+"p": "MID",
+"r": "rare",
+"lg": "liga"
+},
+{
+"id": "christian-vieri",
+"n": "Christian Vieri",
+"c": "Inter Milan",
+"p": "ATT",
+"r": "rare",
+"lg": "seriea"
+},
+{
+"id": "christophe-dugarry",
+"n": "Christophe Dugarry",
+"c": "Bordeaux",
+"p": "ATT",
+"r": "rare",
+"lg": "l1"
+},
+{
+"id": "ciro-immobile",
+"n": "Ciro Immobile",
+"c": "Lazio",
+"p": "ATT",
+"r": "rare",
+"lg": "seriea"
+},
+{
+"id": "corentin-tolisso",
+"n": "Corentin Tolisso",
+"c": "Lyon",
+"p": "MID",
+"r": "rare",
+"lg": "l1"
+},
+{
+"id": "cristiano-lucarelli",
+"n": "Cristiano Lucarelli",
+"c": "Livourne",
+"p": "ATT",
+"r": "rare",
+"lg": "seriea"
+},
+{
+"id": "dani-guiza",
+"n": "Dani Güiza",
+"c": "Mallorca",
+"p": "ATT",
+"r": "rare",
+"lg": "liga"
+},
+{
+"id": "dario-hubner",
+"n": "Dario Hübner",
+"c": "Piacenza",
+"p": "ATT",
+"r": "rare",
+"lg": "seriea"
+},
+{
+"id": "david-trezeguet",
+"n": "David Trezeguet",
+"c": "Juventus",
+"p": "ATT",
+"r": "rare",
+"lg": "seriea"
+},
+{
+"id": "didier-deschamps",
+"n": "Didier Deschamps",
+"c": "Juventus",
+"p": "MID",
+"r": "legend",
+"lg": "seriea"
+},
+{
+"id": "diego-forlan",
+"n": "Diego Forlán",
+"c": "Atlético Madrid",
+"p": "ATT",
+"r": "rare",
+"lg": "liga"
+},
+{
+"id": "diego-tristan",
+"n": "Diego Tristán",
+"c": "Deportivo",
+"p": "ATT",
+"r": "rare",
+"lg": "liga"
+},
+{
+"id": "dion-dublin",
+"n": "Dion Dublin",
+"c": "Aston Villa",
+"p": "ATT",
+"r": "rare",
+"lg": "pl"
+},
+{
+"id": "djibril-sidibe",
+"n": "Djibril Sidibé",
+"c": "Monaco",
+"p": "DEF",
+"r": "rare",
+"lg": "l1"
+},
+{
+"id": "dwight-yorke",
+"n": "Dwight Yorke",
+"c": "Man Utd",
+"p": "ATT",
+"r": "rare",
+"lg": "pl"
+},
+{
+"id": "edinson-cavani",
+"n": "Edinson Cavani",
+"c": "PSG",
+"p": "ATT",
+"r": "rare",
+"lg": "l1"
+},
+{
+"id": "emilio-butragueno",
+"n": "Emilio Butragueño",
+"c": "Real Madrid",
+"p": "ATT",
+"r": "rare",
+"lg": "liga"
+},
+{
+"id": "emmanuel-petit",
+"n": "Emmanuel Petit",
+"c": "Arsenal",
+"p": "MID",
+"r": "rare",
+"lg": "pl"
+},
+{
+"id": "erling-haaland",
+"n": "Erling Haaland",
+"c": "Man City",
+"p": "ATT",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "esteban-lepaul",
+"n": "Esteban Lepaul",
+"c": "Rennes",
+"p": "ATT",
+"r": "rare",
+"lg": "l1"
+},
+{
+"id": "eusebio",
+"n": "Eusébio",
+"c": "Benfica",
+"p": "ATT",
+"r": "legend",
+"lg": "europe"
+},
+{
+"id": "fabien-barthez",
+"n": "Fabien Barthez",
+"c": "Monaco",
+"p": "GK",
+"r": "legend",
+"lg": "l1"
+},
+{
+"id": "fabio-cannavaro",
+"n": "Fabio Cannavaro",
+"c": "Juventus",
+"p": "DEF",
+"r": "icon",
+"lg": "seriea"
+},
+{
+"id": "fabio-quagliarella",
+"n": "Fabio Quagliarella",
+"c": "Sampdoria",
+"p": "ATT",
+"r": "rare",
+"lg": "seriea"
+},
+{
+"id": "ferenc-puskas",
+"n": "Ferenc Puskás",
+"c": "Real Madrid",
+"p": "ATT",
+"r": "legend",
+"lg": "liga"
+},
+{
+"id": "fernando-morientes",
+"n": "Fernando Morientes",
+"c": "Real Madrid",
+"p": "ATT",
+"r": "rare",
+"lg": "liga"
+},
+{
+"id": "filippo-inzaghi",
+"n": "Filippo Inzaghi",
+"c": "AC Milan",
+"p": "ATT",
+"r": "rare",
+"lg": "seriea"
+},
+{
+"id": "florian-thauvin",
+"n": "Florian Thauvin",
+"c": "Marseille",
+"p": "MID",
+"r": "rare",
+"lg": "l1"
+},
+{
+"id": "francesco-totti",
+"n": "Francesco Totti",
+"c": "AS Rome",
+"p": "ATT",
+"r": "legend",
+"lg": "seriea"
+},
+{
+"id": "frank-leboeuf",
+"n": "Frank Lebœuf",
+"c": "Chelsea",
+"p": "DEF",
+"r": "rare",
+"lg": "pl"
+},
+{
+"id": "gabriel-batistuta",
+"n": "Gabriel Batistuta",
+"c": "Fiorentina",
+"p": "ATT",
+"r": "legend",
+"lg": "seriea"
+},
+{
+"id": "george-weah",
+"n": "George Weah",
+"c": "AC Milan",
+"p": "ATT",
+"r": "icon",
+"lg": "seriea"
+},
+{
+"id": "gerd-muller",
+"n": "Gerd Müller",
+"c": "Bayern Munich",
+"p": "ATT",
+"r": "legend",
+"lg": "europe"
+},
+{
+"id": "gianluca-vialli",
+"n": "Gianluca Vialli",
+"c": "Sampdoria",
+"p": "ATT",
+"r": "rare",
+"lg": "seriea"
+},
+{
+"id": "giuseppe-signori",
+"n": "Giuseppe Signori",
+"c": "Lazio",
+"p": "ATT",
+"r": "rare",
+"lg": "seriea"
+},
+{
+"id": "gonzalo-higuain",
+"n": "Gonzalo Higuaín",
+"c": "Naples",
+"p": "ATT",
+"r": "rare",
+"lg": "seriea"
+},
+{
+"id": "hristo-stoichkov",
+"n": "Hristo Stoichkov",
+"c": "FC Barcelone",
+"p": "ATT",
+"r": "icon",
+"lg": "liga"
+},
+{
+"id": "ian-wright",
+"n": "Ian Wright",
+"c": "Arsenal",
+"p": "ATT",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "igor-protti",
+"n": "Igor Protti",
+"c": "Bari",
+"p": "ATT",
+"r": "rare",
+"lg": "seriea"
+},
+{
+"id": "ivan-zamorano",
+"n": "Iván Zamorano",
+"c": "Real Madrid",
+"p": "ATT",
+"r": "rare",
+"lg": "liga"
+},
+{
+"id": "jean-pierre-papin",
+"n": "Jean-Pierre Papin",
+"c": "Marseille",
+"p": "ATT",
+"r": "icon",
+"lg": "l1"
+},
+{
+"id": "juan-antonio-pizzi",
+"n": "Juan Antonio Pizzi",
+"c": "Tenerife",
+"p": "ATT",
+"r": "rare",
+"lg": "liga"
+},
+{
+"id": "kaka",
+"n": "Kaká",
+"c": "AC Milan",
+"p": "MID",
+"r": "icon",
+"lg": "seriea"
+},
+{
+"id": "karim-benzema",
+"n": "Karim Benzema",
+"c": "Real Madrid",
+"p": "ATT",
+"r": "icon",
+"lg": "liga"
+},
+{
+"id": "kevin-phillips",
+"n": "Kevin Phillips",
+"c": "Sunderland",
+"p": "ATT",
+"r": "rare",
+"lg": "pl"
+},
+{
+"id": "kylian-mbappe",
+"n": "Kylian Mbappé",
+"c": "PSG",
+"p": "ATT",
+"r": "legend",
+"lg": "l1"
+},
+{
+"id": "laurent-blanc",
+"n": "Laurent Blanc",
+"c": "Montpellier",
+"p": "DEF",
+"r": "rare",
+"lg": "l1"
+},
+{
+"id": "lautaro-martinez",
+"n": "Lautaro Martínez",
+"c": "Inter Milan",
+"p": "ATT",
+"r": "rare",
+"lg": "seriea"
+},
+{
+"id": "les-ferdinand",
+"n": "Les Ferdinand",
+"c": "Newcastle",
+"p": "ATT",
+"r": "rare",
+"lg": "pl"
+},
+{
+"id": "lilian-thuram",
+"n": "Lilian Thuram",
+"c": "Juventus",
+"p": "DEF",
+"r": "legend",
+"lg": "seriea"
+},
+{
+"id": "lionel-charbonnier",
+"n": "Lionel Charbonnier",
+"c": "Auxerre",
+"p": "GK",
+"r": "rare",
+"lg": "l1"
+},
+{
+"id": "lionel-messi",
+"n": "Lionel Messi",
+"c": "FC Barcelone",
+"p": "ATT",
+"r": "icon",
+"lg": "liga"
+},
+{
+"id": "lothar-matthaus",
+"n": "Lothar Matthäus",
+"c": "Bayern Munich",
+"p": "MID",
+"r": "icon",
+"lg": "europe"
+},
+{
+"id": "luca-toni",
+"n": "Luca Toni",
+"c": "Fiorentina",
+"p": "ATT",
+"r": "rare",
+"lg": "seriea"
+},
+{
+"id": "lucas-hernandez",
+"n": "Lucas Hernandez",
+"c": "Bayern Munich",
+"p": "DEF",
+"r": "rare",
+"lg": "europe"
+},
+{
+"id": "luis-figo",
+"n": "Luís Figo",
+"c": "Real Madrid",
+"p": "MID",
+"r": "icon",
+"lg": "liga"
+},
+{
+"id": "mamadou-niang",
+"n": "Mamadou Niang",
+"c": "Marseille",
+"p": "ATT",
+"r": "rare",
+"lg": "l1"
+},
+{
+"id": "manolo",
+"n": "Manolo",
+"c": "Atlético Madrid",
+"p": "ATT",
+"r": "rare",
+"lg": "liga"
+},
+{
+"id": "marcel-desailly",
+"n": "Marcel Desailly",
+"c": "Chelsea",
+"p": "DEF",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "marco-van-basten",
+"n": "Marco van Basten",
+"c": "AC Milan",
+"p": "ATT",
+"r": "icon",
+"lg": "seriea"
+},
+{
+"id": "mario-gomez",
+"n": "Mario Gómez",
+"c": "Bayern Munich",
+"p": "ATT",
+"r": "rare",
+"lg": "europe"
+},
+{
+"id": "mason-greenwood",
+"n": "Mason Greenwood",
+"c": "Marseille",
+"p": "ATT",
+"r": "rare",
+"lg": "l1"
+},
+{
+"id": "mateo-retegui",
+"n": "Mateo Retegui",
+"c": "Atalanta",
+"p": "ATT",
+"r": "rare",
+"lg": "seriea"
+},
+{
+"id": "matt-le-tissier",
+"n": "Matt Le Tissier",
+"c": "Southampton",
+"p": "ATT",
+"r": "rare",
+"lg": "pl"
+},
+{
+"id": "matthias-sammer",
+"n": "Matthias Sammer",
+"c": "Dortmund",
+"p": "DEF",
+"r": "icon",
+"lg": "europe"
+},
+{
+"id": "mauro-icardi",
+"n": "Mauro Icardi",
+"c": "Inter Milan",
+"p": "ATT",
+"r": "rare",
+"lg": "seriea"
+},
+{
+"id": "mohamed-salah",
+"n": "Mohamed Salah",
+"c": "Liverpool",
+"p": "ATT",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "moussa-sow",
+"n": "Moussa Sow",
+"c": "Lille",
+"p": "ATT",
+"r": "rare",
+"lg": "l1"
+},
+{
+"id": "marcio-amoroso",
+"n": "Márcio Amoroso",
+"c": "Udinese",
+"p": "ATT",
+"r": "rare",
+"lg": "seriea"
+},
+{
+"id": "mario-jardel",
+"n": "Mário Jardel",
+"c": "Porto",
+"p": "ATT",
+"r": "rare",
+"lg": "europe"
+},
+{
+"id": "n-golo-kante",
+"n": "N'Golo Kanté",
+"c": "Chelsea",
+"p": "MID",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "nabil-fekir",
+"n": "Nabil Fekir",
+"c": "Lyon",
+"p": "MID",
+"r": "rare",
+"lg": "l1"
+},
+{
+"id": "nene",
+"n": "Nenê",
+"c": "PSG",
+"p": "ATT",
+"r": "rare",
+"lg": "l1"
+},
+{
+"id": "neymar",
+"n": "Neymar",
+"c": "FC Barcelone",
+"p": "ATT",
+"r": "legend",
+"lg": "liga"
+},
+{
+"id": "nicolas-ouedec",
+"n": "Nicolas Ouédec",
+"c": "Nantes",
+"p": "ATT",
+"r": "rare",
+"lg": "l1"
+},
+{
+"id": "ole-gunnar-solskjaer",
+"n": "Ole Gunnar Solskjær",
+"c": "Man Utd",
+"p": "ATT",
+"r": "legend",
+"lg": "pl"
+},
+{
+"id": "oliver-bierhoff",
+"n": "Oliver Bierhoff",
+"c": "Udinese",
+"p": "ATT",
+"r": "rare",
+"lg": "seriea"
+},
+{
+"id": "ousmane-dembele",
+"n": "Ousmane Dembélé",
+"c": "PSG",
+"p": "ATT",
+"r": "icon",
+"lg": "l1"
+},
+{
+"id": "paco-gento",
+"n": "Paco Gento",
+"c": "Real Madrid",
+"p": "MID",
+"r": "rare",
+"lg": "liga"
+},
+{
+"id": "patrice-loko",
+"n": "Patrice Loko",
+"c": "Nantes",
+"p": "ATT",
+"r": "rare",
+"lg": "l1"
+},
+{
+"id": "patrick-kluivert",
+"n": "Patrick Kluivert",
+"c": "Ajax",
+"p": "ATT",
+"r": "rare",
+"lg": "europe"
+},
+{
+"id": "paul-pogba",
+"n": "Paul Pogba",
+"c": "Man Utd",
+"p": "MID",
+"r": "rare",
+"lg": "pl"
+},
+{
+"id": "pauleta",
+"n": "Pauleta",
+"c": "PSG",
+"p": "ATT",
+"r": "rare",
+"lg": "l1"
+},
+{
+"id": "pavel-nedved",
+"n": "Pavel Nedvěd",
+"c": "Juventus",
+"p": "MID",
+"r": "icon",
+"lg": "seriea"
+},
+{
+"id": "pierre-emerick-aubameyang",
+"n": "Pierre-Emerick Aubameyang",
+"c": "Arsenal",
+"p": "ATT",
+"r": "rare",
+"lg": "pl"
+},
+{
+"id": "presnel-kimpembe",
+"n": "Presnel Kimpembe",
+"c": "PSG",
+"p": "DEF",
+"r": "rare",
+"lg": "l1"
+},
+{
+"id": "raphael-varane",
+"n": "Raphaël Varane",
+"c": "Real Madrid",
+"p": "DEF",
+"r": "rare",
+"lg": "liga"
+},
+{
+"id": "raul",
+"n": "Raúl",
+"c": "Real Madrid",
+"p": "ATT",
+"r": "legend",
+"lg": "liga"
+},
+{
+"id": "rivaldo",
+"n": "Rivaldo",
+"c": "FC Barcelone",
+"p": "MID",
+"r": "icon",
+"lg": "liga"
+},
+{
+"id": "robert-lewandowski",
+"n": "Robert Lewandowski",
+"c": "Bayern Munich",
+"p": "ATT",
+"r": "legend",
+"lg": "europe"
+},
+{
+"id": "roberto-baggio",
+"n": "Roberto Baggio",
+"c": "Juventus",
+"p": "ATT",
+"r": "icon",
+"lg": "seriea"
+},
+{
+"id": "rodri",
+"n": "Rodri",
+"c": "Man City",
+"p": "MID",
+"r": "icon",
+"lg": "pl"
+},
+{
+"id": "roger-boli",
+"n": "Roger Boli",
+"c": "Lens",
+"p": "ATT",
+"r": "rare",
+"lg": "l1"
+},
+{
+"id": "romario",
+"n": "Romário",
+"c": "FC Barcelone",
+"p": "ATT",
+"r": "legend",
+"lg": "liga"
+},
+{
+"id": "ronaldinho",
+"n": "Ronaldinho",
+"c": "FC Barcelone",
+"p": "MID",
+"r": "icon",
+"lg": "liga"
+},
+{
+"id": "ronaldo-nazario",
+"n": "Ronaldo Nazário",
+"c": "Real Madrid",
+"p": "ATT",
+"r": "icon",
+"lg": "liga"
+},
+{
+"id": "roy-makaay",
+"n": "Roy Makaay",
+"c": "Deportivo",
+"p": "ATT",
+"r": "rare",
+"lg": "liga"
+},
+{
+"id": "salva",
+"n": "Salva",
+"c": "Racing Santander",
+"p": "ATT",
+"r": "rare",
+"lg": "liga"
+},
+{
+"id": "samuel-umtiti",
+"n": "Samuel Umtiti",
+"c": "FC Barcelone",
+"p": "DEF",
+"r": "rare",
+"lg": "liga"
+},
+{
+"id": "shabani-nonda",
+"n": "Shabani Nonda",
+"c": "Monaco",
+"p": "ATT",
+"r": "rare",
+"lg": "l1"
+},
+{
+"id": "son-heung-min",
+"n": "Son Heung-min",
+"c": "Tottenham",
+"p": "ATT",
+"r": "rare",
+"lg": "pl"
+},
+{
+"id": "sonny-anderson",
+"n": "Sonny Anderson",
+"c": "Lyon",
+"p": "ATT",
+"r": "rare",
+"lg": "l1"
+},
+{
+"id": "steve-mandanda",
+"n": "Steve Mandanda",
+"c": "Marseille",
+"p": "GK",
+"r": "rare",
+"lg": "l1"
+},
+{
+"id": "stephane-guivarc-h",
+"n": "Stéphane Guivarc'h",
+"c": "Auxerre",
+"p": "ATT",
+"r": "rare",
+"lg": "l1"
+},
+{
+"id": "sylvain-wiltord",
+"n": "Sylvain Wiltord",
+"c": "Bordeaux",
+"p": "ATT",
+"r": "rare",
+"lg": "l1"
+},
+{
+"id": "thomas-lemar",
+"n": "Thomas Lemar",
+"c": "Monaco",
+"p": "MID",
+"r": "rare",
+"lg": "l1"
+},
+{
+"id": "thomas-muller",
+"n": "Thomas Müller",
+"c": "Bayern Munich",
+"p": "MID",
+"r": "legend",
+"lg": "europe"
+},
+{
+"id": "victor-osimhen",
+"n": "Victor Osimhen",
+"c": "Naples",
+"p": "ATT",
+"r": "rare",
+"lg": "seriea"
+},
+{
+"id": "vincent-candela",
+"n": "Vincent Candela",
+"c": "AS Rome",
+"p": "DEF",
+"r": "rare",
+"lg": "seriea"
+},
+{
+"id": "wissam-ben-yedder",
+"n": "Wissam Ben Yedder",
+"c": "Monaco",
+"p": "ATT",
+"r": "rare",
+"lg": "l1"
+},
+{
+"id": "youri-djorkaeff",
+"n": "Youri Djorkaeff",
+"c": "Monaco",
+"p": "ATT",
+"r": "rare",
+"lg": "l1"
+},
+{
+"id": "zinedine-zidane",
+"n": "Zinédine Zidane",
+"c": "Real Madrid",
+"p": "MID",
+"r": "icon",
+"lg": "liga"
+},
+{
+"id": "zlatan-ibrahimovic",
+"n": "Zlatan Ibrahimović",
+"c": "PSG",
+"p": "ATT",
+"r": "legend",
+"lg": "l1"
+}
+]

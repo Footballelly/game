@@ -65,7 +65,7 @@ function celebrate(kind){
 }
 function revealFx(from, to){
   const p = L.pack; p.anim = [from, to]; p.shown = to; render(true);
-  const hasL = p.cards.slice(from, to).findIndex(c => c.rarity==="legend"), hasR = p.cards.slice(from, to).some(c => c.rarity==="rare");
+  const hasL = p.cards.slice(from, to).findIndex(c => c.rarity==="legend" || c.rarity==="icon"), hasR = p.cards.slice(from, to).some(c => c.rarity==="rare");
   if(hasL>=0) setTimeout(() => celebrate("gold"), 450 + hasL*260); else if(hasR) setTimeout(() => buzz(35), 450); else buzz(12);
 }
 function go(v, arg=null){ VIEW = v; VIEW_ARG = arg; L.shareFallback = null; L.packErr = null; if(v==="collection") loadWallet(true); render(true); }
