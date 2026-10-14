@@ -34,6 +34,8 @@ const miniFor = (p, club, w) => miniPlayer(kitOf(club || mainClub(p)), {w, label
 
 /* illustrations dessinées par Paul : ids listés dans data/art.js, fichiers dans cards/<id>.webp ; sinon mini-joueur généré */
 const ART = new Set(window.FL_ART || []);
+/* nom court : « Alessandro Del Piero » → « Del Piero » */
+const cardName = n => { const w = n.split(" "); return w.length>1 && n.length>14 ? w.slice(1).join(" ") : n; };
 const RAR = {common:"Commune", rare:"Rare", legend:"Légende"};
 const POS_FR = {GK:"Gardien", DEF:"Défenseur", MID:"Milieu", ATT:"Attaquant"};
 /* carte de collection (catalogue FL_CARDS) ; locked = pas encore obtenue */
@@ -44,5 +46,5 @@ function cardHTML(id, {locked=false, small=false, count=0, tag=""}={}){
     <div class="fc-meta"><b>???</b><small>${POS_FR[c.p]}</small></div></div>`;
   return `<div class="fcard r-${r}${small?" sm":""}">${tag}<div class="fc-top"><span class="fc-rar">${c.r==="legend"?ICON.star:""}${RAR[c.r]}</span><span class="fc-yr">${count>1?`×${count}`:({pl:"PL",l1:"L1",liga:"Liga",seriea:"Serie A",europe:"Europe"}[c.lg]||"")}</span></div>
     <div class="fc-art" style="--club:${CLUB[c.c]||"#334"}">${ART.has(id)?`<img class="fc-img" src="cards/${id}.webp" alt="Illustration de ${esc(c.n)}" loading="lazy" decoding="async">`:miniPlayer(kitOf(c.c),{w:small?54:70, label:`Mini-joueur de ${c.n}`})}</div>
-    <div class="fc-meta"><b>${esc(c.n.split(" ").length>1&&c.n.length>14?c.n.split(" ").slice(-1)[0]:c.n)}</b><small>${esc(c.c)} · ${POS_FR[c.p]}</small></div></div>`;
+    <div class="fc-meta"><b>${esc(cardName(c.n))}</b><small>${esc(c.c)} · ${POS_FR[c.p]}</small></div></div>`;
 }

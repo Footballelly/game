@@ -481,3 +481,5 @@ input[type=range]{width:100%;accent-color:var(--kit);height:28px}
 .mode.diff-easy .lgtag{background:var(--green)}
 .mode.diff-hard .lgtag{background:var(--red);color:var(--white)}
 .fc-img{width:100%;height:100%;object-fit:contain;object-position:center bottom;display:block}
+.fc-art:has(.fc-img){align-items:flex-start}
+.fc-img{height:122%;width:auto;max-width:none;margin:2px auto 0}
