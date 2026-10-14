@@ -6,10 +6,11 @@ const CAR_N = 10;
 const nClubs = p => new Set(p.s.map(x => x[0])).size;
 const plSeasons = p => p.s.reduce((a,[,x,y]) => a + y - x + 1, 0);
 const FAMOUS = new Set([...CARDS.filter(c => c.r!=="common").map(c => c.n), ...GOALS.map(g => g.n)]);
+const CAR_OK = i => !P[i].x;   // parcours complets uniquement
 const CAR = {
-  easy:  {max:3,  start:2, pool:P.map((p,i) => i).filter(i => nClubs(P[i])>=2 && (FAMOUS.has(P[i].n) || plSeasons(P[i])>=10)), extra:true,  years:true,  coins:f => Math.ceil(f*0.6), d:"Joueurs connus · 2 clubs d'entrée · 4 propositions"},
-  normal:{max:5,  start:1, pool:P.map((p,i) => i).filter(i => nClubs(P[i])>=3), extra:true,  years:true,  coins:f => f,   d:"Tu tapes le nom · poste et initiales en derniers recours"},
-  hard:  {max:10, start:1, pool:P.map((p,i) => i).filter(i => nClubs(P[i])>=3), extra:false, years:false, coins:f => f*2, d:"Seulement les clubs, sans les années · points doublés"}
+  easy:  {max:3,  start:2, pool:P.map((p,i) => i).filter(i => CAR_OK(i) && nClubs(P[i])>=2 && (FAMOUS.has(P[i].n) || plSeasons(P[i])>=10)), extra:true,  years:true,  coins:f => Math.ceil(f*0.6), d:"Joueurs connus · 2 clubs d'entrée · 4 propositions"},
+  normal:{max:5,  start:1, pool:P.map((p,i) => i).filter(i => CAR_OK(i) && nClubs(P[i])>=3), extra:true,  years:true,  coins:f => f,   d:"Tu tapes le nom · poste et initiales en derniers recours"},
+  hard:  {max:10, start:1, pool:P.map((p,i) => i).filter(i => CAR_OK(i) && nClubs(P[i])>=3), extra:false, years:false, coins:f => f*2, d:"Seulement les clubs, sans les années · points doublés"}
 };
 const careerRecKey = d => d==="normal" || !d ? "career" : `career_${d}`;
 const carMaxTotal = d => CAR[d].max * CAR_N;

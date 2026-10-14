@@ -39,6 +39,12 @@ window.FL_CLUBS = {
  "West Ham":"#7a263a",
  "Wigan":"#1d59af",
  "Wolves":"#b07d00",
+ "Bournemouth":"#c8102e",
+ "Brentford":"#e30613",
+ "Nottingham Forest":"#c8102e",
+ "Huddersfield":"#0e63ad",
+ "Luton":"#f78f1e",
+ "Ipswich":"#2b5ca8",
 };
 
 // Tenue type de chaque club pour les mini-joueurs (couleurs traditionnelles, pas de logo ni de design officiel)
@@ -82,5 +88,11 @@ window.FL_KITS = {
  "West Brom":{s:"#1a2e66",t:"#ffffff",sh:"#ffffff",so:"#ffffff",p:"stripes"},
  "West Ham":{s:"#7a263a",t:"#8ac5ea",sh:"#ffffff",so:"#ffffff",p:"sleeves"},
  "Wigan":{s:"#1d59af",t:"#ffffff",sh:"#1d59af",so:"#ffffff",p:"stripes"},
- "Wolves":{s:"#fdb913",t:"#111111",sh:"#111111",so:"#fdb913",p:"plain"}
+ "Wolves":{s:"#fdb913",t:"#111111",sh:"#111111",so:"#fdb913",p:"plain"},
+ "Bournemouth":{s:"#c8102e",t:"#111111",sh:"#111111",so:"#111111",p:"stripes"},
+ "Brentford":{s:"#e30613",t:"#ffffff",sh:"#111111",so:"#e30613",p:"stripes"},
+ "Nottingham Forest":{s:"#c8102e",t:"#ffffff",sh:"#ffffff",so:"#c8102e",p:"plain"},
+ "Huddersfield":{s:"#0e63ad",t:"#ffffff",sh:"#ffffff",so:"#ffffff",p:"stripes"},
+ "Luton":{s:"#f78f1e",t:"#002d62",sh:"#002d62",so:"#f78f1e",p:"plain"},
+ "Ipswich":{s:"#2b5ca8",t:"#ffffff",sh:"#ffffff",so:"#2b5ca8",p:"plain"},
 };

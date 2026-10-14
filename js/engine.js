@@ -227,7 +227,8 @@ function submitGuess(raw){
   const r = game.rounds[game.round], slot = slotById(r.slot);
   if(!norm(raw)) return;
   L.draft = raw;
-  const hits = findPlayers(raw);
+  /* x = joueur dont on ne connaît la carrière qu'à partir de 2016 : on ne peut pas le juger sur une saison plus ancienne */
+  const hits = findPlayers(raw).filter(i => !(P[i].x && r.y < 2016));
   if(!hits.length){ L.msg = {kind:"unknown", raw}; L.pendingRaw = raw; L.ver++; return render(); }
   const already = new Set(Object.values(myTeam()).filter(e => e.st==="ok").map(e => e.i));
   const valid = hits.filter(i => clubAt(P[i], r.y) && lines(P[i]).includes(slot.l) && !already.has(i));
