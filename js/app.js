@@ -14,6 +14,7 @@ function view(){
     case "pmPick": return screenPmPick();
     case "pack": return screenPack();
     case "career": return screenCareer();
+    case "careerPick": return screenCareerPick();
     case "friends": return screenFriends();
     case "collection": return screenCollection();
     case "album": return screenAlbum();
@@ -101,7 +102,8 @@ app.addEventListener("click", e => {
     case "reveal": if(L.pack) revealFx(L.pack.shown, L.pack.shown+1); break;
     case "revealall": if(L.pack) revealFx(L.pack.shown, L.pack.cards.length); break;
     case "claimalbum": claimAlbum(v); break;
-    case "career": startCareer(); break;
+    case "career": startCareer(v); break;
+    case "carpick": careerChoose(+v); break;
     case "carhint": careerHint(null); break;
     case "carskip": if(L.car){ L.car.hist.push(0); L.car.phase = "missed"; L.car.msg = null; render(true); } break;
     case "carnext": careerNext(); break;
@@ -109,7 +111,8 @@ app.addEventListener("click", e => {
     case "pmtheme": if(IS_HOST){ G.pmTheme = v; push(); } break;
     case "saison": startSolo("saison", {timer:45}); break;
     case "pickchrono": go("chronoPick"); break;
-    case "chrono": startSolo("chrono", {list:v, time:90}); break;
+    case "chrono": startSolo("chrono", {list:v, time:PROFILE.chTime||90}); break;
+    case "chtimesolo": PROFILE.chTime = +v; saveProfile(); render(true); break;
     case "share": shareDaily(game && game.daily ? game.daily : todayKey()); break;
     case "install": if(DEFERRED_INSTALL){ DEFERRED_INSTALL.prompt(); DEFERRED_INSTALL.userChoice.finally(() => { DEFERRED_INSTALL = null; render(true); }); } break;
     case "noinstall": PROFILE.seenInstall = true; saveProfile(); render(true); break;

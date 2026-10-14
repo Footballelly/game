@@ -463,3 +463,20 @@ input[type=range]{width:100%;accent-color:var(--kit);height:28px}
 .daily{background:linear-gradient(160deg,#ffffff,var(--paper) 55%,#efe9d6)}
 .summary .recs span{animation:pop .4s ease-out}
 @media (prefers-reduced-motion: reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+/* difficultés */
+.diffbar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;background:rgba(255,255,255,.1);border-radius:14px;padding:4px;margin-bottom:12px}
+.diffbar button{border-radius:10px;padding:8px 4px;color:var(--mute);text-align:center}
+.diffbar b{display:block;font-family:var(--f-display);font-weight:400;font-size:14px}
+.diffbar small{font-family:var(--f-mono);font-size:11px}
+.diffbar button[aria-pressed="true"]{background:var(--flash);color:var(--ink)}
+.mode.diff-easy .lgtag{background:var(--green);color:var(--ink)}
+.mode.diff-hard{background:linear-gradient(135deg,#0c1240,#1a2a9a);color:var(--white);border-color:var(--flash)}
+.mode.diff-hard small{color:var(--mute)}
+.mode.diff-hard .lgtag{background:var(--red);color:var(--white)}
+.mode.diff-hard .rec{color:var(--flash)}
+.qcm{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.qcm .btn{font-size:15px;padding:14px 8px;line-height:1.15}
+.qcm .btn.wrong{background:var(--red);color:var(--white);box-shadow:none;opacity:.6;text-decoration:line-through}
+.mode[class*="diff-"] .lgtag{align-self:flex-start;padding:3px 7px;border-radius:6px;background:var(--flash);color:var(--ink)}
+.mode.diff-easy .lgtag{background:var(--green)}
+.mode.diff-hard .lgtag{background:var(--red);color:var(--white)}

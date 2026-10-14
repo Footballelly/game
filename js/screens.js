@@ -31,7 +31,7 @@ function ticket(r){ const s = slotById(r.slot); return `<div class="ticket"><spa
 const roundBar = (n, cur) => `<div class="rounds">${Array.from({length:n}, (_,k) => `<i class="${k<cur?"done":k===cur?"now":""}"></i>`).join("")}</div>`;
 function tabbar(){
   const t = [["home","Jouer",ICON.home],["collection","Collection",ICON.cards],["board","Classement",ICON.trophy]];
-  const cur = ["album","pack"].includes(VIEW) ? "collection" : ["pmPick","chronoPick","career"].includes(VIEW) ? "home" : VIEW;
+  const cur = ["album","pack"].includes(VIEW) ? "collection" : ["pmPick","chronoPick","career","careerPick"].includes(VIEW) ? "home" : VIEW;
   return `<nav class="tabbar" aria-label="Navigation"><div>${t.map(([v,l,i]) => `<button data-act="nav" data-v="${v}" ${cur===v?'aria-current="page"':""}>${i}<span>${l}</span></button>`).join("")}</div></nav>`;
 }
 function topbar(){
@@ -90,7 +90,7 @@ function screenHome(){
   <div style="margin-top:12px">${dailyCard()}</div>
   <div class="sec-title"><h2>Jouer seul</h2><small>sans limite</small></div>
   <div class="tiles">
-   ${tile("career",ICON.route,"r","Parcours de carrière",`Les clubs tombent un par un : trouve le joueur avant la fin des indices.`, b.career?`Record<br>${b.career}/50`:`<span class="newb">Nouveau</span>`)}
+   ${tile("nav",ICON.route,"r","Parcours de carrière",`Les clubs tombent un par un : trouve le joueur. 3 difficultés.`, b.career||b.career_hard||b.career_easy?"":`<span class="newb">Nouveau</span>`,'data-v="careerPick"')}
    ${tile("pickpm",ICON.updown,"","Plus ou moins","Premier League ou Ligue des champions : enchaîne sans te tromper.", Math.max(b.pm||0,b.pmLdc||0)?`Record<br>${Math.max(b.pm||0,b.pmLdc||0)}`:"")}
    ${tile("pickchrono",ICON.clock,"b","Chrono",`${LISTS.length} listes : PL, Ligue 1, Liga, Serie A, LDC, Bleus…`, "")}
    ${tile("saison",ICON.pitch,"g","Un joueur par saison","11 postes, 11 saisons de PL, de mémoire.", b.saison?`Record<br>${b.saison}/11`:"")}
@@ -102,11 +102,12 @@ function screenHome(){
 function screenChronoPick(){
   const f = L.lgFilter || "all", lgs = ["all", ...new Set(LISTS.map(l => l.lg))];
   const shown = LISTS.filter(l => f==="all" || l.lg===f);
-  return {key:"chronoPick"+f, html:`
+  return {key:"chronoPick"+f+(PROFILE.chTime||90), html:`
   <div class="subhead"><button class="iconbtn" data-act="nav" data-v="home" aria-label="Retour">${ICON.back}</button><h1>Chrono</h1></div>
-  <p class="muted" style="margin:0 0 12px">1 min 30 pour citer un maximum de noms. Les fautes de frappe et les surnoms passent.</p>
+  <p class="muted" style="margin:0 0 12px">Cite un maximum de noms avant la fin du temps. Les fautes de frappe et les surnoms passent.</p>
+  <div class="diffbar" role="group" aria-label="Difficulté">${CH_TIMES.map(([t,l,d]) => `<button data-act="chtimesolo" data-v="${t}" aria-pressed="${(PROFILE.chTime||90)===t}"><b>${l}</b><small>${d}</small></button>`).join("")}</div>
   <div class="chips" role="group" aria-label="Compétition">${lgs.map(k => `<button data-act="lgfilter" data-v="${k}" aria-pressed="${f===k}">${k==="all"?"Toutes":esc(LEAGUES[k]||k)}</button>`).join("")}</div>
-  <div class="pick-list">${shown.map(l => { const r = PROFILE.best.chrono[l.id];
+  <div class="pick-list">${shown.map(l => { const r = PROFILE.best.chrono[chronoKey(l.id, PROFILE.chTime||90)];
     return `<button class="mode" data-act="chrono" data-v="${l.id}"><span class="lgtag">${esc(LEAGUES[l.lg]||"")}</span><b>${esc(l.t)}</b><small>${esc(l.hint)}</small>${r?`<span class="rec">Ton record : ${r}/${l.items.length}</span>`:""}</button>`; }).join("")}</div>
   ${tabbar()}`};
 }
@@ -397,7 +398,7 @@ function screenChronoPlay(){
   const g = game, l = listById(g.chrono.list), done = L.chDone || g.chrono.doneIds.includes(ME.id);
   const people = g.solo ? "" : `<div class="chpeople" data-live="chpeople" data-html>${g.players.map(p => `<span class="${p.id===ME.id?"me":""}">${esc(p.name)} · ${p.id===ME.id?L.chFound.length:(g.chrono.counts[p.id]||0)}${g.chrono.doneIds.includes(p.id)?" ✓":""}</span>`).join("")}</div>`;
   const msg = L.chMsg ? `<span class="${L.chMsg.ok?"ok":"ko"}">${esc(L.chMsg.text)}</span>` : "";
-  const rec = PROFILE.best.chrono[l.id];
+  const rec = PROFILE.best.chrono[chronoKey(l.id, g.solo&&!g.daily ? g.chronoTime : 90)];
   return {key:`chrono-${g.gameNo}-${done}`, html:`
    ${gameTop(esc(l.t), clock())}
    <p class="chhint">${esc(l.hint)}</p>

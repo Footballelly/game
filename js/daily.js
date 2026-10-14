@@ -28,11 +28,11 @@ function shareText(key=todayKey()){
 }
 /* texte à partager pour n'importe quelle partie qui vient de se terminer */
 function shareTextGame(){
-  if(VIEW==="career" && L.summary && L.summary.r.mode==="career"){ const r = L.summary.r; return `Football Legends\nParcours de carrière : ${r.points}/50\n${r.detail.map(CAR_EMO).join("")}\nTu fais mieux ? ${SITE_URL}`; }
+  if(VIEW==="career" && L.summary && L.summary.r.mode==="career"){ const r = L.summary.r; return `Football Legends\nParcours de carrière (${DIFFS[r.diff].t}) : ${r.points}/${r.max}\n${r.detail.map(x => CAR_EMO(x, r.diff)).join("")}\nTu fais mieux ? ${SITE_URL}`; }
   if(game && game.daily) return shareText(game.daily);
   const s = L.summary; if(!s) return "";
   const r = s.r; let line, grid = "";
-  if(r.mode==="chrono"){ const l = listById(r.list); line = `Chrono ${l.t} : ${r.score}/${r.total}`; const k = Math.round(r.score/r.total*10); grid = "🟨".repeat(k)+"⬛".repeat(10-k); }
+  if(r.mode==="chrono"){ const l = listById(r.list); line = `Chrono ${l.t}${r.time&&r.time!==90?` (${(CH_TIMES.find(x => x[0]===r.time)||[,""])[1]})`:""} : ${r.score}/${r.total}`; const k = Math.round(r.score/r.total*10); grid = "🟨".repeat(k)+"⬛".repeat(10-k); }
   else if(r.mode==="saison"){ line = `Un joueur par saison : ${r.score}/11`; grid = (r.detail||[]).map(x => x ? "🟩" : "⬛").join(""); }
   else { line = r.total ? `Plus ou moins : ${r.score}/${r.total}` : `Plus ou moins (${PM_THEMES[r.theme||"pl"].u}) : série de ${r.score}`; grid = (r.detail||[]).map(x => x ? "🟦" : "🟥").join(""); }
   return `Football Legends\n${line}\n${grid}\nTu fais mieux ? ${SITE_URL}`;

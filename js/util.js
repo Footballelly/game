@@ -107,6 +107,10 @@ const LS = {get(k){ try{ return JSON.parse(localStorage.getItem(k)); }catch(e){ 
 const SS = {get(k){ try{ return JSON.parse(sessionStorage.getItem(k)); }catch(e){ return null; } }, set(k,v){ try{ sessionStorage.setItem(k, JSON.stringify(v)); }catch(e){} }, del(k){ try{ sessionStorage.removeItem(k); }catch(e){} }};
 
 /* ---------- Icônes (traits simples, sans emoji) ---------- */
+/* niveaux de difficulté (solo) */
+const DIFFS = {easy:{t:"Facile", c:"g"}, normal:{t:"Normal", c:""}, hard:{t:"Expert", c:"r"}};
+const CH_TIMES = [[180,"Facile","3 min"],[90,"Normal","1 min 30"],[45,"Expert","45 s"]];
+const chronoKey = (id, t) => !t || t===90 ? id : `${id}@${t}`;
 const ICON = {
   flame:`<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M12 2c1 4 5 5.5 5 11a5 5 0 0 1-10 0c0-2.6 1.4-4 2.5-5 .2 1.8 1 2.8 2 3 0-3.5-.5-6 .5-9z" fill="currentColor"/></svg>`,
   star:`<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7L12 17.3 5.8 20.9l1.6-7L2 9.2l7.1-.6z" fill="currentColor"/></svg>`,

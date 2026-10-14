@@ -278,7 +278,7 @@ function finishGame(){
     if(multi){ const rk = rankingSaison(); r.won = rk[0].id===ME.id && rk[0].avg>0; }
   } else if(mode==="chrono"){
     const l = listById(game.chrono.list), mine = (game.chrono.found||{})[ME.id] || L.chFound;
-    r.list = l.id; r.total = l.items.length; r.score = mine.length;
+    r.list = l.id; r.time = game.chronoTime; r.total = l.items.length; r.score = mine.length;
     if(l.kind==="player") r.found = mine.map(i => l.items[i].n);
     if(multi){ const all = game.chrono.found||{}; const best = Math.max(...game.players.map(p => (all[p.id]||[]).length)); r.won = r.score===best && r.score>0;
       r.pepites = l.kind==="player" ? mine.filter(i => game.players.every(p => p.id===ME.id || !(all[p.id]||[]).includes(i))).map(i => l.items[i].n) : []; }

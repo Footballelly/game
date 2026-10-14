@@ -63,8 +63,8 @@ function recordGame(r){
   const rec = [];
   if(r.mode==="plusmoins" && r.solo && !r.daily){ const k = r.theme==="ldc" ? "pmLdc" : "pm"; if(r.score>(PROFILE.best[k]||0)){ PROFILE.best[k] = r.score; rec.push(`Record de série : ${r.score}`); } }
   if(r.mode==="saison" && r.score>PROFILE.best.saison){ PROFILE.best.saison = r.score; rec.push(`Record : ${r.score}/11 postes`); }
-  if(r.mode==="chrono" && r.list){ const b = PROFILE.best.chrono[r.list]||0; if(r.score>b){ PROFILE.best.chrono[r.list] = r.score; if(b) rec.push(`Record sur cette liste : ${r.score}`); } }
-  if(r.mode==="career" && r.points>(PROFILE.best.career||0)){ if(PROFILE.best.career) rec.push(`Record de parcours : ${r.points}/50`); PROFILE.best.career = r.points; }
+  if(r.mode==="chrono" && r.list){ const ck = chronoKey(r.list, r.daily ? 90 : r.time); const b = PROFILE.best.chrono[ck]||0; if(r.score>b){ PROFILE.best.chrono[ck] = r.score; if(b) rec.push(`Record sur cette liste : ${r.score}`); } }
+  if(r.mode==="career"){ const k = careerRecKey(r.diff); if(r.points>(PROFILE.best[k]||0)){ if(PROFILE.best[k]) rec.push(`Record ${DIFFS[r.diff].t} : ${r.points}/${r.max}`); PROFILE.best[k] = r.points; } }
   const cards = [];
   PROFILE.xp += xp; PROFILE.games++;
   let streak = null;
