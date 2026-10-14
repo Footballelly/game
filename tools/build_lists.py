@@ -44,3 +44,19 @@ out = "// Football Legends — listes Chrono calculées depuis les feuilles de m
       "window.FL_LISTS = (window.FL_LISTS || []).concat(" + json.dumps(lists, ensure_ascii=False, indent=0) + ");\n"
 open("/home/claude/game/data/lists_fpl.js", "w", encoding="utf-8").write(out)
 for l in lists: print(l["id"], len(l["items"]), ", ".join(x["n"] for x in l["items"][:12]))
+
+# ---------- Plus ou moins : buts en PL de 2016-17 à 2025-26 (au moins 20)
+clubs_of = collections.defaultdict(list)
+for code in apps:
+    for club, k in apps[code].items(): clubs_of[code].append((k, club))
+pm = []
+for code, gl in goals.most_common():
+    if gl < 20: break
+    cl = [c for _, c in sorted(clubs_of[code], reverse=True)[:2]]
+    pm.append({"n": display_name(info[code]), "g": gl, "c": " · ".join(cl)})
+open("/home/claude/game/data/goals_fpl.js", "w", encoding="utf-8").write(
+ "// Football Legends — Plus ou moins « ère moderne » : buts de Premier League marqués de 2016-17 à 2025-26 (saisons terminées, chiffres figés).\n"
+ "// Source : feuilles de match officielles du Fantasy Premier League (dépôt vaastav/Fantasy-Premier-League, MIT). c = clubs principaux sur la période.\n"
+ "window.FL_GOALS_MOD = " + json.dumps(pm, ensure_ascii=False, indent=0) + ";\n"
+ "window.FL_PM_THEMES = Object.assign(window.FL_PM_THEMES || {}, {mod:{t:\"Buts en PL depuis 2016\", u:\"buts en PL depuis 2016\"}});\n")
+print("PM moderne :", len(pm), pm[:3], pm[-1])

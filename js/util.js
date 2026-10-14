@@ -17,7 +17,9 @@ const GOALS = window.FL_GOALS || [];
 const LISTS = window.FL_LISTS || [];
 const GOALS_UCL = window.FL_GOALS_UCL || [];
 const PM_THEMES = window.FL_PM_THEMES || {pl:{t:"Buts en Premier League", u:"buts en PL"}};
-const goalsOf = th => th==="ldc" ? GOALS_UCL : GOALS;
+const GOALS_MOD = window.FL_GOALS_MOD || [];
+const goalsOf = th => th==="ldc" ? GOALS_UCL : th==="mod" ? GOALS_MOD : GOALS;
+const pmKey = th => ({ldc:"pmLdc", mod:"pmMod"})[th] || "pm";
 const LEAGUES = window.FL_LEAGUES || {};
 
 /* ---------- Constantes de jeu ---------- */
