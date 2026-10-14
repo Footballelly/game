@@ -170,6 +170,26 @@ input[type=range]{width:100%;accent-color:var(--kit);height:28px}
 .share-top .display{font-size:22px;overflow-wrap:anywhere}
 .badge{font-family:var(--f-display);background:var(--flash);color:var(--ink);border-radius:12px;padding:6px 10px;font-size:22px;flex:none;font-variant-numeric:tabular-nums}
 .share-foot{display:flex;justify-content:space-between;gap:8px;font-family:var(--f-mono);font-size:11px;color:var(--mute)}
+/* chrono */
+.chhint{color:var(--mute);font-size:15px;margin:0 0 12px}
+.chscore{display:flex;align-items:baseline;gap:8px;margin:4px 0 14px}
+.chscore b{font-family:var(--f-display);font-weight:400;font-size:56px;line-height:1;color:var(--flash);font-variant-numeric:tabular-nums}
+.chscore span{font-family:var(--f-mono);font-size:15px;color:var(--mute)}
+.chpeople{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.chpeople span{font-family:var(--f-mono);font-size:12px;font-weight:600;background:rgba(255,255,255,.12);border-radius:999px;padding:5px 10px;font-variant-numeric:tabular-nums}
+.chpeople span.me{background:var(--paper);color:var(--ink)}
+.chmsg{min-height:24px;font-weight:700;font-size:15px}
+.chmsg .ok{color:var(--green)}
+.chmsg .ko{color:#ff9aa4}
+.chfound{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.chfound span{background:var(--paper);color:var(--ink);font-weight:700;font-size:14px;border-radius:10px;padding:6px 10px}
+.clist{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.citem{background:var(--paper);color:var(--ink);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.citem b{font-size:14px;line-height:1.2;overflow-wrap:anywhere}
+.citem.miss{background:rgba(255,255,255,.08);color:var(--mute)}
+.citem .who{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+.citem .who i{font-style:normal;font-family:var(--f-display);font-size:10px;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--kit);color:var(--white)}
+.citem .who small{font-size:12px;font-weight:600}
 .toast{position:fixed;left:50%;top:calc(16px + env(safe-area-inset-top,0px));transform:translateX(-50%);background:var(--red);color:var(--white);font-weight:800;padding:12px 18px;border-radius:12px;z-index:30;box-shadow:0 4px 0 rgba(0,0,0,.25)}
 .hostbar{display:flex;flex-direction:column;gap:8px}
 .hosttag{font-family:var(--f-mono);font-size:11px;color:var(--flash);text-transform:uppercase;letter-spacing:.1em;text-align:center}
@@ -183,6 +203,7 @@ input[type=range]{width:100%;accent-color:var(--kit);height:28px}
 <script src="data/players.js"></script>
 <script src="data/clubs.js"></script>
 <script src="data/goals.js"></script>
+<script src="data/lists.js"></script>
 <script>
 /* ======================================================================
    CONFIGURATION — colle ici les deux valeurs de ton projet Supabase
@@ -197,6 +218,7 @@ const CLUB = window.FL_CLUBS || {};
 
 
 const GOALS = window.FL_GOALS || [];
+const LISTS = window.FL_LISTS || [];
 
 /* ---------- Constantes de jeu ---------- */
 const SEASONS=[2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014];
@@ -208,13 +230,14 @@ const SLOTS=[{id:"GK",l:"GK",fr:"Gardien",ab:"G"},
 const LINES=[["LW","ST","RW"],["CM1","CM2","CM3"],["LB","CB1","CB2","RB"],["GK"]];
 const ROLE={GK:"gardien",DEF:"défenseur",MID:"milieu",ATT:"attaquant"};
 const MODES={saison:{t:"Un joueur par saison",d:"11 manches, un poste et une saison de PL. Tu cites un joueur de mémoire."},
-             plusmoins:{t:"Plus ou moins",d:"Buts en Premier League : le joueur suivant en a-t-il plus ou moins ? 10 duels."}};
+             plusmoins:{t:"Plus ou moins",d:"Buts en Premier League : le joueur suivant en a-t-il plus ou moins ? 10 duels."},
+             chrono:{t:"Chrono",d:"Cite un maximum de noms d'une liste avant la fin du temps : Ballons d'Or, buteurs, clubs…"}};
 const MAX_TRIES=3, PM_DUELS=10;
 const slotById=id=>SLOTS.find(s=>s.id===id);
 
 /* ---------- Utilitaires ---------- */
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const norm=s=>String(s).normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[łŁ]/g,"l").toLowerCase().replace(/['’]/g,"").replace(/[^a-z0-9 ]/g," ").replace(/\s+/g," ").trim();
+const norm=s=>String(s).replace(/œ/g,"oe").replace(/Œ/g,"OE").replace(/æ/g,"ae").replace(/ß/g,"ss").normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[łŁ]/g,"l").toLowerCase().replace(/['’]/g,"").replace(/[^a-z0-9 ]/g," ").replace(/\s+/g," ").trim();
 const short=p=>p.k||p.n.split(" ").slice(-1)[0];
 const initialsOf=name=>{const w=String(name).replace(/['’.]/g,"").trim().split(/\s+/).filter(Boolean); if(!w.length) return "?"; return (w.length>1?w[0][0]+w[w.length-1][0]:w[0].slice(0,2)).toUpperCase();};
 const clubAt=(p,y)=>{const st=p.s.find(([c,a,b])=>y>=a&&y<=b); return st?st[0]:null;};
@@ -222,10 +245,31 @@ const lines=p=>p.p.split(" ");
 const shuffle=a=>{a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a;};
 const uid=()=>Math.random().toString(36).slice(2,10);
 const LS={get(k){try{return JSON.parse(localStorage.getItem(k));}catch(e){return null;}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}},del(k){try{localStorage.removeItem(k);}catch(e){}}};
+/* propre à chaque onglet : deux onglets du même navigateur sont deux joueurs différents */
+const SS={get(k){try{return JSON.parse(sessionStorage.getItem(k));}catch(e){return null;}},set(k,v){try{sessionStorage.setItem(k,JSON.stringify(v));}catch(e){}},del(k){try{sessionStorage.removeItem(k);}catch(e){}}};
 const ALIAS=P.map(p=>{const set=new Set([norm(p.n),norm(short(p)),norm(p.n.split(" ").slice(-1)[0]),...(p.a||[]).map(norm)]);
   const w=norm(p.n).split(" "); if(w.length>2) set.add(w.slice(1).join(" ")); return [...set].filter(x=>x.length>1);});
 function lev(a,b){if(Math.abs(a.length-b.length)>2) return 9; const d=Array.from({length:a.length+1},(_,i)=>[i]); for(let j=1;j<=b.length;j++) d[0][j]=j;
   for(let i=1;i<=a.length;i++) for(let j=1;j<=b.length;j++) d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1)); return d[a.length][b.length];}
+function buildListAliases(l){
+  const SUF=/ (city|united|town|rovers|wanderers|athletic|albion|county|hotspur|rangers|wednesday)$/;
+  const auto=l.items.map(it=>{ const s=new Set(), n=norm(it.n), w=n.split(" ");
+    if(l.kind==="player"){ if(w.length>1) s.add(w[w.length-1]); if(w.length>2) s.add(w.slice(1).join(" ")); }
+    else { const st=n.replace(SUF,""); if(st!==n) s.add(st); }
+    return s; });
+  const cnt={}; auto.forEach(s=>s.forEach(a=>cnt[a]=(cnt[a]||0)+1));
+  return l.items.map((it,i)=>{ const s=new Set([norm(it.n),...(it.a||[]).map(norm)]); auto[i].forEach(a=>{ if(cnt[a]===1&&a.length>2) s.add(a); }); return [...s].filter(Boolean); });
+}
+LISTS.forEach(l=>{ l._al=buildListAliases(l); });
+const listById=id=>LISTS.find(l=>l.id===id);
+function chronoMatch(l,input,found){
+  const q=norm(input); if(!q) return {kind:"none"};
+  let hits=l.items.map((_,i)=>i).filter(i=>l._al[i].includes(q));
+  if(!hits.length&&q.length>=5){ const tol=q.length>=8?2:1; hits=l.items.map((_,i)=>i).filter(i=>l._al[i].some(a=>a.length>=4&&lev(q,a)<=tol)); }
+  if(!hits.length) return {kind:"none"};
+  const fresh=hits.find(i=>!found.includes(i));
+  return fresh!==undefined?{kind:"ok",i:fresh}:{kind:"dup",i:hits[0]};
+}
 function findPlayers(input){const q=norm(input); if(!q) return [];
   let hits=P.map((p,i)=>i).filter(i=>ALIAS[i].includes(q));
   if(!hits.length&&q.length>=5){const tol=q.length>=8?2:1; hits=P.map((p,i)=>i).filter(i=>ALIAS[i].some(a=>a.length>=4&&lev(q,a)<=tol));}
@@ -251,7 +295,7 @@ async function connect(code,onMsg){
 }
 
 /* ---------- État ---------- */
-let ME=LS.get("fl-me")||{id:uid(),name:""}; LS.set("fl-me",ME);
+let ME={id:SS.get("fl-id")||uid(),name:(LS.get("fl-me")||{}).name||""}; SS.set("fl-id",ME.id); LS.set("fl-me",{name:ME.name});
 let NET=null, CODE=null, IS_HOST=false;
 let G=null;            // partie complète (seulement chez l'hôte)
 let game=null;         // état public reçu de l'hôte
@@ -265,12 +309,15 @@ const app=document.getElementById("app");
    HÔTE
    ====================================================================== */
 function newGame(){return {code:CODE,host:ME.id,mode:"saison",timer:30,phase:"lobby",players:[{id:ME.id,name:ME.name}],
-  rounds:[],round:0,answers:{},revealed:{},votes:{},chain:[],pm:{cur:0,picks:{},scores:{},last:null},deadlineAt:null};}
+  rounds:[],round:0,answers:{},revealed:{},votes:{},chain:[],pm:{cur:0,picks:{},scores:{},last:null},deadlineAt:null,
+  chronoList:"random",chronoTime:90,chrono:null,lastList:null,gameNo:0};}
 function pub(){
   const s={...G}; delete s.answers; delete s.votes; s.pm={...G.pm}; delete s.pm.picks;
   s.answeredIds=Object.keys(G.answers[G.round]||{});
   s.pickedIds=Object.keys(G.pm.picks||{});
   s.votedIds=Object.keys(G.votes||{});
+  if(G.chrono){ s.chrono={list:G.chrono.list,counts:Object.fromEntries(Object.entries(G.chrono.found).map(([k,v])=>[k,v.length])),doneIds:Object.keys(G.chrono.done)};
+    if(G.phase==="chronoResult") s.chrono.found=G.chrono.found; }
   if(G.phase==="results") s.votes=G.votes;
   return s;
 }
@@ -281,9 +328,9 @@ function push(){
   try{NET&&NET.send(m);}catch(e){}
   onState(m);
 }
-function armTimer(fn){
-  clearTimeout(hostTimer);
-  if(G.timer){G.deadlineAt=Date.now()+G.timer*1000; hostTimer=setTimeout(fn,G.timer*1000+1200);} else G.deadlineAt=null;
+function armTimer(fn,secs){
+  clearTimeout(hostTimer); const s=secs??G.timer;
+  if(s){G.deadlineAt=Date.now()+s*1000; hostTimer=setTimeout(fn,s*1000+1200);} else G.deadlineAt=null;
 }
 function hostHandle(m){
   if(!G||!m||!m.id) return;
@@ -303,6 +350,15 @@ function hostHandle(m){
       if(G.phase!=="pmAsk"||m.cur!==G.pm.cur||!inGame||!["plus","moins"].includes(m.choice)) return;
       G.pm.picks[m.id]=m.choice;
       if(G.players.every(p=>G.pm.picks[p.id])) endPm(); else push(); break;
+    case "found": {
+      if(G.phase!=="chronoPlay"||!inGame||!Array.isArray(m.items)) return;
+      const n=(listById(G.chrono.list)||{items:[]}).items.length;
+      G.chrono.found[m.id]=[...new Set(m.items.filter(i=>Number.isInteger(i)&&i>=0&&i<n))];
+      push(); break; }
+    case "chdone":
+      if(G.phase!=="chronoPlay"||!inGame) return;
+      G.chrono.done[m.id]=true;
+      if(G.players.every(p=>G.chrono.done[p.id])) endChrono(); else push(); break;
     case "votes":
       if(G.phase!=="voting"||!inGame) return;
       G.votes[m.id]=m.ratings||{};
@@ -316,7 +372,12 @@ function sanitizeEntry(e){
   return {st:"none"};
 }
 function hostStart(){
-  if(G.mode==="saison"){
+  G.gameNo=(G.gameNo||0)+1;
+  if(G.mode==="chrono"){
+    let id=G.chronoList;
+    if(id==="random"||!listById(id)){ const pool=LISTS.filter(l=>l.id!==G.lastList); id=pool[Math.floor(Math.random()*pool.length)].id; }
+    G.lastList=id; G.chrono={list:id,found:{},done:{}}; G.phase="chronoPlay"; armTimer(endChrono,G.chronoTime||90);
+  } else if(G.mode==="saison"){
     const ss=shuffle(SEASONS); G.rounds=SLOTS.map((s,k)=>({slot:s.id,y:ss[k]}));
     G.round=0; G.answers={}; G.revealed={}; G.votes={}; G.phase="answering"; armTimer(endRound);
   } else {
@@ -331,6 +392,10 @@ function endRound(){
   const a=G.answers[G.round]||{};
   G.revealed[G.round]=Object.fromEntries(G.players.map(p=>[p.id,a[p.id]||{st:"none"}]));
   G.phase="roundResult"; G.deadlineAt=null; push();
+}
+function endChrono(){
+  if(G.phase!=="chronoPlay") return; clearTimeout(hostTimer);
+  G.phase="chronoResult"; G.deadlineAt=null; push();
 }
 function endPm(){
   if(G.phase!=="pmAsk") return; clearTimeout(hostTimer);
@@ -352,9 +417,9 @@ function hostNext(){
   }
   push();
 }
-function hostForce(){ if(G.phase==="answering") endRound(); else if(G.phase==="pmAsk") endPm(); else if(G.phase==="voting"){G.phase="results"; push();} }
+function hostForce(){ if(G.phase==="answering") endRound(); else if(G.phase==="pmAsk") endPm(); else if(G.phase==="chronoPlay") endChrono(); else if(G.phase==="voting"){G.phase="results"; push();} }
 function hostJudge(r,id,v){ const e=G.revealed[r]&&G.revealed[r][id]; if(e&&e.st==="pending"){e.st=v==="ok"?"agreed":"refused"; push();} }
-function hostLobby(){ clearTimeout(hostTimer); const keep=G.players; const mode=G.mode, timer=G.timer; G=newGame(); G.players=keep; G.mode=mode; G.timer=timer; push(); }
+function hostLobby(){ clearTimeout(hostTimer); const old=G; G=newGame(); ["players","mode","timer","chronoList","chronoTime","lastList","gameNo"].forEach(k=>{ if(old[k]!==undefined) G[k]=old[k]; }); push(); }
 
 /* ======================================================================
    CLIENT (tous les téléphones, y compris l'hôte)
@@ -380,7 +445,7 @@ async function createGame(){
   CODE=Array.from({length:4},()=>"ABCDEFGHJKMNPQRSTUVWXYZ"[Math.floor(Math.random()*23)]).join("");
   IS_HOST=true; G=newGame();
   try{ NET=await connect(CODE,onMsg); }catch(e){ L.err=e.message; L.busy=false; IS_HOST=false; G=null; return render(true); }
-  LS.set("fl-session",{code:CODE,host:true}); L.busy=false; push();
+  SS.set("fl-session",{code:CODE,host:true}); L.busy=false; push();
 }
 async function joinGame(code){
   code=String(code||"").toUpperCase().replace(/[^A-Z]/g,"");
@@ -389,7 +454,7 @@ async function joinGame(code){
   L.busy=true; L.err=null; render(true);
   CODE=code; IS_HOST=false;
   try{ NET=await connect(CODE,onMsg); }catch(e){ L.err=e.message; L.busy=false; CODE=null; return render(true); }
-  LS.set("fl-session",{code:CODE,host:false});
+  SS.set("fl-session",{code:CODE,host:false});
   act({t:"join",name:ME.name});
   joinTimer=setTimeout(()=>{ if(!game){ L.err=`Aucune partie trouvée avec le code ${CODE}. Vérifie le code et que l'hôte a l'appli ouverte.`; leave(true);} },7000);
 }
@@ -398,16 +463,16 @@ function leave(keepErr){
   try{NET&&NET.close();}catch(e){}
   clearTimeout(hostTimer); clearTimeout(joinTimer);
   if(CODE) LS.del("fl-g-"+CODE);
-  LS.del("fl-session"); NET=null; CODE=null; IS_HOST=false; G=null; game=null; deadline=null;
+  SS.del("fl-session"); NET=null; CODE=null; IS_HOST=false; G=null; game=null; deadline=null;
   const err=keepErr?L.err:null; L=freshLocal(); L.err=err; L.busy=false; render(true);
 }
 async function resume(){
-  const s=LS.get("fl-session"); if(!s||!s.code) return render(true);
+  const s=SS.get("fl-session"); if(!s||!s.code) return render(true);
   CODE=s.code; IS_HOST=!!s.host;
-  try{ NET=await connect(CODE,onMsg); }catch(e){ LS.del("fl-session"); CODE=null; IS_HOST=false; return render(true); }
+  try{ NET=await connect(CODE,onMsg); }catch(e){ SS.del("fl-session"); CODE=null; IS_HOST=false; return render(true); }
   if(IS_HOST){
     G=LS.get("fl-g-"+CODE); if(!G){ leave(); return; }
-    if(G.deadlineAt){ const left=G.deadlineAt-Date.now(); const fn=G.phase==="answering"?endRound:G.phase==="pmAsk"?endPm:null; if(fn) hostTimer=setTimeout(fn,Math.max(0,left)+1200); }
+    if(G.deadlineAt){ const left=G.deadlineAt-Date.now(); const fn=G.phase==="answering"?endRound:G.phase==="pmAsk"?endPm:G.phase==="chronoPlay"?endChrono:null; if(fn) hostTimer=setTimeout(fn,Math.max(0,left)+1200); }
     push();
   } else {
     act({t:"hello"});
@@ -483,7 +548,7 @@ function screenWelcome(){
 }
 function screenLobby(){
   const g=game, n=g.players.length;
-  return {key:"lobby"+JSON.stringify([g.players,g.mode,g.timer]),html:`
+  return {key:"lobby"+JSON.stringify([g.players,g.mode,g.timer,g.chronoList,g.chronoTime]),html:`
   <div class="stack">
    <div style="display:flex;justify-content:space-between;align-items:center"><span class="eyebrow">Salon</span>${netBadge()}</div>
    <div class="codebox"><div class="lbl" style="margin:0">Code de la partie</div><div class="display">${esc(g.code)}</div><div class="hint">Tes potes tapent ce code sur leur téléphone.</div></div>
@@ -491,11 +556,13 @@ function screenLobby(){
     <div class="people">${g.players.map(p=>`<span class="person${p.id===ME.id?" me":""}"><span class="dot">${esc(initialsOf(p.name))}</span><span>${esc(p.name)}${p.id===g.host?" · hôte":""}</span></span>`).join("")}</div></div>
    ${IS_HOST?`<div class="card stack">
      <div><span class="lbl">Mode de jeu</span><div class="modes">${Object.entries(MODES).map(([k,m])=>`<button class="mode" data-act="mode" data-v="${k}" aria-pressed="${g.mode===k}"><b>${m.t}</b><small>${m.d}</small></button>`).join("")}</div></div>
-     <div><span class="lbl">Temps par manche</span><div class="seg">${[[0,"Sans"],[15,"15 s"],[30,"30 s"],[45,"45 s"]].map(([v,l])=>`<button data-act="timer" data-v="${v}" aria-pressed="${g.timer===v}">${l}</button>`).join("")}</div>
-      <div class="hint">Sans chrono, c'est toi qui clôtures chaque manche.</div></div>
-    </div>`:`<div class="card"><h3>${esc(MODES[g.mode].t)}</h3><p style="margin:6px 0 0;color:var(--ink-soft)">${esc(MODES[g.mode].d)}</p><p class="hint">En attente de ${esc(nameOf(g.host))} pour lancer.</p></div>`}
+     ${g.mode==="chrono"?`<div><span class="lbl">Liste</span><div class="modes">${[["random","Au hasard","Une liste surprise à chaque partie."],...LISTS.map(l=>[l.id,l.t,`${l.items.length} réponses possibles`])].map(([k,t2,d])=>`<button class="mode" data-act="chlist" data-v="${k}" aria-pressed="${g.chronoList===k}"><b>${esc(t2)}</b><small>${esc(d)}</small></button>`).join("")}</div></div>
+     <div><span class="lbl">Durée</span><div class="seg">${[[60,"1 min"],[90,"1 min 30"],[120,"2 min"]].map(([v,l])=>`<button data-act="chtime" data-v="${v}" aria-pressed="${g.chronoTime===v}">${l}</button>`).join("")}</div></div>`
+     :`<div><span class="lbl">Temps par manche</span><div class="seg">${[[0,"Sans"],[15,"15 s"],[30,"30 s"],[45,"45 s"]].map(([v,l])=>`<button data-act="timer" data-v="${v}" aria-pressed="${g.timer===v}">${l}</button>`).join("")}</div>
+      <div class="hint">Sans chrono, c'est toi qui clôtures chaque manche.</div></div>`}
+    </div>`:`<div class="card"><h3>${esc(MODES[g.mode].t)}</h3><p style="margin:6px 0 0;color:var(--ink-soft)">${esc(MODES[g.mode].d)}</p>${g.mode==="chrono"?`<p class="hint">Liste : ${esc(g.chronoList==="random"?"au hasard":(listById(g.chronoList)||{}).t||"")}</p>`:""}<p class="hint">En attente de ${esc(nameOf(g.host))} pour lancer.</p></div>`}
   </div>
-  ${IS_HOST?dock(`<button class="btn" data-act="start">${n<2?"Lancer seul (test)":`Lancer avec ${n} joueurs`}</button><button class="btn ghost" data-act="leave">Fermer le salon</button>`)
+  ${IS_HOST?dock(`<button class="btn" data-act="start">${n<2?"Jouer seul":`Lancer avec ${n} joueurs`}</button><button class="btn ghost" data-act="leave">Fermer le salon</button>`)
            :dock(`<button class="btn ghost" data-act="leave">Quitter le salon</button>`)}`};
 }
 function msgBox(m){
@@ -617,6 +684,52 @@ function screenPmResult(){
    <div class="podium" style="margin-top:16px">${res.map((r,k)=>`<div class="pod${last.winners.includes(r.p.id)?" first":""}"><span class="rk">${k+1}</span><span><b>${esc(r.p.name)}</b><small>${last.picks[r.p.id]?(last.picks[r.p.id]==="plus"?"A dit plus":"A dit moins"):"Pas de réponse"}</small></span><span class="sc">${r.sc} pt${r.sc>1?"s":""}</span></div>`).join("")}</div>
    ${IS_HOST?hostDock(`<button class="btn" data-act="next">${g.pm.cur<g.chain.length-2?"Duel suivant":"Voir le classement"}</button>`):dock(`<p class="muted" style="text-align:center;margin:0">En attente de l'hôte.</p>`)}`};
 }
+function chronoReset(){ if(L.chGame!==game.gameNo){ L.chGame=game.gameNo; L.chFound=[]; L.chMsg=null; L.chDone=false; } }
+function screenChronoPlay(){
+  chronoReset();
+  const g=game, l=listById(g.chrono.list), done=L.chDone||g.chrono.doneIds.includes(ME.id);
+  const people=`<div class="chpeople" data-live="chpeople" data-html>${g.players.map(p=>`<span class="${p.id===ME.id?"me":""}">${esc(p.name)} · ${p.id===ME.id?L.chFound.length:(g.chrono.counts[p.id]||0)}${g.chrono.doneIds.includes(p.id)?" ✓":""}</span>`).join("")}</div>`;
+  const msg=L.chMsg?`<span class="${L.chMsg.ok?"ok":"ko"}">${esc(L.chMsg.text)}</span>`:"";
+  return {key:`chrono-${g.gameNo}-${done}`,html:`
+   <div class="bar"><h2>${esc(l.t)}</h2>${clock()}</div>
+   <p class="chhint">${esc(l.hint)}</p>
+   <div class="chscore"><b data-live="chmine">${L.chFound.length}</b><span>/ ${l.items.length} trouvés</span></div>
+   ${people}
+   ${done?`<div class="card"><h3>Tu as terminé avec ${L.chFound.length} réponse${L.chFound.length>1?"s":""}.</h3><p class="hint">Les résultats arrivent quand le chrono s'arrête ou que tout le monde a fini.</p></div>`
+   :`<form class="answer" data-form="chrono" autocomplete="off" style="margin-top:0">
+     <label class="eyebrow" for="chguess">Un nom, puis Entrée</label>
+     <input id="chguess" autocomplete="off" autocorrect="off" autocapitalize="words" spellcheck="false" enterkeyhint="send" placeholder="Tape un nom">
+     <div class="chmsg" data-live="chmsg" data-html aria-live="polite">${msg}</div>
+     <button class="btn ink" type="submit">Valider</button>
+     <button class="linkbtn" type="button" data-act="chdone">J'ai fini</button>
+    </form>`}
+   <div class="chfound" data-live="chfound" data-html>${L.chFound.map(i=>`<span>${esc(l.items[i].n)}</span>`).join("")}</div>
+   ${hostDock(`<button class="btn ghost" data-act="force">Arrêter le chrono</button>`)}`};
+}
+function screenChronoResult(){
+  chronoReset();
+  const g=game, l=listById(g.chrono.list), found=g.chrono.found||{}, multi=g.players.length>1;
+  const finders=l.items.map((_,i)=>g.players.filter(p=>(found[p.id]||[]).includes(i)));
+  const res=g.players.map(p=>{ const f=found[p.id]||[]; return {p,n:f.length,gems:multi?f.filter(i=>finders[i].length===1).length:0}; }).sort((a,b)=>b.n-a.n||b.gems-a.gems);
+  const w=res[0], tie=res.length>1&&res[1].n===w.n&&res[1].gems===w.gems, missed=finders.filter(f=>!f.length).length;
+  return {key:"chres"+g.gameNo,html:`<div class="stack">
+   <div class="hero"><span class="eyebrow">Chrono · ${esc(l.t)}</span>
+    <h1 class="display" style="font-size:clamp(34px,10vw,50px)">${!multi?`${w.n} <span>sur ${l.items.length}</span>`:tie?`Égalité <span>parfaite</span>`:`${esc(w.p.name)} <span>gagne</span>`}</h1></div>
+   <div class="podium">${res.map((r,k)=>`<div class="pod${k===0?" first":""}"><span class="rk">${k+1}</span><span><b>${esc(r.p.name)}</b><small>${multi?`${r.gems} pépite${r.gems>1?"s":""}`:`${l.items.length-r.n} oubli${l.items.length-r.n>1?"s":""}`}</small></span><span class="sc">${r.n}/${l.items.length}</span></div>`).join("")}</div>
+   <div><div class="eyebrow" style="margin-bottom:8px">La liste complète${missed?` · ${missed} oublié${missed>1?"s":""} par tout le monde`:""}</div>
+    <div class="clist">${l.items.map((it,i)=>{ const f=finders[i];
+      return `<div class="citem${f.length?"":" miss"}"><b>${esc(it.n)}</b><div class="who">${f.length?f.map(p=>`<i title="${esc(p.name)}">${esc(initialsOf(p.name))}</i>`).join("")+(multi&&f.length===1?`<span class="gem">Pépite</span>`:""):`<small>Personne</small>`}</div></div>`; }).join("")}</div></div>
+  </div>
+  ${IS_HOST?hostDock(`<button class="btn" data-act="start">Rejouer${g.chronoList==="random"?" avec une autre liste":""}</button><button class="btn ghost" data-act="lobby">Retour au salon</button>`):dock(`<p class="muted" style="text-align:center;margin:0">L'hôte peut relancer une partie.</p>`)}`};
+}
+function chronoGuess(input){
+  const raw=input.value, l=listById(game.chrono.list); if(!norm(raw)) return;
+  const r=chronoMatch(l,raw,L.chFound);
+  if(r.kind==="ok"){ L.chFound.push(r.i); L.chMsg={ok:true,text:`✓ ${l.items[r.i].n}`}; act({t:"found",items:L.chFound.slice()}); }
+  else if(r.kind==="dup") L.chMsg={ok:false,text:`${l.items[r.i].n} : déjà trouvé`};
+  else L.chMsg={ok:false,text:`« ${raw.trim()} » n'est pas dans la liste`};
+  input.value=""; render();
+}
 function view(){
   if(!game) return screenWelcome();
   switch(game.phase){
@@ -626,6 +739,8 @@ function view(){
     case "voting": return screenVoting();
     case "pmAsk": return screenPmAsk();
     case "pmResult": return screenPmResult();
+    case "chronoPlay": return screenChronoPlay();
+    case "chronoResult": return screenChronoResult();
     default: return screenResults();
   }
 }
@@ -634,17 +749,18 @@ function render(force){
   if(!force&&v.key===lastKey){ updateLive(v.html); return; }
   const sameScreen=lastKey&&v.key.split("-")[0]===lastKey.split("-")[0];
   const y=window.scrollY; lastKey=v.key; app.innerHTML=v.html; window.scrollTo(0,sameScreen?y:0);
+  const cg=document.getElementById("chguess"); if(cg) cg.focus({preventScroll:true});
   const g=document.getElementById("guess"); if(g&&!L.mine){ g.focus({preventScroll:true}); const n=g.value.length; try{g.setSelectionRange(n,n);}catch(e){} }
   tickClock();
 }
-function updateLive(html){ const tmp=document.createElement("div"); tmp.innerHTML=html; app.querySelectorAll("[data-live]").forEach(el=>{ const n=tmp.querySelector(`[data-live="${el.dataset.live}"]`); if(n) el.textContent=n.textContent; }); }
-function tickClock(){ document.querySelectorAll("[data-clock]").forEach(el=>{ const left=Math.max(0,Math.ceil((deadline-Date.now())/1000)); el.textContent=`${left}s`; el.classList.toggle("warn",left<=10);
+function updateLive(html){ const tmp=document.createElement("div"); tmp.innerHTML=html; app.querySelectorAll("[data-live]").forEach(el=>{ const n=tmp.querySelector(`[data-live="${el.dataset.live}"]`); if(!n) return; if(el.hasAttribute("data-html")){ if(el.innerHTML!==n.innerHTML) el.innerHTML=n.innerHTML; } else el.textContent=n.textContent; }); }
+function tickClock(){ document.querySelectorAll("[data-clock]").forEach(el=>{ const left=Math.max(0,Math.ceil((deadline-Date.now())/1000)); el.textContent=left>=60?`${Math.floor(left/60)}:${String(left%60).padStart(2,"0")}`:`${left}s`; el.classList.toggle("warn",left<=10);
   if(left<=0&&game&&game.phase==="answering"&&!L.mine&&!game.answeredIds.includes(ME.id)){ L.why="Temps écoulé."; sendAnswer({st:"none"}); } }); }
 setInterval(tickClock,250);
 function toast(msg){const t=document.createElement("div"); t.className="toast"; t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),1800);}
 
 /* ---------- Événements ---------- */
-app.addEventListener("submit",e=>{ if(e.target.dataset.form==="answer"){ e.preventDefault(); submitGuess(e.target.querySelector("#guess").value); } });
+app.addEventListener("submit",e=>{ if(e.target.dataset.form==="chrono"){ e.preventDefault(); chronoGuess(e.target.querySelector("#chguess")); return; } if(e.target.dataset.form==="answer"){ e.preventDefault(); submitGuess(e.target.querySelector("#guess").value); } });
 app.addEventListener("click",e=>{
   const el=e.target.closest("[data-act]"); if(!el) return;
   const a=el.dataset.act;
@@ -654,6 +770,9 @@ app.addEventListener("click",e=>{
     case "leave": leave(); break;
     case "mode": if(IS_HOST){G.mode=el.dataset.v; push();} break;
     case "timer": if(IS_HOST){G.timer=+el.dataset.v; push();} break;
+    case "chlist": if(IS_HOST){G.chronoList=el.dataset.v; push();} break;
+    case "chtime": if(IS_HOST){G.chronoTime=+el.dataset.v; push();} break;
+    case "chdone": L.chDone=true; act({t:"chdone"}); render(); break;
     case "start": if(IS_HOST) hostStart(); break;
     case "next": if(IS_HOST) hostNext(); break;
     case "force": if(IS_HOST) hostForce(); break;
@@ -668,7 +787,7 @@ app.addEventListener("click",e=>{
 });
 app.addEventListener("input",e=>{
   const el=e.target;
-  if(el.id==="me-name"){ ME.name=el.value.slice(0,18); LS.set("fl-me",ME); }
+  if(el.id==="me-name"){ ME.name=el.value.slice(0,18); LS.set("fl-me",{name:ME.name}); }
   if(el.id==="join-code"){ L.joinCode=el.value.toUpperCase().replace(/[^A-Z]/g,"").slice(0,4); el.value=L.joinCode; }
   if(el.id==="guess"){ L.draft=el.value; }
   if(el.dataset.act==="rate"){ L.ratings[el.dataset.p]=+el.value; const o=document.getElementById(`sv-${el.dataset.p}`); if(o) o.textContent=el.value; }
