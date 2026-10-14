@@ -32,6 +32,8 @@ function miniPlayer(kit=DEFAULT_KIT, {w=60, label=""}={}){
 }
 const miniFor = (p, club, w) => miniPlayer(kitOf(club || mainClub(p)), {w, label:`Mini-joueur de ${p.n}`});
 
+/* illustrations dessinées par Paul : ids listés dans data/art.js, fichiers dans cards/<id>.webp ; sinon mini-joueur généré */
+const ART = new Set(window.FL_ART || []);
 const RAR = {common:"Commune", rare:"Rare", legend:"Légende"};
 const POS_FR = {GK:"Gardien", DEF:"Défenseur", MID:"Milieu", ATT:"Attaquant"};
 /* carte de collection (catalogue FL_CARDS) ; locked = pas encore obtenue */
@@ -41,6 +43,6 @@ function cardHTML(id, {locked=false, small=false, count=0, tag=""}={}){
   if(locked) return `<div class="fcard locked${small?" sm":""}"><div class="fc-art">${miniPlayer({s:"#3a4180",t:"#4a5190",sh:"#3a4180",so:"#3a4180",p:"plain"},{w:small?54:70})}<span class="fc-q">?</span></div>
     <div class="fc-meta"><b>???</b><small>${POS_FR[c.p]}</small></div></div>`;
   return `<div class="fcard r-${r}${small?" sm":""}">${tag}<div class="fc-top"><span class="fc-rar">${c.r==="legend"?ICON.star:""}${RAR[c.r]}</span><span class="fc-yr">${count>1?`×${count}`:({pl:"PL",l1:"L1",liga:"Liga",seriea:"Serie A",europe:"Europe"}[c.lg]||"")}</span></div>
-    <div class="fc-art" style="--club:${CLUB[c.c]||"#334"}">${miniPlayer(kitOf(c.c),{w:small?54:70, label:`Mini-joueur de ${c.n}`})}</div>
+    <div class="fc-art" style="--club:${CLUB[c.c]||"#334"}">${ART.has(id)?`<img class="fc-img" src="cards/${id}.webp" alt="Illustration de ${esc(c.n)}" loading="lazy" decoding="async">`:miniPlayer(kitOf(c.c),{w:small?54:70, label:`Mini-joueur de ${c.n}`})}</div>
     <div class="fc-meta"><b>${esc(c.n.split(" ").length>1&&c.n.length>14?c.n.split(" ").slice(-1)[0]:c.n)}</b><small>${esc(c.c)} · ${POS_FR[c.p]}</small></div></div>`;
 }
