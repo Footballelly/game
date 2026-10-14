@@ -79,24 +79,41 @@ function dailyCard(){
    <span class="next">Prochain défi dans <span data-live="cd">${fmtCountdown(msToTomorrow())}</span></span>
    ${L.shareFallback?`<textarea class="sharebox" readonly aria-label="Texte à copier">${esc(L.shareFallback)}</textarea>`:""}</section>`;
 }
+/* vitrine de la collection : 3 meilleures cartes en éventail + progression + raccourci vers les packs */
+function collectionTeaser(){
+  if(WALLET.err) return "";
+  const own = ownedIds().sort((a,b) => RORD[CARD.get(a).r]-RORD[CARD.get(b).r] || (ART.has(b)-ART.has(a)));
+  const top = own.slice(0,3), pct = Math.round(own.length/CARDS.length*100), can = WALLET.loaded && WALLET.coins>=PACKS.classic.price;
+  const fan = top.length ? top.map((id,k) => `<span class="fan-c fan-${k}">${cardHTML(id,{small:true})}</span>`).join("")
+    : `<span class="fan-c fan-1">${cardHTML(CARDS[0].id,{locked:true,small:true})}</span>`;
+  return `<button class="teaser" data-act="nav" data-v="collection" aria-label="Ouvrir ma collection">
+    <span class="fan">${fan}</span>
+    <span class="t-body"><span class="eyebrow">Ma collection</span><b>${own.length}<small> / ${CARDS.length} cartes</small></b>
+     <span class="xpbar"><i style="width:${Math.max(pct,own.length?2:0)}%"></i></span>
+     <span class="t-cta${can?" on":""}">${can?`${ICON.pack} Ouvrir un pack`:`${ICON.coin} ${WALLET.loaded?WALLET.coins:"…"} pièces · joue pour en gagner`}</span></span>
+  </button>`;
+}
 function screenHome(){
   const li = levelInfo(), b = PROFILE.best;
-  const tile = (act, ic, cls, t, d, rec, extra="") => `<button class="tile" data-act="${act}" ${extra}><span class="ic ${cls}">${ic}</span><span><b>${t}</b><small>${d}</small></span>${rec?`<span class="rec">${rec}</span>`:"<span></span>"}</button>`;
-  return {key:"home"+JSON.stringify([dailyDone(), PROFILE.xp, L.shareFallback, !!DEFERRED_INSTALL, PROFILE.seenInstall, WALLET.loaded, WALLET.streak]), html:`
+  const m = (act, ic, cls, t, d, badge="", extra="") => `<button class="mtile ${cls}" data-act="${act}" ${extra}><span class="m-ic">${ic}</span><span class="m-bg" aria-hidden="true">${ic}</span>
+    <span class="m-txt"><b>${t}</b><small>${d}</small></span>${badge?`<span class="m-badge">${badge}</span>`:""}</button>`;
+  const pmRec = Math.max(b.pm||0, b.pmLdc||0), carRec = b.career_hard ? `Expert ${b.career_hard}` : b.career ? `Record ${b.career}/50` : b.career_easy ? `Facile ${b.career_easy}` : "";
+  return {key:"home"+JSON.stringify([dailyDone(), PROFILE.xp, L.shareFallback, !!DEFERRED_INSTALL, PROFILE.seenInstall, WALLET.loaded, WALLET.streak, WALLET.coins, ownedIds().length]), html:`
   ${topbar()}
-  <div class="xpbar" title="Niveau ${li.level}" aria-label="Progression du niveau ${li.level} : ${li.pct} %"><i style="width:${li.pct}%"></i></div>
-  <div style="display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:11px;color:var(--mute);margin:6px 0 14px"><span>${esc(titleOf(li.level))}</span><span>${li.into}/${li.need} XP</span></div>
+  <div class="lvl-strip"><span class="lvl-n">Niv. ${li.level}</span><span class="lvl-t">${esc(titleOf(li.level))}</span><span class="xpbar"><i style="width:${li.pct}%"></i></span><span class="lvl-x">${li.into}/${li.need} XP</span></div>
   ${installBanner()}
   <div style="margin-top:12px">${dailyCard()}</div>
   <div class="sec-title"><h2>Jouer seul</h2><small>sans limite</small></div>
-  <div class="tiles">
-   ${tile("nav",ICON.route,"r","Parcours de carrière",`Les clubs tombent un par un : trouve le joueur. 3 difficultés.`, b.career||b.career_hard||b.career_easy?"":`<span class="newb">Nouveau</span>`,'data-v="careerPick"')}
-   ${tile("pickpm",ICON.updown,"","Plus ou moins","Premier League ou Ligue des champions : enchaîne sans te tromper.", Math.max(b.pm||0,b.pmLdc||0)?`Record<br>${Math.max(b.pm||0,b.pmLdc||0)}`:"")}
-   ${tile("pickchrono",ICON.clock,"b","Chrono",`${LISTS.length} listes : PL, Ligue 1, Liga, Serie A, LDC, Bleus…`, "")}
-   ${tile("saison",ICON.pitch,"g","Un joueur par saison","11 postes, 11 saisons de PL, de mémoire.", b.saison?`Record<br>${b.saison}/11`:"")}
+  <div class="modes">
+   ${m("nav",ICON.route,"m-pink","Parcours de carrière","Trouve le joueur à partir de ses clubs.", carRec || "Nouveau", 'data-v="careerPick"')}
+   ${m("pickpm",ICON.updown,"m-gold","Plus ou moins","Plus de buts ou moins ? Enchaîne.", pmRec?`Record ${pmRec}`:"")}
+   ${m("pickchrono",ICON.clock,"m-sky","Chrono",`${LISTS.length} listes à vider avant la fin du temps.`, "")}
+   ${m("saison",ICON.pitch,"m-green","Un joueur par saison","11 postes, 11 saisons de PL.", b.saison?`Record ${b.saison}/11`:"")}
   </div>
+  <div class="sec-title"><h2>Collection</h2><small>${WALLET.loaded?`${WALLET.coins} pièces`:""}</small></div>
+  ${collectionTeaser()}
   <div class="sec-title"><h2>Entre potes</h2><small>chacun sur son téléphone</small></div>
-  ${tile("nav",ICON.users,"","Jouer avec des amis","Crée un salon ou rejoins-en un avec un code.","",'data-v="friends"')}
+  <button class="friends-tile" data-act="nav" data-v="friends"><span class="ic">${ICON.users}</span><span><b>Jouer avec des amis</b><small>Crée un salon, partage le code, et que le meilleur gagne.</small></span><span class="arrow" aria-hidden="true">›</span></button>
   ${tabbar()}`};
 }
 function screenChronoPick(){
@@ -145,8 +162,11 @@ function screenCollection(){
     .sort((a,b) => (RORD[CARD.get(a).r] - RORD[CARD.get(b).r]) || CARD.get(a).n.localeCompare(CARD.get(b).n));
   const al = ALBUMS.map(a => ({...a, ...albumState(a)})).sort((a,b) => b.claimable-a.claimable || b.got/b.ids.length - a.got/a.ids.length || b.ids.length - a.ids.length);
   const nFull = al.filter(a => a.full).length, nClaim = al.filter(a => a.claimable).length;
-  const packBtn = k => { const p = PACKS[k], ok = WALLET.loaded && WALLET.coins>=p.price;
-    return `<button class="pack pack-${k}" data-act="openpack" data-v="${k}" ${ok&&!L.opening?"":"disabled"}><span class="pk-box">${ICON.pack}</span><span><b>${p.t}</b><small>${p.d}</small></span><span class="pk-price">${ICON.coin}${p.price}</span></button>`; };
+  const packBtn = k => { const p = PACKS[k], ok = WALLET.loaded && WALLET.coins>=p.price, miss = p.price - (WALLET.coins||0);
+    return `<button class="shop-pack sp-${k}" data-act="openpack" data-v="${k}" ${ok&&!L.opening?"":"disabled"} aria-label="${esc(p.t)}, ${p.price} pièces">
+      <span class="sp-art"><span class="sp-strip"></span>${BALL}<b>${esc(p.t.replace("Pack ",""))}</b><small>3 cartes</small></span>
+      <span class="sp-odds">${esc(p.d.split(" · ")[1]||p.d)}</span>
+      <span class="sp-price">${ok?`${ICON.coin}${p.price}`:WALLET.loaded?`Encore ${miss} ${ICON.coin}`:`${ICON.coin}${p.price}`}</span></button>`; };
   const filters = [["all","Toutes"],["icon","Icônes"],["legend","Légendes"],["rare","Pépites"],["common","Communes"],["pl","Premier League"],["l1","Ligue 1"],["liga","Liga"],["seriea","Serie A"],["europe","Europe"]];
   return {key:"collection"+JSON.stringify([own.length, WALLET.coins, WALLET.loaded, WALLET.err, f, L.opening, L.packErr, !!L.allAlbums, WALLET.albums.length, L.claiming]), html:`
   ${topbar()}
