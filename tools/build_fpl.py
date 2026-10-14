@@ -75,7 +75,7 @@ OVERRIDE = {"Virgil":"Virgil van Dijk","De Gea":"David de Gea","Bernardo":"Berna
   "Son Heung-min":"Son Heung-min","Mario Jr.":"Mario Lemina","Antony dos Santos":"Antony","Danilo dos Santos de Oliveira":"Danilo","Darwin":"Darwin Núñez",
   "Tomiyasu Takehiro":"Takehiro Tomiyasu","Mitoma Kaoru":"Kaoru Mitoma","Hee Chan":"Hwang Hee-chan","Diogo J.":"Diogo Jota","Royal":"Emerson Royal",
   "Paquetá":"Lucas Paquetá","Andreas":"Andreas Pereira","Thiago":"Thiago Alcântara","Ricardo":"Ricardo Pereira","Emerson":"Emerson Palmieri","Cédric":"Cédric Soares",
-  "Hegazi":"Ahmed Hegazi","Richarlison de Andrade":"Richarlison","André":"André Trindade","Jota Silva":"Jota Silva","Bruno":"Bruno Saltor","Alisson Becker":"Alisson"}
+  "Hegazi":"Ahmed Hegazi","Frederico Santos":"Fred","Endo Wataru":"Wataru Endo","Richarlison de Andrade":"Richarlison","André":"André Trindade","Jota Silva":"Jota Silva","Bruno":"Bruno Saltor","Alisson Becker":"Alisson"}
 def display_name(i):
     f, s2, web = i["first"].strip(), i["second"].strip(), i["web"].strip()
     q = re.search(r"['\"‘’“”](.+?)['\"‘’“”]", f)
