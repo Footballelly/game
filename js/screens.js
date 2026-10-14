@@ -48,10 +48,11 @@ function screenOnboard(){
   <div class="onboard">
    <div class="wordmark" style="font-size:20px">${BALL}<div>FOOTBALL<br><span>LEGENDS</span></div></div>
    <h1>Tu connais vraiment le foot ? <span>Prouve-le de mémoire.</span></h1>
+   <div class="ob-fan" aria-hidden="true">${["cristiano-ronaldo","zinedine-zidane","lionel-messi"].filter(id => CARD.has(id)).map((id,k) => `<span class="fan-c fan-${[1,0,2][k]}">${cardHTML(id,{small:true})}</span>`).join("")}</div>
    <ul class="pts">
     <li><i>${ICON.clock}</i>Pas de liste, pas d'aide : tu tapes les noms de tête.</li>
     <li><i>${ICON.trophy}</i>Un défi par jour, le même pour tout le monde, avec un classement.</li>
-    <li><i>${ICON.cards}</i>Chaque joueur que tu cites rejoint ta collection de cartes.</li>
+    <li><i>${ICON.cards}</i>Tes parties rapportent des pièces : ouvre des packs et chasse les ${CARDS.length} cartes, jusqu'aux Icônes.</li>
    </ul>
    <form class="card stack" data-form="onboard" autocomplete="off">
     <div><label class="lbl" for="ob-name">Ton pseudo</label><input class="input" id="ob-name" maxlength="18" value="${esc(PROFILE.name)}" placeholder="Pseudo affiché au classement" autocomplete="nickname"></div>

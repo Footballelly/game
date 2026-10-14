@@ -579,3 +579,6 @@ input[type=range]{width:100%;accent-color:var(--kit);height:28px}
 .sp-price{display:inline-flex;align-items:center;justify-content:center;gap:5px;font-family:var(--f-mono);font-weight:600;font-size:15px;background:var(--flash);color:var(--ink);border-radius:12px;padding:9px;box-shadow:0 4px 0 #c99a00}
 .shop-pack[disabled] .sp-price{background:rgba(255,255,255,.12);color:var(--mute);box-shadow:none;font-size:13px}
 .sp-price svg{width:17px;height:17px}
+.ob-fan{position:relative;height:118px;width:160px;margin:0 auto}
+.ob-fan .fan-c{width:76px}
+.ob-fan .fan-0{left:42px}.ob-fan .fan-1{left:4px}.ob-fan .fan-2{left:80px}
