@@ -68,7 +68,7 @@ function recordGame(r){
   const cards = [];
   PROFILE.xp += xp; PROFILE.games++;
   let streak = null;
-  if(r.daily){ PROFILE.daily[r.daily] = {kind:r.mode, score:r.score, total:r.total, detail:r.detail||null, list:r.list||null, at:Date.now()}; streak = bumpStreak(r.daily); }
+  if(r.daily){ PROFILE.daily[r.daily] = {kind:r.mode, score:r.dscore ?? r.score, total:r.dtotal ?? r.total, detail:r.detail||null, list:r.list||null, at:Date.now()}; streak = bumpStreak(r.daily); }
   saveProfile();
   return {xp, cards, rec, levelUp: levelOf(PROFILE.xp)>before ? levelOf(PROFILE.xp) : 0, streak};
 }

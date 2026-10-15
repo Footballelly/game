@@ -106,7 +106,7 @@ function hostStart(){
     const ss = shuffle((ERAS[G.era]||ERAS.classic).s, r); G.rounds = SLOTS.map((s,k) => ({slot:s.id, y:ss[k]}));
     G.round = 0; G.answers = {}; G.revealed = {}; G.votes = {}; G.phase = "answering"; armTimer(endRound);
   } else {
-    const endless = G.solo && !G.daily;
+    const endless = G.solo;   // défi du jour compris : même série pour tout le monde, une erreur et c'est fini
     const pool = goalsOf(G.pmTheme);
     G.chain = shuffle(pool.map((g,i) => i), r).slice(0, endless ? pool.length : PM_DUELS+1);
     G.pm = {cur:0, picks:{}, scores:Object.fromEntries(G.players.map(p => [p.id,0])), hist:Object.fromEntries(G.players.map(p => [p.id,[]])), last:null, endless};
@@ -285,7 +285,7 @@ function finishGame(){
       r.pepites = l.kind==="player" ? mine.filter(i => game.players.every(p => p.id===ME.id || !(all[p.id]||[]).includes(i))).map(i => l.items[i].n) : []; }
   } else {
     r.score = (game.pm.scores||{})[ME.id] || 0; r.detail = (game.pm.hist||{})[ME.id] || [];
-    r.total = game.pm.endless ? null : PM_DUELS; r.theme = game.pmTheme;
+    r.total = game.daily ? Math.min(100, game.chain.length-1) : game.pm.endless ? null : PM_DUELS; r.theme = game.pmTheme;
     if(multi){ const best = Math.max(...Object.values(game.pm.scores)); r.won = r.score===best && r.score>0; }
   }
   L.summary = Object.assign(recordGame(r), {r, coins:null, bonus:null});

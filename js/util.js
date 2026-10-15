@@ -45,7 +45,7 @@ const slotById = id => SLOTS.find(s => s.id === id);
 /* ---------- Texte ---------- */
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const norm = s => String(s).replace(/œ/g,"oe").replace(/Œ/g,"OE").replace(/æ/g,"ae").replace(/ß/g,"ss")
-  .normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[łŁ]/g,"l").toLowerCase()
+  .normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[łŁ]/g,"l").replace(/[øØ]/g,"o").replace(/ı/g,"i").replace(/[đĐ]/g,"d").toLowerCase()
   .replace(/['’]/g,"").replace(/[^a-z0-9 ]/g," ").replace(/\s+/g," ").trim();
 const short = p => p.k || p.n.split(" ").slice(-1)[0];
 const initialsOf = name => { const w = String(name).replace(/['’.]/g,"").trim().split(/\s+/).filter(Boolean); if(!w.length) return "?"; return (w.length>1 ? w[0][0]+w[w.length-1][0] : w[0].slice(0,2)).toUpperCase(); };

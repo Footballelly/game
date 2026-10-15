@@ -34,19 +34,27 @@ function careerOptions(i, r){
   for(let k=out.length-1;k>0;k--){ const j = Math.floor(r()*(k+1)); [out[k],out[j]] = [out[j],out[k]]; }
   return out;
 }
-function startCareer(d){
+const CAR_DAILY_S = 30;   // défi du jour : 30 s par joueur
+function startCareer(d, opts={}){
   d = CAR[d] ? d : (L.car && L.car.diff) || PROFILE.carDiff || "normal";
-  PROFILE.carDiff = d; saveProfile();
+  if(!opts.daily){ PROFILE.carDiff = d; saveProfile(); }
   leaveGame(false, true);
-  const r = rng(Date.now() % 1e9), pool = [...CAR[d].pool];
+  const r = opts.daily ? rng("fl-"+opts.daily+"-career") : rng(Date.now() % 1e9), pool = [...CAR[d].pool];
   for(let k=pool.length-1;k>0;k--){ const j = Math.floor(r()*(k+1)); [pool[k],pool[j]] = [pool[j],pool[k]]; }
-  L.car = {diff:d, ids:pool.slice(0, CAR_N), cur:0, shown:CAR[d].start, phase:"ask", hist:[], msg:null, wrong:[], opts:null, r};
+  L.car = {diff:d, ids:pool.slice(0, CAR_N), cur:0, shown:CAR[d].start, phase:"ask", hist:[], msg:null, wrong:[], opts:null, r, daily:opts.daily||null};
   if(d==="easy") L.car.opts = careerOptions(L.car.ids[0], r);
+  carArm();
   VIEW = "career"; render(true);
+}
+/* chrono du défi : on réutilise l'horloge commune (deadline) affichée par [data-clock] */
+function carArm(){ deadline = L.car && L.car.daily ? Date.now() + CAR_DAILY_S*1000 : null; }
+function careerTick(){
+  const c = L.car; if(VIEW!=="career" || !c || !c.daily || c.phase!=="ask" || !deadline || Date.now()<deadline) return;
+  c.hist.push(0); c.phase = "missed"; c.msg = null; c.timeout = true; deadline = null; buzz([20,40,20]); render(true);
 }
 const carPoints = c => { const cf = CAR[c.diff], used = c.shown - cf.start; return c.diff==="hard" ? Math.max(2, cf.max - 2*used) : Math.max(1, cf.max - used); };
 const isTarget = (c, j) => j===c.ids[c.cur] || careerSig(j)===careerSig(c.ids[c.cur]);
-function careerFound(){ const c = L.car; c.hist.push(carPoints(c)); c.phase = "found"; c.msg = null; buzz(30); render(true); }
+function careerFound(){ const c = L.car; c.hist.push(carPoints(c)); c.phase = "found"; c.msg = null; deadline = null; buzz(30); render(true); }
 function careerGuess(input){
   const c = L.car; if(!c || c.phase!=="ask") return;
   const raw = input.value.trim(); if(!raw) return;
@@ -64,20 +72,24 @@ function careerHint(msg){
   const c = L.car, clues = careerClues(c.ids[c.cur], c.diff);
   if(c.shown<clues.length){ c.shown++; c.msg = msg ? {t:msg+" Nouvel indice."} : null; }
   else if(c.diff==="easy" && msg && c.wrong.length<3){ c.msg = {t:msg+" Plus d'indice : il reste "+(3-c.wrong.length)+" proposition"+(c.wrong.length<2?"s":"")+"."}; }
-  else { c.hist.push(0); c.phase = "missed"; c.msg = null; buzz([20,40,20]); }
+  else { c.hist.push(0); c.phase = "missed"; c.msg = null; deadline = null; buzz([20,40,20]); }
   render(true);
 }
 function careerNext(){
   const c = L.car; if(!c) return;
-  if(c.cur<CAR_N-1){ c.cur++; c.shown = CAR[c.diff].start; c.phase = "ask"; c.msg = null; c.wrong = [];
+  if(c.cur<CAR_N-1){ c.cur++; c.shown = CAR[c.diff].start; c.phase = "ask"; c.msg = null; c.wrong = []; c.timeout = false; carArm();
     if(c.diff==="easy") c.opts = careerOptions(c.ids[c.cur], c.r); return render(true); }
   c.phase = "end";
   const found = c.hist.filter(x => x>0).length, points = c.hist.reduce((a,b) => a+b, 0);
   const r = {mode:"career", solo:true, diff:c.diff, max:carMaxTotal(c.diff), score:found, total:CAR_N, points, detail:[...c.hist], found:c.ids.filter((_,k) => c.hist[k]>0).map(i => P[i].n), pepites:[]};
+  if(c.daily){ r.daily = c.daily; r.dscore = points; r.dtotal = carMaxTotal(c.diff); }
   L.summary = Object.assign(recordGame(r), {r, coins:null, bonus:null});
   if(L.summary.rec.length) setTimeout(() => celebrate("gold"), 250);
+  if(r.daily) submitDaily(r);
   render(true);
-  (async () => { const s = L.summary, coins = await rewardGame(CAR[c.diff].coins(found), false); if(L.summary!==s) return; s.coins = coins; render(true); })();
+  (async () => { const s = L.summary, coins = await rewardGame(CAR[c.diff].coins(found), false); if(L.summary!==s) return; s.coins = coins;
+    if(r.daily){ const d = await claimDaily(r.daily); if(L.summary===s && d && !d.already){ s.bonus = d; PROFILE.streak = {count:d.streak, best:Math.max(PROFILE.streak.best||0, d.streak), last:r.daily}; saveProfile(); } }
+    render(true); })();
 }
 const CAR_EMO = (x, d="normal") => { const m = CAR[d].max; return !x ? "⬛" : x>=m ? "🟩" : x>=m*0.6 ? "🟨" : "🟧"; };
 
@@ -95,14 +107,14 @@ function screenCareer(){
   const total = c.hist.reduce((a,b) => a+b, 0), cf = CAR[c.diff];
   if(c.phase==="end"){
     const found = c.hist.filter(x => x>0).length, s = L.summary;
-    return {key:"car-end"+(s&&s.coins), html:`<div class="stack">
-     <div class="hero"><span class="eyebrow">Parcours de carrière · ${DIFFS[c.diff].t}</span><h1 class="display" style="font-size:clamp(36px,11vw,52px)">${total} <span>sur ${carMaxTotal(c.diff)}</span></h1>
+    return {key:"car-end"+(s&&s.coins)+(s&&s.bonus?1:0), html:`<div class="stack">
+     <div class="hero"><span class="eyebrow">${c.daily?`Défi n°${dayNumber(c.daily)} · `:""}Parcours de carrière · ${DIFFS[c.diff].t}</span><h1 class="display" style="font-size:clamp(36px,11vw,52px)">${total} <span>sur ${carMaxTotal(c.diff)}</span></h1>
       <p>${plural(found,"joueur")} retrouvé${found>1?"s":""} sur ${CAR_N} · ${c.hist.map(x => CAR_EMO(x, c.diff)).join("")}</p></div>
      ${summaryBlock()}
      <div><div class="eyebrow" style="margin-bottom:8px">Les ${CAR_N} parcours</div>
       <div class="clist">${c.ids.map((i,k) => `<div class="citem${c.hist[k]?"":" miss"}"><b>${esc(P[i].n)}</b><div class="who"><small>${c.hist[k]?`+${c.hist[k]} pts`:"Raté"}</small></div></div>`).join("")}</div></div>
     </div>
-    ${dock(`<button class="btn" data-act="career" data-v="${c.diff}">Rejouer en ${DIFFS[c.diff].t}</button><div class="row2"><button class="btn ghost" data-act="sharegame">${ICON.share} Partager</button><button class="btn ghost" data-act="nav" data-v="careerPick">Changer de niveau</button></div>`)}`};
+    ${c.daily?dock(`<button class="btn" data-act="share">${ICON.share} Partager mon résultat</button><button class="btn ghost" data-act="tohome" data-v="board">Voir le classement</button>`):dock(`<button class="btn" data-act="career" data-v="${c.diff}">Rejouer en ${DIFFS[c.diff].t}</button><div class="row2"><button class="btn ghost" data-act="sharegame">${ICON.share} Partager</button><button class="btn ghost" data-act="nav" data-v="careerPick">Changer de niveau</button></div>`)}`};
   }
   const i = c.ids[c.cur], clues = careerClues(i, c.diff), over = c.phase!=="ask", show = over ? clues.length : c.shown;
   const row = (x,k) => k>=show ? `<li class="cl locked"><span class="cl-n">${k+1}</span><span>Indice caché</span></li>`
@@ -120,8 +132,8 @@ function screenCareer(){
     </form>`;
   return {key:`car-${c.diff}-${c.cur}-${c.shown}-${c.phase}-${c.wrong.length}-${c.msg?c.msg.t:""}`, html:`
    ${roundBar(CAR_N, c.cur)}
-   ${gameTop(`Joueur ${c.cur+1}/${CAR_N}`, `<span class="chip">${DIFFS[c.diff].t} · ${total} pts</span>`)}
-   ${over?`<div class="car-ans ${c.phase}"><span class="mp">${miniFor(P[i], null, 64)}</span><span><small>${c.phase==="found"?`Trouvé · +${c.hist[c.cur]} points`:"Raté, c'était"}</small><b>${esc(P[i].n)}</b></span></div>`
+   ${gameTop(`Joueur ${c.cur+1}/${CAR_N}`, c.daily ? `<span class="chip">${total} pts</span>${c.phase==="ask"?clock():""}` : `<span class="chip">${DIFFS[c.diff].t} · ${total} pts</span>`)}
+   ${over?`<div class="car-ans ${c.phase}"><span class="mp">${miniFor(P[i], null, 64)}</span><span><small>${c.phase==="found"?`Trouvé · +${c.hist[c.cur]} points`:c.timeout?"Temps écoulé, c'était":"Raté, c'était"}</small><b>${esc(P[i].n)}</b></span></div>`
      :`<p class="chhint">Qui a eu ce parcours en Premier League ? <b class="ptsnow">${pts} pt${pts>1?"s":""}</b> en jeu.</p>`}
    <ol class="clues">${clues.map(row).join("")}</ol>
    ${over?dock(`<button class="btn" data-act="carnext">${c.cur<CAR_N-1?"Joueur suivant":"Voir mon score"}</button>`):input}`};

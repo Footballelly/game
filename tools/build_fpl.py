@@ -18,8 +18,9 @@ NAME = {"Spurs":"Tottenham","Nott'm Forest":"Nottingham Forest","Man Utd":"Man U
 POS = {"1":"GK","2":"DEF","3":"MID","4":"ATT"}
 MIN_NEW = 3000   # minutes PL cumulées pour ajouter un nouveau joueur (éviter les inconnus)
 
+TR = str.maketrans({"ł":"l","Ł":"L","ø":"o","Ø":"O","ı":"i","đ":"d","Đ":"D","ß":"ss","æ":"ae","Æ":"AE","œ":"oe"})
 def norm(s):
-    s = unicodedata.normalize("NFD", s); s = "".join(c for c in s if unicodedata.category(c) != "Mn")
+    s = unicodedata.normalize("NFD", s.translate(TR)); s = "".join(c for c in s if unicodedata.category(c) != "Mn")
     return re.sub(r"[^a-z ]", "", s.lower().replace("-", " ")).strip()
 
 # ---------- joueurs existants

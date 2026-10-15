@@ -1,18 +1,22 @@
 /* Football Legends — défi du jour : le même pour tout le monde, un essai par jour, classement en ligne. */
 "use strict";
 
-/* rotation : Chrono, Un joueur par saison, Plus ou moins, puis on recommence avec la liste suivante */
+/* rotation : Chrono, Parcours de carrière, Plus ou moins en série — trois modes notés finement, pour un vrai classement.
+   (Un joueur par saison est sorti du défi le 15/10 : trop de 11/11, impossible de départager.) */
+const fmtDailyScore = (kind, score, total) => kind==="plusmoins" ? `série de ${score}` : kind==="career" ? `${score} pts` : `${score}/${total}`;
 function dailyFor(key=todayKey()){
-  const n = dayNumber(key), kind = ["chrono","saison","plusmoins"][(n-1+300)%3];
+  const n = dayNumber(key), kind = ["chrono","career","plusmoins"][(n-1+300)%3];
   const d = {key, n, kind};
   if(kind==="chrono"){ const l = LISTS[Math.floor((n-1)/3) % LISTS.length]; d.list = l.id; d.title = l.t; d.sub = `Chrono 1 min 30 · ${l.items.length} réponses possibles`; d.time = 90; }
-  if(kind==="saison"){ d.title = "Un joueur par saison"; d.sub = "Les mêmes 11 postes et saisons pour tout le monde · 30 s par manche"; }
-  if(kind==="plusmoins"){ d.theme = Math.floor((n-1)/3)%2 ? "ldc" : "pl"; d.title = `Plus ou moins : ${PM_THEMES[d.theme].t.toLowerCase()}`; d.sub = "10 duels · 20 s par duel"; }
+  if(kind==="career"){ d.title = "Parcours de carrière"; d.sub = "Les mêmes 10 joueurs pour tout le monde · 30 s par joueur · 50 points en jeu"; }
+  if(kind==="plusmoins"){ d.theme = ["pl","mod","ldc"][Math.floor((n-1)/3)%3]; d.title = `Plus ou moins : ${PM_THEMES[d.theme].t.toLowerCase()}`; d.sub = "La même série pour tout le monde · une erreur et c'est fini · 20 s par duel"; }
   return d;
 }
-const dailyDone = (key=todayKey()) => PROFILE.daily[key] || null;
+/* un défi joué sous un autre mode (le défi a changé de formule ce jour-là) ne compte pas */
+const dailyDone = (key=todayKey()) => { const r = PROFILE.daily[key]; return r && r.kind===dailyFor(key).kind ? r : null; };
 function playDaily(){
   const d = dailyFor(); if(dailyDone()) return;
+  if(d.kind==="career") return startCareer("normal", {daily:d.key});
   startSolo(d.kind, {daily:d.key, list:d.list, time:d.time, timer:30, theme:d.theme});
 }
 
@@ -22,12 +26,14 @@ function shareText(key=todayKey()){
   let line, grid;
   if(d.kind==="chrono"){ line = `${d.title} : ${r.score}/${r.total}`; const k = Math.round(r.score/r.total*10); grid = "🟨".repeat(k)+"⬛".repeat(10-k); }
   else if(d.kind==="saison"){ line = `Un joueur par saison : ${r.score}/11`; grid = (r.detail||[]).map(x => x ? "🟩" : "⬛").join(""); }
-  else { line = `Plus ou moins : ${r.score}/${r.total}`; grid = (r.detail||[]).map(x => x ? "🟦" : "⬛").join(""); }
+  else if(d.kind==="career"){ line = `Parcours de carrière : ${r.score}/50`; grid = (r.detail||[]).map(x => CAR_EMO(x)).join(""); }
+  else { line = `${d.title} : série de ${r.score}`; grid = (r.detail||[]).map(x => x ? "🟦" : "🟥").join(""); }
   const st = PROFILE.streak.last===key && PROFILE.streak.count>1 ? `\nSérie : ${PROFILE.streak.count} jours` : "";
   return `Football Legends · Défi n°${d.n}\n${line}\n${grid}${st}\n${SITE_URL}`;
 }
 /* texte à partager pour n'importe quelle partie qui vient de se terminer */
 function shareTextGame(){
+  if(VIEW==="career" && L.summary && L.summary.r.mode==="career" && L.summary.r.daily) return shareText(L.summary.r.daily);
   if(VIEW==="career" && L.summary && L.summary.r.mode==="career"){ const r = L.summary.r; return `Football Legends\nParcours de carrière (${DIFFS[r.diff].t}) : ${r.points}/${r.max}\n${r.detail.map(x => CAR_EMO(x, r.diff)).join("")}\nTu fais mieux ? ${SITE_URL}`; }
   if(game && game.daily) return shareText(game.daily);
   const s = L.summary; if(!s) return "";
@@ -49,7 +55,7 @@ let BOARD = {key:null, data:null, loading:false, err:null};
 async function submitDaily(r){
   const client = sb(); if(!client) return;
   try{
-    await client.rpc("submit_daily", {p_day:r.daily, p_player:PROFILE.id, p_pseudo:PROFILE.name, p_kind:r.mode, p_score:r.score, p_total:r.total || 0});
+    await client.rpc("submit_daily", {p_day:r.daily, p_player:PROFILE.id, p_pseudo:PROFILE.name, p_kind:r.mode, p_score:r.dscore ?? r.score, p_total:r.dtotal ?? (r.total || 0)});
     BOARD.key = null; loadBoard(r.daily);
   }catch(e){ /* le score reste enregistré sur l'appareil */ }
 }
@@ -58,7 +64,7 @@ async function loadBoard(key=todayKey()){
   if(BOARD.loading) return;
   BOARD = {key, data:BOARD.key===key ? BOARD.data : null, loading:true, err:null}; render();
   try{
-    const {data, error} = await client.rpc("daily_board", {p_day:key, p_player:PROFILE.id});
+    const {data, error} = await client.rpc("daily_board", {p_day:key, p_player:PROFILE.id, p_kind:dailyFor(key).kind});
     if(error) throw error;
     BOARD = {key, data, loading:false, err:null};
   }catch(e){ BOARD = {key, data:null, loading:false, err:"Impossible de charger le classement pour le moment."}; }

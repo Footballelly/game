@@ -49,6 +49,7 @@ function tickClock(){
     if(left<=0 && game && game.phase==="answering" && !L.mine && !game.answeredIds.includes(ME.id)){ L.why = "Temps écoulé."; sendAnswer({st:"none"}); }
   });
   document.querySelectorAll('[data-live="cd"]').forEach(el => el.textContent = fmtCountdown(msToTomorrow()));
+  if(typeof careerTick==="function") careerTick();
 }
 setInterval(tickClock, 250);
 setInterval(() => { if(VIEW!=="game" && document.visibilityState==="visible"){ const k = lastKey; render(); if(k!==lastKey) return; } }, 30000);
@@ -125,7 +126,7 @@ app.addEventListener("click", e => {
     case "pickchrono": go("chronoPick"); break;
     case "chrono": startSolo("chrono", {list:v, time:PROFILE.chTime||90}); break;
     case "chtimesolo": PROFILE.chTime = +v; saveProfile(); render(true); break;
-    case "share": shareDaily(game && game.daily ? game.daily : todayKey()); break;
+    case "share": shareDaily(game && game.daily ? game.daily : (L.car && L.car.daily) || todayKey()); break;
     case "install": if(DEFERRED_INSTALL){ DEFERRED_INSTALL.prompt(); DEFERRED_INSTALL.userChoice.finally(() => { DEFERRED_INSTALL = null; render(true); }); } break;
     case "noinstall": PROFILE.seenInstall = true; saveProfile(); render(true); break;
     /* salon */
