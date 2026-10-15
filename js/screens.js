@@ -188,6 +188,7 @@ function screenCollection(){
   ${L.packErr?`<div class="err" role="alert" style="margin-top:10px">${esc(L.packErr)}</div>`:""}
   <p class="solo-note" style="margin-top:8px">Une carte en double te rembourse des pièces : 10 pour une commune, 25 pour une pépite, 60 pour une légende, 150 pour une icône.</p>
   <div class="sec-title"><h2>Ma collection</h2><small>${plural(own.length,"carte")}</small></div>
+  <p class="art-note">${ICON.star}<span><b>Les illustrations arrivent au fur et à mesure.</b> Tes cartes se dévoilent automatiquement à chaque nouvelle série, même celles que tu as déjà.</span></p>
   <div class="chips" role="group" aria-label="Filtrer">${filters.map(([k,l]) => `<button data-act="colfilter" data-v="${k}" aria-pressed="${f===k}">${l}</button>`).join("")}</div>
   ${!WALLET.loaded?`<div class="empty">Chargement de ta collection…</div>`:shown.length?`<div class="fgrid">${shown.map(id => cardHTML(id,{count:WALLET.cards[id]})).join("")}</div>`
     :`<div class="empty">${own.length?"Aucune carte dans ce filtre pour l'instant.":"Ta collection est vide. Ouvre ton premier pack : tu as reçu 150 pièces de bienvenue."}</div>`}
