@@ -8,7 +8,10 @@ function dailyFor(key=todayKey()){
   const n = dayNumber(key), kind = ["chrono","career","plusmoins"][(n-1+300)%3];
   const d = {key, n, kind};
   if(kind==="chrono"){ const l = LISTS[Math.floor((n-1)/3) % LISTS.length]; d.list = l.id; d.title = l.t; d.sub = `Chrono 1 min 30 · ${l.items.length} réponses possibles`; d.time = 90; }
-  if(kind==="career"){ d.title = "Parcours de carrière"; d.sub = "Les mêmes 10 joueurs pour tout le monde · 30 s par joueur · 50 points en jeu"; }
+  /* à partir du 16/10 : défi plus accessible (Parcours en Facile, Chrono en 2 min) pour donner envie de revenir */
+  d.easy = key >= "2026-10-16";
+  if(kind==="chrono" && d.easy){ d.time = 120; d.sub = d.sub.replace("1 min 30", "2 min"); }
+  if(kind==="career"){ d.diff = d.easy ? "easy" : "normal"; d.title = "Parcours de carrière"; d.sub = d.easy ? "Les mêmes 10 joueurs connus pour tout le monde · 4 propositions · 30 s par joueur" : "Les mêmes 10 joueurs pour tout le monde · 30 s par joueur · 50 points en jeu"; }
   if(kind==="plusmoins"){ d.theme = ["pl","mod","ldc"][Math.floor((n-1)/3)%3]; d.title = `Plus ou moins : ${PM_THEMES[d.theme].t.toLowerCase()}`; d.sub = "La même série pour tout le monde · une erreur et c'est fini · 20 s par duel"; }
   return d;
 }
@@ -16,7 +19,7 @@ function dailyFor(key=todayKey()){
 const dailyDone = (key=todayKey()) => { const r = PROFILE.daily[key]; return r && r.kind===dailyFor(key).kind ? r : null; };
 function playDaily(){
   const d = dailyFor(); if(dailyDone()) return;
-  if(d.kind==="career") return startCareer("normal", {daily:d.key});
+  if(d.kind==="career") return startCareer(d.diff, {daily:d.key});
   startSolo(d.kind, {daily:d.key, list:d.list, time:d.time, timer:30, theme:d.theme});
 }
 
@@ -26,7 +29,7 @@ function shareText(key=todayKey()){
   let line, grid;
   if(d.kind==="chrono"){ line = `${d.title} : ${r.score}/${r.total}`; const k = Math.round(r.score/r.total*10); grid = "🟨".repeat(k)+"⬛".repeat(10-k); }
   else if(d.kind==="saison"){ line = `Un joueur par saison : ${r.score}/11`; grid = (r.detail||[]).map(x => x ? "🟩" : "⬛").join(""); }
-  else if(d.kind==="career"){ line = `Parcours de carrière : ${r.score}/50`; grid = (r.detail||[]).map(x => CAR_EMO(x)).join(""); }
+  else if(d.kind==="career"){ line = `Parcours de carrière : ${r.score}/${r.total}`; grid = (r.detail||[]).map(x => CAR_EMO(x, d.diff)).join(""); }
   else { line = `${d.title} : série de ${r.score}`; grid = (r.detail||[]).map(x => x ? "🟦" : "🟥").join(""); }
   const st = PROFILE.streak.last===key && PROFILE.streak.count>1 ? `\nSérie : ${PROFILE.streak.count} jours` : "";
   return `Football Legends · Défi n°${d.n}\n${line}\n${grid}${st}\n${SITE_URL}`;

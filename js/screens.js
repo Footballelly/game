@@ -75,7 +75,7 @@ function dailyCard(){
     <button class="btn ink" data-act="daily">Jouer le défi du jour</button><span class="next">Un seul essai · nouveau défi dans <span data-live="cd">${fmtCountdown(msToTomorrow())}</span></span></section>`;
   const grid = shareText().split("\n")[2] || "";
   return `<section class="daily" aria-label="Défi du jour">${head}<h2>${esc(d.title)}</h2>
-   <div class="done-score"><b>${r.score}</b><span>${d.kind==="plusmoins"?"de série":d.kind==="career"?"/ 50 points":`/ ${r.total}`}</span></div><div class="grid-emo" aria-hidden="true">${grid}</div>
+   <div class="done-score"><b>${r.score}</b><span>${d.kind==="plusmoins"?"de série":d.kind==="career"?`/ ${r.total} points`:`/ ${r.total}`}</span></div><div class="grid-emo" aria-hidden="true">${grid}</div>
    <div class="row2"><button class="btn ink sm" data-act="share">${ICON.share} Partager</button><button class="btn ghost-ink sm" data-act="nav" data-v="board">Classement</button></div>
    <span class="next">Prochain défi dans <span data-live="cd">${fmtCountdown(msToTomorrow())}</span></span>
    ${L.shareFallback?`<textarea class="sharebox" readonly aria-label="Texte à copier">${esc(L.shareFallback)}</textarea>`:""}</section>`;
