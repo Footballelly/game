@@ -106,13 +106,13 @@ app.addEventListener("submit", e => {
 app.addEventListener("click", e => {
   const el = e.target.closest("[data-act]"); if(!el) return;
   const a = el.dataset.act, v = el.dataset.v;
-  if(a.startsWith("mc")) return mcAct(a, v);
+  if(a.startsWith("mc")) return mcAct(a, v, el);
   switch(a){
     /* navigation */
     case "nav": go(v); break;
     case "album": go("album", v); break;
     case "tohome": leaveGame(false, true); go(v || "home"); break;
-    case "quit": if(VIEW==="mercato"){ M = null; go("mercatoPick"); break; } leaveGame(false, true); go("home"); break;
+    case "quit": if(VIEW==="mercato"){ mcStopFlash(); M = null; go("mercatoPick"); break; } leaveGame(false, true); go("home"); break;
     /* solo */
     case "daily": playDaily(); break;
     case "pickpm": go("pmPick"); break;
