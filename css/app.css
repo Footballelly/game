@@ -939,3 +939,9 @@ button.lg-r{cursor:pointer}
 .mc-resume{background:linear-gradient(135deg,#3ed38f,#1f9a5c);box-shadow:0 4px 0 #0c5a32}
 .snotes{background:#0c1240aa;border-radius:14px;padding:8px 14px;margin:6px 0;text-align:left;font-size:14px;max-width:340px}.snotes p{margin:4px 0}
 .palm{display:flex;flex-wrap:wrap;gap:6px;align-items:center;color:#fff}.palm b{width:100%}.palm span{background:#ffffff1f;border-radius:8px;padding:3px 8px;font-size:13px}
+.fmt{display:flex;gap:6px;background:#00000033;border-radius:14px;padding:4px;margin:4px 0}
+.fmt button{flex:1;color:#fff;font-weight:800;font-size:13px;border-radius:10px;padding:8px 6px}
+.fmt button.on{background:#ffd23f;color:var(--ink)}
+.cash .warn{color:#ffb4c0;font-weight:700;margin-top:3px}
+.career-end{background:linear-gradient(135deg,#3a1a8a,#0c1240);color:#fff;border-radius:18px;padding:12px 14px;border:2px solid #ffd23f}
+.career-end p{display:flex;justify-content:space-between;margin:6px 0}.career-end p.me{color:#ffd23f;font-weight:800}

@@ -8,7 +8,7 @@
 
 const MC = {
   periods:6, rounds:[6,6,7,6,7,6], buys:2, handMax:3, plays:2, bench:2, deals:3,
-  income:6, winBonus:2, bankRatio:0.8, secretPts:5, boardPts:5, fee:1, pactLen:2, flashPeriod:4, clauseMult:1.5
+  income:11, winBonus:2, bankRatio:0.8, secretPts:5, boardPts:5, fee:1, pactLen:2, flashPeriod:4, clauseMult:1.5
 };
 const MC_PERIODS = ["Mercato d'été · août", "Septembre · octobre", "Novembre · décembre", "Mercato d'hiver · janvier", "Février · mars", "Sprint final · avril-mai"];
 const MC_SLOTS = {G:1, F:4};
@@ -81,6 +81,8 @@ const mcMe = () => M.players[0];
 const mcIdx = p => M.players.indexOf(p);
 const mcName = p => p.cpu ? p.n : p.bot ? p.n : "Toi";
 const mcShort = p => p.cpu ? p.n : p.bot ? MC_BOTS.find(x => x.prof===p.prof).s : "Toi";
+const mcWage = c => Math.max(1, Math.round(c.val * 0.06));
+const mcWages = p => mcRoster(p).reduce((s,c) => s + mcWage(c), 0);
 const mcBank = (p, c) => Math.round(c.val * (p.power==="trader" ? 1 : MC.bankRatio));
 let M = null;
 
@@ -188,6 +190,7 @@ function startMercato(diff, opt={}){
 const mcBlank = o => Object.assign({team:[], bench:[], hand:[], shield:1, pts:0, gf:0, ga:0, w:0, d:0, l:0, form:[], money:0, hit:false, betrayed:0, bas:0, mod:0, mods:[], buys:[], bestGain:0, grudge:null, mission:false, income:0}, o);
 /* le joueur a choisi son club : on crée la ligue */
 function mcSetup(profile){
+  M.len = M.len || 1;
   const sr = M.sr, P = MC_PROFILES[profile];
   const me = mcBlank({n:P.n, ic:P.ic, prof:"me", bot:false, col:"#ffd23f", money:P.money, goal:P.goal, profile});
   const bots = mcShuffle([...MC_BOTS], sr).slice(0, 3).map(b => mcBlank({n:b.n, club:b.club, ic:b.ic, prof:b.prof, bot:true, col:b.col, money:{easy:65, normal:70, hard:85}[M.diff], goal:8}));
@@ -318,7 +321,9 @@ function mcPlayPeriod(){
 function mcAfterPeriod(){
   const moves = [];
   M.clubs.forEach(p => {
-    if(!p.cpu){ p.income = MC.income + MC.winBonus*p.pw + Math.round((mcPos(p)-1)/2); p.money += p.income; }
+    if(!p.cpu){ p.income = MC.income + MC.winBonus*p.pw + Math.round((mcPos(p)-1)/2); p.wages = mcWages(p); p.money += p.income - p.wages;
+      p.forced = [];
+      while(p.money < 0 && p.bench.length){ const c = [...p.bench].sort((a,b) => a.ovr-b.ovr)[0]; p.forced.push(`${cardName(c.n)} (${mcSell(p, c)} M€)`); } }
     mcRoster(p).forEach(c => {
       const old = c.val, oldO = c.ovr;
       const sp = p.power==="formateur" ? 2 : 1;
@@ -343,7 +348,7 @@ function mcAfterPeriod(){
 const mcStar = p => [...p.team].filter(c => c.trait!=="fidele").sort((a,b) => b.val-a.val)[0];
 const MC_NEWS = {
   saudi:{ic:"🛢️", t:"Offre venue du Golfe", ok:() => !!mcStar(mcMe()),
-    set:n => { n.c = mcStar(mcMe()); n.amt = Math.round(n.c.val*2.2); },
+    set:n => { n.c = mcStar(mcMe()); n.amt = Math.round(n.c.val*1.8); },
     d:n => `Un club saoudien propose ${n.amt} M€ pour ${n.c.n} (cote ${n.c.val} M€, note ${n.c.ovr}).`,
     a:[["Vendre", n => { const me = mcMe(); mcRemove(me, n.c); me.money += n.amt; mcGain(me, n.c, n.amt); mcLineup(me); return `+${n.amt} M€ ! ${n.c.n} s'envole vers le désert.`; }],
        ["Refuser", n => `${n.c.n} reste. Les supporters t'adorent.`]]},
@@ -429,7 +434,7 @@ function mcWtp(p, c){
   const left = MC.periods - M.period + 1, hard = M.diff==="hard";
   let gain = mcGainOf(p, c) + ({capitaine:0.4, clutch:M.period>=4 ? 0.8 : 0.2, fragile:-0.3, ego:-0.2}[c.trait] || 0);
   gain += (p.team.filter(o => o.club===c.club).length ? 0.3 : 0) * (p.prof==="C" || hard ? 2 : 1);
-  let v = gain * left * MC_K[M.diff] + c.val * 0.75;
+  let v = gain * left * MC_K[M.diff] + c.val * 0.75 - mcWage(c) * left * (M.diff==="easy" ? 0.3 : 0.8);
   if(p.prof==="B") v *= c.kind==="legend" ? 1.15 : 0.85;
   if(p.prof==="D") v *= c.age <= 21 ? 1.3 : 0.85;
   if(M.diff==="easy") v *= 0.6 + M.r()*0.6;
@@ -726,8 +731,10 @@ function mcNext(){
   L_SUM(r);
   if(M.daily){ const k = todayKey(), b = PROFILE.best.mercatoDay; if(!b || b.day!==k || me.final > b.pts){ PROFILE.best.mercatoDay = {day:k, pts:me.final, rank}; saveProfile(); } }
   if(won){ setTimeout(() => celebrate("gold"), 300); mcSfx("win"); }
+  M.players.forEach(p => p.careerPts = (p.careerPts||0) + p.final);
   M.palmares = M.palmares || []; M.palmares.push({s:M.season, pos:mcPos(me), rank, champ:L[0]===me, board:me.boardOk, champion:L[0].n});
-  M.seasonDone = true; mcSave();
+  M.seasonDone = true; M.careerOver = !M.daily && M.season >= (M.len||1);
+  if(M.careerOver){ try{ localStorage.removeItem(MC_SAVE); }catch(e){} } else mcSave();
   M.phase = "end"; mcR("end");
 }
 /* ---------- carrière : sauvegarde locale (une carrière à la fois) */
@@ -735,7 +742,7 @@ const MC_SAVE = "fl_mercato_career";
 function mcSave(){
   if(!M || M.daily) return;
   const idx = c => c ? M.clubs.indexOf(c) : -1;
-  const data = {ver:1, diff:M.diff, season:M.season, period:M.period, round:M.round, fixtures:M.fixtures, pools:M.pools, pdeck:M.pdeck, newsPlan:M.newsPlan,
+  const data = {ver:1, len:M.len||1, diff:M.diff, season:M.season, period:M.period, round:M.round, fixtures:M.fixtures, pools:M.pools, pdeck:M.pdeck, newsPlan:M.newsPlan,
     clubs:M.clubs.map(k => ({...k, grudge:idx(k.grudge)})), pacts:M.pacts.map(x => ({a:idx(x.a), b:idx(x.b), until:x.until})),
     bestTrade:M.bestTrade||null, palmares:M.palmares||[], seasonDone:!!M.seasonDone, secretChoice:M.secretChoice};
   try{ localStorage.setItem(MC_SAVE, JSON.stringify(data, (k, v) => k==="from" || k==="_n" ? undefined : v)); }catch(e){}
@@ -744,7 +751,7 @@ function mcSaved(){ try{ const d = JSON.parse(localStorage.getItem(MC_SAVE) || "
 function mcLoad(){
   const d = mcSaved(); if(!d) return toast("Aucune carrière sauvegardée.");
   leaveGame(false, true); mcStopFlash();
-  M = {diff:d.diff, daily:false, r:rng((Date.now() ^ 0x2c1b3c6d) % 1e9), v:0, season:d.season, period:d.period, round:d.round, fixtures:d.fixtures, pools:d.pools, pdeck:d.pdeck, newsPlan:d.newsPlan,
+  M = {len:d.len||1, diff:d.diff, daily:false, r:rng((Date.now() ^ 0x2c1b3c6d) % 1e9), v:0, season:d.season, period:d.period, round:d.round, fixtures:d.fixtures, pools:d.pools, pdeck:d.pdeck, newsPlan:d.newsPlan,
        market:[], won:{}, susp:new Set(), sel:{}, results:[], bub:{}, show:[], si:0, flash:null, sheet:null, aim:null, played:0, fx:null, flashA:null, inbox:[], news:null, buys:MC.buys, deals:0, drawn:[], moves:[],
        bestTrade:d.bestTrade, palmares:d.palmares, seasonDone:d.seasonDone, secretChoice:d.secretChoice};
   M.sr = M.r; M.clubs = d.clubs; M.players = M.clubs.slice(0, 4); M.cpu = M.clubs.slice(4);
@@ -868,7 +875,7 @@ function mcTable(center, dockHtml="", cls=""){
    <div class="steps">${MC_STEPS.map((s,k) => `<span class="${k<si?"done":k===si?"cur":""}">${s[1]} ${s[2]}</span>`).join("")}</div>
    <div class="mct-c">${center}</div>
    <div class="me-zone" style="--pc:${me.col}">
-    <div class="me-bar"><span class="seat-av me">${me.power?MC_POWERS[me.power].ic:me.ic}</span><span class="me-st"><b>${esc(me.n)} · ${mcRating(me).total}</b><small>💰 ${me.money} M€ · ${pos}ᵉ · ${me.pts} pts</small></span>
+    <div class="me-bar"><span class="seat-av me">${me.power?MC_POWERS[me.power].ic:me.ic}</span><span class="me-st"><b>${esc(me.n)} · ${mcRating(me).total}</b><small>💰 ${me.money} M€ · 💸 −${mcWages(me)}/pér. · ${pos}ᵉ</small></span>
      <span class="me-form">${me.form.slice(-5).map(f => `<i class="f-${f}">${f}</i>`).join("")}</span>
      ${me.shield?`<span class="me-sh">🛡️${me.shield>1?" "+me.shield:""}</span>`:""}${mcAllies(me).length?`<span class="me-sh">🤫🤝${mcAllies(me).map(q => q.ic).join("")}</span>`:""}
      <button class="me-secret" data-act="mcsecretpeek" aria-label="Objectif secret">🔒</button></div>
@@ -912,14 +919,14 @@ function mcSheet(){
       ${c.trait?`<span class="trait-l">${MC_TRAITS[c.trait].ic} <b>${MC_TRAITS[c.trait].t}</b> · ${MC_TRAITS[c.trait].d}</span>`:""}
       <small>${mcFree(me, c)?"✅ Place libre chez les titulaires":weak && mcOvr(weak) < mcOvr(c)?`🔄 Remplacerait ${esc(cardName(weak.n))} (${mcOvr(weak)})`:"🪑 Irait sur le banc"}</small></div></div>
       <div class="bid-dial"><button data-act="mcbid" data-v="-5">−5</button><button data-act="mcbid" data-v="-1">−</button><b>${b}<small> M€</small></b><button data-act="mcbid" data-v="1">+</button><button data-act="mcbid" data-v="5">+5</button></div>
-      <p class="bid-note">Prix de base ${c.price} M€${c.sale?" (soldé !)":""} · il te reste ${me.money - used} M€</p>
+      <p class="bid-note">Prix de base ${c.price} M€${c.sale?" (soldé !)":""} · salaire ${mcWage(c)} M€/période · il te reste ${me.money - used} M€</p>
       <button class="btn" data-act="mcseal" data-v="${s.u}">✉️ Glisser mon offre (${b} M€)</button>
       ${!s.isNew?`<button class="btn ghost" data-act="mcunbid" data-v="${s.u}">Retirer l'offre</button>`:""}`; }
   if(s.t==="team"){ const sel = s.u && mcRoster(me).find(c => c.uid===s.u), sc = mcRating(me);
-    body = `<h3>${esc(me.n)} · note ${sc.total}</h3>
+    body = `<h3>${esc(me.n)} · note ${sc.total}</h3><p class="bid-note">💸 Masse salariale : ${mcWages(me)} M€ par période (6 périodes par saison)</p>
       <div class="team-big">${mcLine(me, "mcchip", true)}</div>
       <div class="lines">${sc.lines.filter(x => x.v).map((x,k) => `<span class="${x.v<0?"neg":k?"bonus":""}">${esc(x.t)} ${k&&x.v>0?"+":""}${x.v}</span>`).join("")}</div>
-      ${sel?`<div class="chip-acts"><b>${esc(sel.n)}</b> · ${MC_POS_FR[sel.pos]}<br><small>${mcPlayerLine(sel)}${sel.paid!=null?` (acheté ${sel.paid})`:""}</small>${sel.trait?`<br>${MC_TRAITS[sel.trait].ic} ${MC_TRAITS[sel.trait].t} : ${MC_TRAITS[sel.trait].d}`:""}
+      ${sel?`<div class="chip-acts"><b>${esc(sel.n)}</b> · ${MC_POS_FR[sel.pos]}<br><small>${mcPlayerLine(sel)}${sel.paid!=null?` (acheté ${sel.paid})`:""} · salaire ${mcWage(sel)} M€/période</small>${sel.trait?`<br>${MC_TRAITS[sel.trait].ic} ${MC_TRAITS[sel.trait].t} : ${MC_TRAITS[sel.trait].d}`:""}
         <div><button class="btn ghost" data-act="mcmove" data-v="${sel.uid}">${me.bench.includes(sel)?"↑ Titulaire":"↓ Au banc"}</button><button class="btn" data-act="mcsell" data-v="${sel.uid}">Banque : ${mcBank(me, sel)} M€</button></div>
         ${M.phase==="coups"?`<p class="bid-note">💡 Pour en tirer plus, propose-le à un président : touche son siège.</p>`:""}</div>`
         :`<p class="bid-note">La note de l'équipe = moyenne de tes 5 titulaires (un remplaçant prend la place d'un absent) + bonus.<br>Le chiffre jaune : note du joueur. L'étiquette verte/rouge : sa cote en M€.<br>Les jeunes progressent, les plus de 32 ans déclinent.</p>`}`; }
@@ -960,7 +967,7 @@ function screenMercatoPick(){
   <div class="subhead"><button class="iconbtn" data-act="nav" data-v="home" aria-label="Retour">${ICON.back}</button><h1>Mercato FC</h1></div>
   <div class="mc-hero"><div class="mc-hero-row"><span class="mc-hero-av" style="--pc:#ff4d6d">🦈</span><span class="mc-hero-av" style="--pc:#3ed38f">🧮</span><span class="mc-hero-av" style="--pc:#a98bff">🎓</span><span class="mc-hero-av" style="--pc:#ff9f3a">🔍</span></div>
    <p class="mc-hero-t">Mercato FC</p><p>Une saison, 20 clubs, 3 présidents rivaux.<br>Achète, revends, trahis… et finis devant eux.</p></div>
-  ${(() => { const sv = mcSaved(); if(!sv) return ""; const c = sv.clubs[0]; return `<button class="mc-daily mc-resume" data-act="mcresume"><span>${c.ic}</span><span><b>Reprendre ma carrière</b><small>${esc(c.n)} · saison ${sv.season + (sv.seasonDone?1:0)}${sv.seasonDone?"":` · période ${sv.period}`} · ${MC_DIFF[sv.diff].t}</small></span><em>▶</em></button>`; })()}
+  ${(() => { const sv = mcSaved(); if(!sv) return ""; const c = sv.clubs[0]; return `<button class="mc-daily mc-resume" data-act="mcresume"><span>${c.ic}</span><span><b>Reprendre ma carrière</b><small>${esc(c.n)} · saison ${sv.season + (sv.seasonDone?1:0)}${(sv.len||1)<99?`/${sv.len||1}`:""}${sv.seasonDone?"":` · période ${sv.period}`} · ${MC_DIFF[sv.diff].t}</small></span><em>▶</em></button>`; })()}
   <button class="mc-daily" data-act="mcstart" data-v="normal" data-d="1"><span>🎯</span><span><b>Partie du jour</b><small>Même tirage pour tout le monde · niveau Moyen</small></span><em>${day?`${day.pts} pts`:"Jouer"}</em></button>
   <div class="pick-list">${Object.entries(MC_DIFF).map(([k,d]) => `<button class="mode diff-${k}" data-act="mcstart" data-v="${k}"><span class="lgtag">${d.t}</span><b>${d.b}</b><small>${d.d}</small>${b["mercato_"+k]?`<span class="rec">🏆 ${b["mercato_"+k]}</span>`:""}</button>`).join("")}</div>
   ${tabbar()}`};
@@ -976,6 +983,8 @@ function screenMercato(){
       ${dock(`<button class="btn" data-act="mctuto">${M.tuto<sl.length-1?"Suivant":"C'est parti"}</button>`)}`}; }
   if(M.phase==="club") return {key:"mcc-"+M.v, html:`<div class="tuto">
       <span class="eyebrow">1/3 · Ton club</span><h1 class="display">Choisis ton club</h1>
+      <div class="fmt">${[[1,"⚡","1 saison"],[3,"📅","3 saisons"],[99,"♾️","Carrière"]].map(([n,ic,t]) => `<button class="${(M.len||1)===n?"on":""}" data-act="mcfmt" data-v="${n}">${ic} ${t}</button>`).join("")}</div>
+      <p class="mct-hint">${(M.len||1)===1?"Une saison, environ 15 minutes.":(M.len===3?"3 saisons : le meilleur président au cumul des points.":"Sans fin : enchaîne les saisons tant que tu veux.")}</p>
       <div class="power-pick">${Object.entries(MC_PROFILES).map(([k,P],i) => `<button class="power-c club-c" data-act="mcclub" data-v="${k}" style="animation-delay:${i*0.15}s"><span>${P.ic}</span><span><b>${P.n}</b><small>${P.t} · ${P.d}</small><em>💰 ${P.money} M€ · 🎯 objectif top ${P.goal}</em></span></button>`).join("")}</div></div>`};
   const me = mcMe();
   if(M.phase==="secret") return {key:"mcs-"+M.v, html:`<div class="tuto">
@@ -1053,7 +1062,7 @@ function screenMercato(){
       </div>
       <div class="after-match" style="animation-delay:${anim?end+0.8:0}s">
        <div class="period-res"><b>Ta période : ${w}V ${d}N ${l}D</b><div class="pr-list">${M.myRes.map(x => `<span class="pr ${x.gf>x.ga?"f-V":x.gf===x.ga?"f-N":"f-D"}${x.big?" big":""}"><i>J${x.day}</i>${x.opp.ic} ${x.gf}-${x.ga}</span>`).join("")}</div></div>
-       <div class="cash"><b>💰 +${me.income} M€</b><small>recettes de la période</small></div>
+       <div class="cash"><b>💰 ${me.income-me.wages>=0?"+":""}${me.income-me.wages} M€</b><small>recettes +${me.income} · salaires −${me.wages}</small>${me.forced && me.forced.length?`<small class="warn">⚠️ Caisse vide : vente forcée de ${esc(me.forced.join(", "))}</small>`:""}</div>
        ${M.moves.length?`<div class="moves">${M.moves.map(x => `<span class="${x.c.val>=x.old?"up":"down"}">${x.c.ovr>x.oldO?`🆙 ${esc(cardName(x.c.n))} ${x.oldO}→${x.c.ovr}`:x.c.ovr<x.oldO?`🔻 ${esc(cardName(x.c.n))} ${x.oldO}→${x.c.ovr}`:`${x.c.val>x.old?"📈":"📉"} ${esc(cardName(x.c.n))} ${x.old}→${x.c.val} M€`}</span>`).join("")}</div>`:""}
        ${mcLeagueHTML(false)}
        <button class="linkbtn" data-act="mcevent">Voir le classement complet</button>
@@ -1069,9 +1078,11 @@ function screenMercato(){
      <button class="btn ghost" data-act="mcshare">${ICON.share} Partager mon résultat</button>
      ${summaryBlock()}</div>
      ${mcSheet()}
+     ${M.careerOver && M.len>1 ? `<div class="career-end"><b>🏁 Fin de carrière · ${M.len} saisons</b>${[...M.players].sort((a,b) => b.careerPts-a.careerPts).map((p,k) => `<p class="${p===me?"me":""}"><span>${k+1}. ${p.ic} ${esc(p===me?me.n:p.club)}</span><b>${p.careerPts} pts</b></p>`).join("")}</div>` : ""}
      ${M.palmares && M.palmares.length>1 ? `<div class="palm"><b>Ton palmarès</b>${M.palmares.map(x => `<span>S${x.s} · ${x.pos}ᵉ${x.champ?" 🏆":""}${x.rank===1?" 👑":""}</span>`).join("")}</div>` : ""}
      ${dock(M.daily ? `<button class="btn" data-act="mcstart" data-v="${M.diff}" data-d="1">Rejouer</button><button class="btn ghost" data-act="nav" data-v="mercatoPick">Retour</button>`
-       : `<button class="btn" data-act="mcnextseason">Saison ${M.season+1} avec ${esc(me.n)} →</button><button class="btn ghost" data-act="nav" data-v="mercatoPick">Nouvelle partie</button>`)}`};
+       : !M.careerOver ? `<button class="btn" data-act="mcnextseason">Saison ${M.season+1}${M.len<99?`/${M.len}`:""} avec ${esc(me.n)} →</button><button class="btn ghost" data-act="nav" data-v="mercatoPick">Quitter (sauvegardé)</button>`
+       : `<button class="btn" data-act="mcstart" data-v="${M.diff}">Nouvelle partie</button><button class="btn ghost" data-act="nav" data-v="mercatoPick">Retour</button>`)}`};
   }
   return {key:"mc-x", html:""};
 }
@@ -1087,6 +1098,7 @@ function mcAct(a, v, el){
     case "mctuto": if(M.tuto < mcTutoSlides().length-1){ M.tuto++; mcR(); } else { PROFILE.best.mercatoTuto4 = 1; saveProfile(); M.phase = "club"; mcR(); } break;
     case "mctutoskip": PROFILE.best.mercatoTuto4 = 1; saveProfile(); M.phase = "club"; mcR(); break;
     case "mcclub": mcSetup(v); break;
+    case "mcfmt": M.len = +v; mcR(); break;
     case "mcsecret": me.secret = v; if(me.power){ mcSave(); mcPeriodStart(); } else { M.phase = "power"; mcR(); } break;
     case "mcnextseason": mcNewSeason(); break;
     case "mcresume": mcLoad(); break;
