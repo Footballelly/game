@@ -864,3 +864,36 @@ input[type=range]{width:100%;accent-color:var(--kit);height:28px}
 .tro.me{border-color:#ffd23f;box-shadow:0 0 18px #ffd23f55}
 .tro>span{font-size:30px}.tro b{font-size:13.5px;margin-top:4px}.tro small{font-size:12px;opacity:.8}.tro em{font-style:normal;font-size:12px;font-weight:700;margin-top:4px;color:#ffd23f}
 .fin{border-left:5px solid var(--pc)}
+/* Mercato v6 : économie, bureau, news */
+.val{position:absolute;top:-6px;right:-4px;z-index:2;font-family:var(--f-mono);font-size:9.5px;font-weight:700;background:#0c1240;color:#fff;border:1px solid #ffffff55;border-radius:6px;padding:0 3px;line-height:1.4}
+.val.up{background:#1f9a5c}.val.down{background:#c8344f}
+.news{width:100%;text-align:center;color:var(--ink);background:#fffdf3;border-radius:18px;padding:16px 14px 14px;position:relative;box-shadow:0 8px 24px #0006;border:3px solid #ff4d6d}
+.news.in{animation:mcnews .55s cubic-bezier(.3,1.4,.5,1) both}
+@keyframes mcnews{from{transform:rotate(-8deg) scale(.4);opacity:0}}
+.news.calm{border-color:#ffffff;background:#0c1240cc;color:#fff;box-shadow:none}
+.news-tag{position:absolute;top:-12px;left:50%;transform:translateX(-50%);white-space:nowrap;background:#ff4d6d;color:#fff;font-family:var(--f-mono);font-size:11px;font-weight:700;letter-spacing:.08em;border-radius:8px;padding:3px 10px;animation:mcpulse 1.2s infinite}
+.news.calm .news-tag{background:#ffd23f;color:var(--ink);animation:none}
+.news-ic{display:block;font-size:46px;line-height:1.1}
+.news b{display:block;font-family:var(--f-display);font-weight:400;font-size:24px;line-height:1.1;margin:4px 0}
+.news p{margin:6px 0 0;font-size:14.5px;line-height:1.4}
+.news-out{font-weight:800;color:#1f7a4a}
+.drawn .mcc{width:64px;height:88px}
+.dock-row{display:flex;gap:8px;margin-top:8px}.dock-row .btn{flex:1;margin:0}
+.dock .dock-row:first-child{margin-top:0}
+.sale-tag{position:absolute;top:30%;left:-4px;right:-4px;text-align:center;background:#ff4d6d;color:#fff;font-weight:900;font-size:12px;transform:rotate(-12deg);border-radius:4px;box-shadow:0 2px 6px #0006}
+.mkt-c.sale{animation:mcpulse 1.4s infinite}
+.seat-grudge{position:absolute;top:24px;right:4px;font-size:15px}
+.alert.phone{background:linear-gradient(160deg,#1b2470,#3a1a8a);border:2px solid #ffffff33;animation:mcpop2 .35s}
+.alert.phone b{font-size:40px;color:#ffd23f}
+.ring{position:absolute;margin-left:46px;margin-top:-6px;font-size:22px;animation:mcring .5s infinite}
+@keyframes mcring{0%,100%{transform:rotate(-15deg)}50%{transform:rotate(15deg)}}
+.alert{position:relative}
+.mini-one{width:64px;margin:8px auto 4px}
+.mood{display:inline-block;margin-top:6px;font-size:13px;font-weight:800;border-radius:8px;padding:3px 8px}
+.mood.ok{background:#c8f7dc;color:#0c5a32}.mood.mid{background:#fff1b8;color:#6a5200}.mood.no{background:#ffd1da;color:#8a0c2a}
+.hint-ally{background:#e4fff0;border:2px dashed #3ed38f;border-radius:12px;padding:8px 10px;font-size:13px;margin:4px 0 0}
+.cash{display:flex;flex-direction:column;align-items:center;color:#fff;margin:6px 0}
+.cash b{font-family:var(--f-display);font-weight:400;font-size:26px;color:#ffd23f}.cash small{font-size:12px;opacity:.8}
+.moves{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:6px}
+.moves span{font-size:12px;font-weight:700;border-radius:99px;padding:3px 9px;color:#fff}
+.moves .up{background:#1f9a5c}.moves .down{background:#c8344f}
