@@ -15,6 +15,8 @@ function view(){
     case "pack": return screenPack();
     case "career": return screenCareer();
     case "careerPick": return screenCareerPick();
+    case "mercato": return screenMercato();
+    case "mercatoPick": return screenMercatoPick();
     case "saisonPick": return screenSaisonPick();
     case "friends": return screenFriends();
     case "collection": return screenCollection();
@@ -104,12 +106,13 @@ app.addEventListener("submit", e => {
 app.addEventListener("click", e => {
   const el = e.target.closest("[data-act]"); if(!el) return;
   const a = el.dataset.act, v = el.dataset.v;
+  if(a.startsWith("mc")) return mcAct(a, v);
   switch(a){
     /* navigation */
     case "nav": go(v); break;
     case "album": go("album", v); break;
     case "tohome": leaveGame(false, true); go(v || "home"); break;
-    case "quit": leaveGame(false, true); go("home"); break;
+    case "quit": if(VIEW==="mercato"){ M = null; go("mercatoPick"); break; } leaveGame(false, true); go("home"); break;
     /* solo */
     case "daily": playDaily(); break;
     case "pickpm": go("pmPick"); break;

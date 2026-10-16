@@ -65,6 +65,7 @@ function recordGame(r){
   if(r.mode==="saison"){ const k = r.era==="modern" ? "saisonModern" : "saison"; if(r.score>(PROFILE.best[k]||0)){ PROFILE.best[k] = r.score; rec.push(`Record ${ERAS[r.era||"classic"].t} : ${r.score}/11 postes`); } }
   if(r.mode==="chrono" && r.list){ const ck = chronoKey(r.list, r.daily ? 90 : r.time); const b = PROFILE.best.chrono[ck]||0; if(r.score>b){ PROFILE.best.chrono[ck] = r.score; if(b) rec.push(`Record sur cette liste : ${r.score}`); } }
   if(r.mode==="career"){ const k = careerRecKey(r.diff); if(r.points>(PROFILE.best[k]||0)){ if(PROFILE.best[k]) rec.push(`Record ${DIFFS[r.diff].t} : ${r.points}/${r.max}`); PROFILE.best[k] = r.points; } }
+  if(r.mode==="mercato" && r.won){ const k = "mercato_"+r.diff; PROFILE.best[k] = (PROFILE.best[k]||0)+1; rec.push(`Victoire ${MC_DIFF[r.diff].t} n°${PROFILE.best[k]}`); }
   const cards = [];
   PROFILE.xp += xp; PROFILE.games++;
   let streak = null;
