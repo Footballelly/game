@@ -132,6 +132,7 @@ function endPm(){
   G.players.forEach(p => (G.pm.hist[p.id] ||= []).push(winners.includes(p.id)));
   G.pm.last = {right, winners, picks:{...G.pm.picks}};
   G.deadlineAt = null;
+  if(G.pm.endless && !winners.length && G.solo && !G.daily && !G.pm.usedChance && itemQty("chance")){ G.phase = "pmResult"; G.pm.offer = true; push(); return; }
   if(G.pm.endless && !winners.length){ G.phase = "pmResult"; G.pm.over = true; push(); autoTimer = setTimeout(() => { G.phase = "results"; push(); }, 1800); return; }
   G.phase = "pmResult";
   if(G.solo) autoTimer = setTimeout(hostNext, 1300);
@@ -292,7 +293,7 @@ function finishGame(){
   if(L.summary.rec.length) setTimeout(() => celebrate(), 300);
   if(r.daily) submitDaily(r);
   (async () => {
-    const s = L.summary, coins = await rewardGame(r.score, r.won);
+    const s = L.summary, coins = await rewardGame(r.score, r.won); s.ref = LAST_REF;
     if(L.summary!==s) return;
     s.coins = coins;
     if(r.daily){ const d = await claimDaily(r.daily); if(d && !d.already){ s.bonus = d; PROFILE.streak = {count:d.streak, best:Math.max(PROFILE.streak.best||0, d.streak), last:r.daily}; saveProfile(); } }

@@ -66,7 +66,16 @@ function celebrate(kind){
   document.body.appendChild(box); buzz(kind==="gold"?[60,40,140]:40); setTimeout(() => box.remove(), 2400);
 }
 function revealFx(from, to){
-  const p = L.pack; p.anim = [from, to]; p.shown = to; render(true);
+  const p = L.pack;
+  /* mise en scène avant une Icône : écran noir, écusson, poste, puis la carte */
+  const big = p.cards.slice(from, to).find(c => c.rarity==="icon");
+  if(big && !p.walked && !window.matchMedia("(prefers-reduced-motion: reduce)").matches){
+    p.walked = true; buzz([40,80,40,80,120]);
+    const c = CARD.get(big.id), el = document.createElement("div");
+    el.className = "walkout"; el.setAttribute("aria-live", "polite");
+    el.innerHTML = `<span class="wo-rays" aria-hidden="true"></span><span class="wo-1">${crest(c.c, 96)}</span><span class="wo-2">${POS_FR[c.p]} · ${esc(c.c)}</span><span class="wo-3">ICÔNE</span>`;
+    document.body.appendChild(el);
+    setTimeout(() => { el.remove(); if(L.pack===p) revealFx(from, to); }, 2600); return; } p.anim = [from, to]; p.shown = to; render(true);
   const hasL = p.cards.slice(from, to).findIndex(c => c.rarity==="legend" || c.rarity==="icon"), hasR = p.cards.slice(from, to).some(c => c.rarity==="rare");
   if(hasL>=0) setTimeout(() => celebrate("gold"), 450 + hasL*260); else if(hasR) setTimeout(() => buzz(35), 450); else buzz(12);
 }
@@ -114,6 +123,10 @@ app.addEventListener("click", e => {
     case "reveal": if(L.pack) revealFx(L.pack.shown, L.pack.shown+1); break;
     case "revealall": if(L.pack) revealFx(L.pack.shown, L.pack.cards.length); break;
     case "claimalbum": claimAlbum(v); break;
+    case "boost": useBoost(); break;
+    case "carjoker": careerJoker(); break;
+    case "pmchance": pmChance(true); break;
+    case "pmstop": pmChance(false); break;
     case "career": startCareer(v); break;
     case "carpick": careerChoose(+v); break;
     case "carhint": careerHint(null); break;
@@ -171,3 +184,10 @@ if("serviceWorker" in navigator && location.protocol==="https:"){ window.addEven
   if(location.hash==="#salon") go("friends");
   if(await resumeSession()) render(true);
 })();
+
+/* Plus ou moins : seconde chance proposée après une erreur (solo, hors défi) */
+async function pmChance(use){
+  if(!IS_HOST || !G || !G.pm.offer) return;
+  if(use && await useItem("chance")){ G.pm.offer = false; G.pm.usedChance = true; toast("Seconde chance utilisée", "ok"); hostNext(); return; }
+  G.pm.offer = false; G.pm.over = true; G.phase = "results"; push();
+}

@@ -9,7 +9,13 @@ const PACKS = {
 };
 const RAR_FR = {common:"Commune", rare:"Pépite", legend:"Légende", icon:"Icône"};
 const RORD = {icon:0, legend:1, rare:2, common:3};
-let WALLET = {loaded:false, loading:false, err:null, coins:0, streak:0, best:0, cards:{}, albums:[]};
+let WALLET = {loaded:false, loading:false, err:null, coins:0, streak:0, best:0, cards:{}, albums:[], items:{}};
+/* objets gagnés dans les packs (et 1 de chaque offert au départ) ; interdits pendant le défi du jour */
+const ITEMS = {joker:{t:"Joker", d:"Parcours de carrière : un indice sans perdre de point"},
+               chance:{t:"Seconde chance", d:"Plus ou moins : continue ta série après une erreur"},
+               boost:{t:"Boost ×2", d:"Double les pièces gagnées sur une partie"}};
+const itemQty = k => (WALLET.items||{})[k] || 0;
+let LAST_REF = null;
 
 async function rpc(fn, args){
   const client = sb(); if(!client) throw new Error("hors ligne");
@@ -19,14 +25,15 @@ async function loadWallet(force){
   if(WALLET.loading || (WALLET.loaded && !force)) return;
   WALLET.loading = true;
   try{ const w = await rpc("fl_wallet", {p_player:PROFILE.id});
-    WALLET = {loaded:true, loading:false, err:null, coins:w.coins, streak:w.streak, best:w.best_streak, cards:w.cards || {}, albums:w.albums || []}; }
+    WALLET = {loaded:true, loading:false, err:null, coins:w.coins, streak:w.streak, best:w.best_streak, cards:w.cards || {}, albums:w.albums || [], items:w.items || {}}; }
   catch(e){ WALLET.loading = false; WALLET.err = "La collection a besoin d'une connexion internet."; }
   render();
 }
 /* gain de fin de partie ; ref unique par partie (le serveur ignore un second envoi) */
 async function rewardGame(score, won){
-  try{ const r = await rpc("fl_reward", {p_player:PROFILE.id, p_ref:uid()+uid(), p_score:Math.max(0, score|0), p_won:!!won});
-    WALLET.coins = r.coins; return r.amount; }catch(e){ return null; }
+  const ref = uid()+uid();
+  try{ const r = await rpc("fl_reward", {p_player:PROFILE.id, p_ref:ref, p_score:Math.max(0, score|0), p_won:!!won});
+    WALLET.coins = r.coins; LAST_REF = ref; return r.amount; }catch(e){ return null; }
 }
 async function claimDaily(day){
   try{ const r = await rpc("fl_claim_daily", {p_player:PROFILE.id, p_day:day});
@@ -39,7 +46,8 @@ async function openPack(kind){
     const r = await rpc("fl_open_pack", {p_player:PROFILE.id, p_pack:kind});
     r.cards.forEach(c => WALLET.cards[c.id] = (WALLET.cards[c.id]||0) + 1);
     WALLET.coins = r.coins;
-    L.pack = {kind, cards:r.cards, refund:r.refund, shown:0, torn:false, anim:[0,0]};
+    if(r.items) WALLET.items = r.items;
+    L.pack = {kind, cards:r.cards, refund:r.refund, shown:0, torn:false, anim:[0,0], item:r.item || null};
     VIEW = "pack";
   }catch(e){ L.packErr = /pas assez/.test(e.message||"") ? "Pas assez de pièces pour ce pack." : "Ouverture impossible pour le moment. Réessaie dans un instant."; }
   L.opening = false; render(true);
@@ -56,6 +64,18 @@ async function claimAlbum(club){
     toast(`Album ${club} complété : +${r.amount} pièces`, "ok"); celebrate("gold"); }
   catch(e){ toast("Bonus indisponible pour le moment, réessaie.", ""); }
   L.claiming = null; render(true);
+}
+async function useItem(item){
+  try{ const r = await rpc("fl_use_item", {p_player:PROFILE.id, p_item:item}); WALLET.items = r.items || {}; return true; }
+  catch(e){ toast("Objet indisponible pour le moment."); return false; }
+}
+async function useBoost(){
+  const s = L.summary; if(!s || !s.ref || s.boosted || L.boosting) return;
+  L.boosting = true; render(true);
+  try{ const r = await rpc("fl_use_boost", {p_player:PROFILE.id, p_ref:s.ref}); WALLET.coins = r.coins; WALLET.items = r.items || {};
+    s.coins += r.amount; s.boosted = true; celebrate("gold"); }
+  catch(e){ toast("Boost impossible pour cette partie."); }
+  L.boosting = false; render(true);
 }
 const ownedIds = () => Object.keys(WALLET.cards).filter(id => CARD.has(id));
 const coinPill = () => `<span class="coins" title="Pièces">${ICON.coin}<b data-live="coins">${WALLET.loaded ? WALLET.coins : "…"}</b></span>`;

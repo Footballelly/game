@@ -1,6 +1,6 @@
 /* Football Legends — service worker : rend l'appli installable et la garde utilisable avec une connexion instable.
    Stratégie « réseau d'abord » : la dernière version en ligne gagne toujours, le cache ne sert qu'en secours. */
-const CACHE = "fl-v15";
+const CACHE = "fl-v16";
 self.addEventListener("install", e => { self.skipWaiting(); });
 self.addEventListener("activate", e => {
   e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k!==CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim()));

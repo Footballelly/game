@@ -52,7 +52,11 @@ function careerTick(){
   const c = L.car; if(VIEW!=="career" || !c || !c.daily || c.phase!=="ask" || !deadline || Date.now()<deadline) return;
   c.hist.push(0); c.phase = "missed"; c.msg = null; c.timeout = true; deadline = null; buzz([20,40,20]); render(true);
 }
-const carPoints = c => { const cf = CAR[c.diff], used = c.shown - cf.start; return c.diff==="hard" ? Math.max(2, cf.max - 2*used) : Math.max(1, cf.max - used); };
+async function careerJoker(){
+  const c = L.car; if(!c || c.daily || c.phase!=="ask" || c.shown>=careerClues(c.ids[c.cur], c.diff).length || !itemQty("joker")) return;
+  if(await useItem("joker")){ c.jok = (c.jok||0)+1; c.shown++; c.msg = null; toast("Joker : indice offert", "ok"); render(true); }
+}
+const carPoints = c => { const cf = CAR[c.diff], used = c.shown - cf.start - (c.jok||0); return c.diff==="hard" ? Math.max(2, cf.max - 2*used) : Math.max(1, cf.max - used); };
 const isTarget = (c, j) => j===c.ids[c.cur] || careerSig(j)===careerSig(c.ids[c.cur]);
 function careerFound(){ const c = L.car; c.hist.push(carPoints(c)); c.phase = "found"; c.msg = null; deadline = null; buzz(30); render(true); }
 function careerGuess(input){
@@ -77,7 +81,7 @@ function careerHint(msg){
 }
 function careerNext(){
   const c = L.car; if(!c) return;
-  if(c.cur<CAR_N-1){ c.cur++; c.shown = CAR[c.diff].start; c.phase = "ask"; c.msg = null; c.wrong = []; c.timeout = false; carArm();
+  if(c.cur<CAR_N-1){ c.cur++; c.shown = CAR[c.diff].start; c.phase = "ask"; c.msg = null; c.wrong = []; c.timeout = false; c.jok = 0; carArm();
     if(c.diff==="easy") c.opts = careerOptions(c.ids[c.cur], c.r); return render(true); }
   c.phase = "end";
   const found = c.hist.filter(x => x>0).length, points = c.hist.reduce((a,b) => a+b, 0);
@@ -87,7 +91,7 @@ function careerNext(){
   if(L.summary.rec.length) setTimeout(() => celebrate("gold"), 250);
   if(r.daily) submitDaily(r);
   render(true);
-  (async () => { const s = L.summary, coins = await rewardGame(CAR[c.diff].coins(found), false); if(L.summary!==s) return; s.coins = coins;
+  (async () => { const s = L.summary, coins = await rewardGame(CAR[c.diff].coins(found), false); if(L.summary!==s) return; s.coins = coins; s.ref = LAST_REF;
     if(r.daily){ const d = await claimDaily(r.daily); if(L.summary===s && d && !d.already){ s.bonus = d; PROFILE.streak = {count:d.streak, best:Math.max(PROFILE.streak.best||0, d.streak), last:r.daily}; saveProfile(); } }
     render(true); })();
 }
@@ -123,14 +127,15 @@ function screenCareer(){
   const pts = carPoints(c), msg = c.msg ? `<div class="chmsg"><span class="ko">${esc(c.msg.t)}</span></div>` : "";
   const input = c.diff==="easy"
     ? `<div class="qcm">${c.opts.map(j => `<button class="btn${c.wrong.includes(j)?" wrong":""}" data-act="carpick" data-v="${j}" ${c.wrong.includes(j)?"disabled":""}>${esc(P[j].n)}</button>`).join("")}</div>${msg}
-       <div class="row2" style="margin-top:10px"><button class="btn ghost" data-act="carhint" ${c.shown>=clues.length?"disabled":""}>Indice (−1)</button><button class="btn ghost" data-act="carskip">Je passe</button></div>`
+       <div class="row2" style="margin-top:10px"><button class="btn ghost" data-act="carhint" ${c.shown>=clues.length?"disabled":""}>Indice (−1)</button><button class="btn ghost" data-act="carskip">Je passe</button></div>${!c.daily && itemQty("joker") && c.shown<clues.length ? `<button class="btn item-btn" data-act="carjoker" style="margin-top:10px">${ICON.joker} Joker : indice gratuit (×${itemQty("joker")})</button>` : ""}`
     : `<form class="answer" data-form="career" autocomplete="off" style="margin-top:14px">
      <input id="carguess" autocomplete="off" autocorrect="off" autocapitalize="words" spellcheck="false" enterkeyhint="send" placeholder="Nom du joueur" aria-label="Nom du joueur">
      ${msg}
      <button class="btn ink" type="submit">Valider</button>
      <div class="row2"><button class="btn ghost" type="button" data-act="carhint">Indice (−${c.diff==="hard"?2:1})</button><button class="btn ghost" type="button" data-act="carskip">Je passe</button></div>
+     ${!c.daily && itemQty("joker") && c.shown<clues.length ? `<button class="btn item-btn" type="button" data-act="carjoker" style="margin-top:10px">${ICON.joker} Joker : indice gratuit (×${itemQty("joker")})</button>` : ""}
     </form>`;
-  return {key:`car-${c.diff}-${c.cur}-${c.shown}-${c.phase}-${c.wrong.length}-${c.msg?c.msg.t:""}`, html:`
+  return {key:`car-${c.diff}-${c.cur}-${c.shown}-${c.phase}-${c.wrong.length}-${c.msg?c.msg.t:""}-${itemQty("joker")}`, html:`
    ${roundBar(CAR_N, c.cur)}
    ${gameTop(`Joueur ${c.cur+1}/${CAR_N}`, c.daily ? `<span class="chip">${total} pts</span>${c.phase==="ask"?clock():""}` : `<span class="chip">${DIFFS[c.diff].t} · ${total} pts</span>`)}
    ${over?`<div class="car-ans ${c.phase}"><span class="mp">${miniFor(P[i], null, 64)}</span><span><small>${c.phase==="found"?`Trouvé · +${c.hist[c.cur]} points`:c.timeout?"Temps écoulé, c'était":"Raté, c'était"}</small><b>${esc(P[i].n)}</b></span></div>`

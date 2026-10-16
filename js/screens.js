@@ -178,11 +178,13 @@ function screenCollection(){
       <span class="sp-odds">${esc(p.d.split(" · ")[1]||p.d)}</span>
       <span class="sp-price">${ok?`${ICON.coin}${p.price}`:WALLET.loaded?`Encore ${miss} ${ICON.coin}`:`${ICON.coin}${p.price}`}</span></button>`; };
   const filters = [["all","Toutes"],["icon","Icônes"],["legend","Légendes"],["rare","Pépites"],["common","Communes"],["pl","Premier League"],["l1","Ligue 1"],["liga","Liga"],["seriea","Serie A"],["europe","Europe"]];
-  return {key:"collection"+JSON.stringify([own.length, WALLET.coins, WALLET.loaded, WALLET.err, f, L.opening, L.packErr, !!L.allAlbums, WALLET.albums.length, L.claiming]), html:`
+  return {key:"collection"+JSON.stringify([own.length, WALLET.coins, WALLET.loaded, WALLET.err, f, L.opening, L.packErr, !!L.allAlbums, WALLET.albums.length, L.claiming, WALLET.items]), html:`
   ${topbar()}
   ${WALLET.err?`<div class="empty">${esc(WALLET.err)}</div>`:`
   <div class="stats3"><div class="stat"><b>${own.length}</b><small>cartes sur ${CARDS.length}</small></div><div class="stat"><b>${byR("legend")}</b><small>légendes sur ${tot("legend")}</small></div><div class="stat icon"><b>${byR("icon")}</b><small>icônes sur ${tot("icon")}</small></div></div>
   ${nClaim?`<button class="claimbar" data-act="album" data-v="${esc(al[0].club)}">${ICON.star}<span><b>${plural(nClaim,"album")} à réclamer</b>Ton bonus de pièces t'attend</span>${ICON.coin}</button>`:""}
+  <div class="sec-title"><h2>Mes objets</h2><small>à gagner dans les packs</small></div>
+  <div class="items">${Object.entries(ITEMS).map(([k,v]) => `<div class="item i-${k}${itemQty(k)?"":" empty"}"><span class="i-ic">${ICON[k]}<b>×${itemQty(k)}</b></span><span><b>${v.t}</b><small>${v.d}</small></span></div>`).join("")}</div>
   <div class="sec-title"><h2>Boutique</h2><small>tu gagnes des pièces en jouant</small></div>
   <div class="packs">${packBtn("classic")}${packBtn("gold")}</div>
   ${L.packErr?`<div class="err" role="alert" style="margin-top:10px">${esc(L.packErr)}</div>`:""}
@@ -234,6 +236,7 @@ function screenPack(){
    <h1 class="display" style="font-size:clamp(30px,9vw,42px)">${all?(best===3?"Une <span>icône</span> !!":best===2?"Une <span>légende</span> !":best===1?"Une <span>pépite</span> !":"Pack <span>ouvert</span>"):"Touche une carte <span>pour la retourner</span>"}</h1>
    <div class="pack-cards">${p.cards.map((c,i) => i<p.shown ? face(c,i)
      : `<button class="flip back deal r-${c.rarity}" style="--d:${i*120}ms" data-act="reveal" aria-label="Retourner la carte ${i+1}">${ICON.pack}<span>?</span></button>`).join("")}</div>
+   ${all&&p.item?`<div class="pack-item i-${p.item}">${ICON[p.item]}<span><small>Objet bonus</small><b>${ITEMS[p.item].t}</b></span></div>`:""}
    ${all&&p.refund?`<p class="muted" style="text-align:center">Doublons remboursés : <b style="color:var(--flash)">+${p.refund} pièces</b></p>`:""}
   </div>
   ${all?dock(`<button class="btn" data-act="openpack" data-v="${p.kind}" ${WALLET.coins>=PACKS[p.kind].price?"":"disabled"}>Ouvrir un autre ${esc(PACKS[p.kind].t)} (${WALLET.coins} pièces)</button><button class="btn ghost" data-act="nav" data-v="collection">Voir ma collection</button>`)
@@ -361,7 +364,8 @@ function summaryBlock(){
     <div class="xpline"><b>+${s.xp} XP</b>${s.levelUp?`<span class="lvup">${ICON.star} Niveau ${s.levelUp}</span>`:`<span class="muted" style="color:var(--ink-soft);font-size:13px">Niveau ${levelInfo().level}</span>`}</div>
     <div class="xpbar"><i style="width:${levelInfo().pct}%"></i></div>
     ${s.rec.length||(s.streak&&!s.bonus)?`<div class="recs">${s.rec.map(x => `<span>${esc(x)}</span>`).join("")}${s.streak&&!s.bonus?`<span>Série : ${plural(s.streak,"jour")}</span>`:""}</div>`:""}
-    <div class="coinline">${ICON.coin}<span>${s.coins==null?"Pièces en cours de calcul…":s.coins===0?"Plafond de pièces du jour atteint":`<b>+${s.coins}</b> pièces`}</span>${s.bonus?`<span class="bonus">${ICON.flame} Série de ${plural(s.bonus.streak,"jour")} : <b>+${s.bonus.amount}</b></span>`:""}</div>
+    <div class="coinline">${ICON.coin}<span>${s.coins==null?"Pièces en cours de calcul…":s.coins===0?"Plafond de pièces du jour atteint":`<b>+${s.coins}</b> pièces`}</span>${s.bonus?`<span class="bonus">${ICON.flame} Série de ${plural(s.bonus.streak,"jour")} : <b>+${s.bonus.amount}</b></span>`:""}${s.boosted?`<span class="bonus">${ICON.boost} Doublé</span>`:""}</div>
+    ${s.coins>0 && s.ref && !s.boosted && itemQty("boost") ? `<button class="btn item-btn sm" data-act="boost" ${L.boosting?"disabled":""}>${ICON.boost} Doubler mes pièces (+${s.coins}) · Boost ×${itemQty("boost")}</button>` : ""}
     ${WALLET.loaded&&WALLET.coins>=PACKS.classic.price?`<button class="btn ink sm" data-act="tohome" data-v="collection">${ICON.pack} Ouvrir un pack (${WALLET.coins} pièces)</button>`:""}
   </div>`;
 }
@@ -416,12 +420,13 @@ function screenPmResult(){
   const g = game, GS = goalsOf(g.pmTheme), A = GS[g.chain[g.pm.cur]], B = GS[g.chain[g.pm.cur+1]], last = g.pm.last || {winners:[], picks:{}};
   const mine = last.picks[ME.id], won = last.winners.includes(ME.id);
   const res = g.players.map(p => ({p, sc:g.pm.scores[p.id]||0})).sort((a,b) => b.sc-a.sc);
-  const head = g.pm.endless ? gameTop(`Série : ${g.pm.scores[ME.id]||0}`, g.pm.over?`<span class="over">Fin de série</span>`:`<span class="stamp ok">+1</span>`)
+  const head = g.pm.endless ? gameTop(`Série : ${g.pm.scores[ME.id]||0}`, g.pm.offer?`<span class="over">Raté…</span>`:g.pm.over?`<span class="over">Fin de série</span>`:`<span class="stamp ok">+1</span>`)
     : `${roundBar(PM_DUELS, g.pm.cur)}${gameTop(`Duel ${g.pm.cur+1}/${PM_DUELS}`, `<span class="stamp ${won?"ok":"none"}">${won?"+1 point":mine?"Raté":"Pas de réponse"}</span>`)}`;
-  return {key:"pmr"+g.pm.cur+JSON.stringify(g.pm.scores)+!!g.pm.over, html:`${head}
+  return {key:"pmr"+g.pm.cur+JSON.stringify(g.pm.scores)+!!g.pm.over+!!g.pm.offer, html:`${head}
    ${duelCards(A, B, true, g.pmTheme)}
    ${g.solo?"":`<div class="podium" style="margin-top:16px">${res.map((r,k) => `<div class="pod${last.winners.includes(r.p.id)?" first":""}"><span class="rk">${k+1}</span><span><b>${esc(r.p.name)}</b><small>${last.picks[r.p.id]?(last.picks[r.p.id]==="plus"?"A dit plus":"A dit moins"):"Pas de réponse"}</small></span><span class="sc">${plural(r.sc,"pt")}</span></div>`).join("")}</div>`}
-   ${g.solo?dock(`<p class="solo-note">${g.pm.over?"Bilan…":"Duel suivant…"}</p>`)
+   ${g.solo&&g.pm.offer?dock(`<button class="btn item-btn" data-act="pmchance">${ICON.chance} Seconde chance (×${itemQty("chance")}) : je continue</button><button class="btn ghost" data-act="pmstop">Arrêter ma série à ${g.pm.scores[ME.id]||0}</button>`)
+     :g.solo?dock(`<p class="solo-note">${g.pm.over?"Bilan…":"Duel suivant…"}</p>`)
      :IS_HOST?hostDock(`<button class="btn" data-act="next">${g.pm.cur<g.chain.length-2?"Duel suivant":"Voir le classement"}</button>`):dock(`<p class="muted" style="text-align:center;margin:0">En attente de l'hôte.</p>`)}`};
 }
 function screenChronoPlay(){
