@@ -123,11 +123,11 @@ const mcRevalue = c => { c.val = Math.max(1, Math.round(mcFair(c) * c.form)); };
 function mcMake(card, kind, r){
   const x = hashStr(card.id+"mc") >>> 0, tk = Object.keys(MC_TRAITS);
   const c = {uid:uid(), id:card.id, n:card.n, club:card.c, lg:card.lg, pos:MC_POS[card.p]||"MIL", kind, form:1,
-    trait: kind!=="pepite" && x%100 < 30 ? tk[(x>>8) % tk.length] : null};
-  if(kind==="legend"){ c.ovr = (card.r==="icon" ? 89 : 85) + x%5; c.age = 29 + (x>>4)%6; }
-  else if(kind==="rare"){ c.ovr = 78 + x%7; c.age = 23 + (x>>4)%9; }
-  else if(kind==="common"){ c.ovr = 68 + x%10; c.age = 21 + (x>>4)%12; }
-  else { c.ovr = 58 + x%10; c.age = 18 + (x>>4)%2; c.pot = 72 + (x>>6)%19; }
+    trait: kind!=="pepite" && x%100 < 30 ? tk[(x>>>8) % tk.length] : null};
+  if(kind==="legend"){ c.ovr = (card.r==="icon" ? 89 : 85) + x%5; c.age = 29 + (x>>>4)%6; }
+  else if(kind==="rare"){ c.ovr = 78 + x%7; c.age = 23 + (x>>>4)%9; }
+  else if(kind==="common"){ c.ovr = 68 + x%10; c.age = 21 + (x>>>4)%12; }
+  else { c.ovr = 58 + x%10; c.age = 18 + (x>>>4)%2; c.pot = 72 + (x>>>6)%19; }
   if(!c.pot) c.pot = c.ovr + (c.age < 24 ? 2 + x%4 : 0);
   c.kind = kind==="pepite" ? "pepite" : kind==="legend" ? "legend" : "regular";
   mcRevalue(c); return c;
@@ -178,7 +178,7 @@ function startMercato(diff, opt={}){
   const r = rng((Date.now() ^ 0x5bd1e995) % 1e9);
   M = {diff, daily, r, sr, v:0, period:1, pools:mcPools(sr), pdeck:mcPdeck(sr), phase:(PROFILE.best.mercatoTuto4 ? "club" : "tuto"), tuto:0,
        market:[], won:{}, susp:new Set(), sel:{}, results:[], pacts:[], bub:{}, show:[], si:0, flash:null, sheet:null, aim:null, played:0, fx:null,
-       goals:{}, flashA:null, inbox:[], news:null, buys:MC.buys, deals:0, drawn:[], moves:[], round:0};
+       flashA:null, inbox:[], news:null, buys:MC.buys, deals:0, drawn:[], moves:[], round:0, season:1, palmares:[]};
   M.newsPlan = [null, ...mcShuffle(Object.keys(MC_NEWS), sr).slice(0, MC.periods-1)];
   const keys = Object.keys(MC_SECRETS);
   M.secretChoice = mcShuffle([...keys], sr).slice(0, 2);
@@ -231,7 +231,7 @@ function mcLineup(p){
 function mcPlace(p, c){ p.bench.push(c); return mcLineup(p); }
 function mcRemove(p, c){ const i = p.team.indexOf(c); if(i>=0) p.team.splice(i, 1); else { const j = p.bench.indexOf(c); if(j>=0) p.bench.splice(j, 1); } }
 function mcSell(p, c){ if(!mcRoster(p).includes(c)) return 0; mcRemove(p, c); const v = mcBank(p, c); p.money += v; mcGain(p, c, v); return v; }
-function mcGain(p, c, v){ if(c.paid==null || p.cpu) return; const g = v - c.paid; p.bestGain = Math.max(p.bestGain, g); if(!M.bestTrade || g > M.bestTrade.g) M.bestTrade = {p, c, g}; }
+function mcGain(p, c, v){ if(c.paid==null || p.cpu) return; const g = v - c.paid; p.bestGain = Math.max(p.bestGain, g); if(!M.bestTrade || g > M.bestTrade.g) M.bestTrade = {pi:M.clubs.indexOf(p), n:c.n, g}; }
 /* un club IA qui perd un joueur se renforce aussitôt avec un joueur libre */
 function mcRefill(club){ if(!club.cpu) return; while(club.team.length < 5){ const g = !club.team.some(c => c.pos==="G"); const kind = club.tier===3 ? "rare" : "common"; const c = mcDrawPlayer(kind, g ? "G" : "F"); if(!c) break; club.team.push(c); } mcLineup(club); }
 function mcTransfer(from, to, c, amt){
@@ -268,7 +268,7 @@ function mcQuick(a, b){
   const r = M.r, fr = p => new Set(p.team.filter(c => c.trait==="fragile" && r() < 0.25).map(c => c.uid));
   const ra = mcRating(a, fr(a)).total + 1.5, rb = mcRating(b, fr(b)).total;      // +1.5 : avantage du terrain
   const ga = mcPois(1.35*Math.exp((ra-rb)/9), r), gb = mcPois(1.35*Math.exp((rb-ra)/9), r);
-  [[a, ga], [b, gb]].forEach(([p, g]) => { for(let k=0;k<g;k++){ const s = mcScorer(p, r); if(s){ M.goals[s.uid] = M.goals[s.uid] || {c:s, n:0, p}; M.goals[s.uid].n++; s.sc = (s.sc||0)+1; } } });
+  [[a, ga], [b, gb]].forEach(([p, g]) => { for(let k=0;k<g;k++){ const s = mcScorer(p, r); if(s){ s.gs = (s.gs||0)+1; s.sc = (s.sc||0)+1; } } });
   return {a, b, ga, gb};
 }
 function mcScorer(p, r){ const pool = p.team.filter(c => c.pos!=="G" && !M.susp.has(c.uid)); if(!pool.length) return null; const w = pool.map(c => ({ATT:6, MIL:3, DEF:1}[c.pos]||1) + (mcOvr(c)-60)/10); let x = r()*w.reduce((s,v) => s+v, 0); for(let k=0;k<pool.length;k++){ x -= w[k]; if(x<=0) return pool[k]; } return pool[0]; }
@@ -281,7 +281,7 @@ function mcBig(a, b){
   const ga = mcPois(1.35*Math.exp((ra-rb)/9), r), gb = mcPois(1.35*Math.exp((rb-ra)/9), r);
   const mins = Array.from({length:ga+gb}, () => 2 + Math.floor(r()*88));
   const sides = mcShuffle([...Array(ga).fill(a), ...Array(gb).fill(b)], r);
-  mins.sort((x,y) => x-y).forEach((min, k) => { const p = sides[k], s = mcScorer(p, r); if(s){ M.goals[s.uid] = M.goals[s.uid] || {c:s, n:0, p}; M.goals[s.uid].n++; s.sc = (s.sc||0)+1; } ev.push({min, p, t:s ? cardName(s.n) : "But contre son camp", goal:true}); });
+  mins.sort((x,y) => x-y).forEach((min, k) => { const p = sides[k], s = mcScorer(p, r); if(s){ s.gs = (s.gs||0)+1; s.sc = (s.sc||0)+1; } ev.push({min, p, t:s ? cardName(s.n) : "But contre son camp", goal:true}); });
   for(let k=0;k<3+Math.floor(r()*3);k++){ const p = r()<0.5 ? a : b, s = mcScorer(p, r), D = p===a ? fb : fa, gk = D.xi.find(c => c && c.pos==="G"); if(s) ev.push({min:2+Math.floor(r()*88), p, t: gk && r()<0.6 ? `Arrêt de ${cardName(gk.n)} devant ${cardName(s.n)}` : `${cardName(s.n)} manque le cadre`}); }
   ev.sort((x,y) => x.min-y.min);
   return {a, b, ga, gb, fa, fb, ev};
@@ -618,9 +618,9 @@ function mcPlay(i, seat, u){
   const me = mcMe(), st = me.hand[i]; if(st==null) return;
   if(M.played >= MC.plays) return toast("2 cartes maximum par période.");
   const C = MC_CARDS[st], to = seat!=null ? M.players[seat] : null;
-  if(C.tg!=="self" && seat==null){ M.aim = i; M.sheet = null; M.flash = null; return mcR(); }
+  if(C.tg!=="self" && seat==null){ M.sheet = {t:"target", i}; M.flash = null; return mcR("sheet"); }
   const err = mcCheck(me, st, to); if(err) return toast(err);
-  if(C.pick && !u){ M.sheet = {t:"target", i, seat}; M.aim = null; return mcR("sheet"); }
+  if(C.pick && !u) return toast("Choisis un joueur.");
   const c = u ? mcTargets(me, st, to).find(x => x.uid===u) : null;
   me.hand.splice(i, 1); M.played++; M.aim = null; M.sheet = null;
   if(st==="pacte"){
@@ -715,7 +715,7 @@ function mcAnswer(yes){
 
 /* ---------- fin de période / fin de saison */
 function mcNext(){
-  if(M.period < MC.periods){ M.period++; mcPeriodStart(); return; }
+  if(M.period < MC.periods){ M.period++; mcSave(); mcPeriodStart(); return; }
   const L = mcLeague();
   M.players.forEach(p => { p.secretOk = !!(p.secret && MC_SECRETS[p.secret].ok(p)); p.bonusSecret = p.secretOk ? MC.secretPts : 0;
     p.boardOk = L.indexOf(p)+1 <= p.goal; p.bonusBoard = p.boardOk ? MC.boardPts : 0; p.final = p.pts + p.bonusSecret + p.bonusBoard; });
@@ -726,7 +726,61 @@ function mcNext(){
   L_SUM(r);
   if(M.daily){ const k = todayKey(), b = PROFILE.best.mercatoDay; if(!b || b.day!==k || me.final > b.pts){ PROFILE.best.mercatoDay = {day:k, pts:me.final, rank}; saveProfile(); } }
   if(won){ setTimeout(() => celebrate("gold"), 300); mcSfx("win"); }
+  M.palmares = M.palmares || []; M.palmares.push({s:M.season, pos:mcPos(me), rank, champ:L[0]===me, board:me.boardOk, champion:L[0].n});
+  M.seasonDone = true; mcSave();
   M.phase = "end"; mcR("end");
+}
+/* ---------- carrière : sauvegarde locale (une carrière à la fois) */
+const MC_SAVE = "fl_mercato_career";
+function mcSave(){
+  if(!M || M.daily) return;
+  const idx = c => c ? M.clubs.indexOf(c) : -1;
+  const data = {ver:1, diff:M.diff, season:M.season, period:M.period, round:M.round, fixtures:M.fixtures, pools:M.pools, pdeck:M.pdeck, newsPlan:M.newsPlan,
+    clubs:M.clubs.map(k => ({...k, grudge:idx(k.grudge)})), pacts:M.pacts.map(x => ({a:idx(x.a), b:idx(x.b), until:x.until})),
+    bestTrade:M.bestTrade||null, palmares:M.palmares||[], seasonDone:!!M.seasonDone, secretChoice:M.secretChoice};
+  try{ localStorage.setItem(MC_SAVE, JSON.stringify(data, (k, v) => k==="from" || k==="_n" ? undefined : v)); }catch(e){}
+}
+function mcSaved(){ try{ const d = JSON.parse(localStorage.getItem(MC_SAVE) || "null"); return d && d.ver===1 ? d : null; }catch(e){ return null; } }
+function mcLoad(){
+  const d = mcSaved(); if(!d) return toast("Aucune carrière sauvegardée.");
+  leaveGame(false, true); mcStopFlash();
+  M = {diff:d.diff, daily:false, r:rng((Date.now() ^ 0x2c1b3c6d) % 1e9), v:0, season:d.season, period:d.period, round:d.round, fixtures:d.fixtures, pools:d.pools, pdeck:d.pdeck, newsPlan:d.newsPlan,
+       market:[], won:{}, susp:new Set(), sel:{}, results:[], bub:{}, show:[], si:0, flash:null, sheet:null, aim:null, played:0, fx:null, flashA:null, inbox:[], news:null, buys:MC.buys, deals:0, drawn:[], moves:[],
+       bestTrade:d.bestTrade, palmares:d.palmares, seasonDone:d.seasonDone, secretChoice:d.secretChoice};
+  M.sr = M.r; M.clubs = d.clubs; M.players = M.clubs.slice(0, 4); M.cpu = M.clubs.slice(4);
+  M.clubs.forEach(k => { k.grudge = k.grudge>=0 ? M.clubs[k.grudge] : null; });
+  M.pacts = d.pacts.map(x => ({a:M.clubs[x.a], b:M.clubs[x.b], until:x.until}));
+  VIEW = "mercato";
+  if(M.seasonDone) mcNewSeason(); else mcPeriodStart();
+}
+/* saison suivante : vieillissement, progression d'été, retraites, primes, nouveaux objectifs */
+function mcNewSeason(){
+  const L = mcLeague(), r = M.r, notes = [], me = mcMe();
+  M.clubs.forEach(k => {
+    const pos = L.indexOf(k) + 1;
+    if(!k.cpu){ const prize = Math.round(42 - pos*2) + (k.boardOk ? 15 : 0); k.money += prize; if(k===me) notes.push(`💰 +${prize} M€ de primes (${pos}ᵉ${k.boardOk?" + objectif atteint":""})`); }
+    mcRoster(k).forEach(c => {
+      c.age++; c.gs = 0;
+      if(c.age <= 22 && c.ovr < c.pot) c.ovr = Math.min(c.pot, c.ovr + 2 + Math.floor(r()*4));
+      else if(c.age <= 25 && c.ovr < c.pot) c.ovr += 1;
+      else if(c.age >= 31) c.ovr -= 1 + Math.floor(r()*3);
+      c.form = 1; mcRevalue(c);
+      if(k===me && c.age<=22 && c.ovr>=80) notes.push(`🆙 ${cardName(c.n)} passe à ${c.ovr}`);
+    });
+    mcRoster(k).filter(c => c.age >= 35 && r() < 0.6).forEach(c => { mcRemove(k, c); if(k===me) notes.push(`👋 ${cardName(c.n)} prend sa retraite`); });
+    k.pts = k.gf = k.ga = k.w = k.d = k.l = 0; k.form = []; k.bas = 0; k.buys = []; k.bestGain = 0; k.grudge = null; k.mission = false; k.hit = false; k.betrayed = 0; k.shield = Math.max(k.shield||0, 1);
+    if(k.cpu) mcRefill(k); else mcLineup(k);
+  });
+  // nouvel objectif : selon la force de l'effectif
+  const byRating = [...M.clubs].sort((a,b) => mcRating(b).total - mcRating(a).total);
+  M.players.forEach(p => { p.goal = Math.min(17, Math.max(1, byRating.indexOf(p) + 1 + (p===me ? 1 : 2))); if(p.bot) p.secret = mcShuffle(Object.keys(MC_SECRETS), r)[0]; });
+  M.season++; M.period = 1; M.round = 0; M.seasonDone = false; M.pacts = []; M.bestTrade = null;
+  M.fixtures = mcFixtures(20, r);
+  M.newsPlan = [null, ...mcShuffle(Object.keys(MC_NEWS), r).slice(0, MC.periods-1)];
+  M.secretChoice = mcShuffle(Object.keys(MC_SECRETS), r).slice(0, 2);
+  M.seasonNotes = notes;
+  mcSave();
+  M.phase = "secret"; mcR();
 }
 function L_SUM(r){
   L.summary = Object.assign(recordGame(r), {r, coins:null, bonus:null});
@@ -735,9 +789,9 @@ function L_SUM(r){
 function mcTrophies(){
   const t = [], P = M.players, L = mcLeague();
   t.push({ic:"🏆", t:"Champion", d:`${L[0].n} · ${L[0].pts} pts`, p:L[0]});
-  const top = Object.values(M.goals).sort((a,b) => b.n-a.n)[0];
-  if(top) t.push({ic:"👟", t:"Soulier d'or", d:`${top.c.n} · ${top.n} buts`, p:mcOwner(top.c) || top.p});
-  if(M.bestTrade && M.bestTrade.g > 0) t.push({ic:"📈", t:"Coup du siècle", d:`${M.bestTrade.c.n} · +${M.bestTrade.g} M€`, p:M.bestTrade.p});
+  const top = M.clubs.flatMap(k => mcRoster(k).map(c => ({c, k}))).sort((a,b) => (b.c.gs||0)-(a.c.gs||0))[0];
+  if(top && top.c.gs) t.push({ic:"👟", t:"Soulier d'or", d:`${top.c.n} · ${top.c.gs} buts`, p:top.k});
+  if(M.bestTrade && M.bestTrade.g > 0) t.push({ic:"📈", t:"Coup du siècle", d:`${M.bestTrade.n} · +${M.bestTrade.g} M€`, p:M.clubs[M.bestTrade.pi]});
   const bas = [...P].sort((a,b) => b.bas-a.bas)[0]; if(bas.bas) t.push({ic:"🗡️", t:"Roi des coups bas", d:`${bas.bas} coup${bas.bas>1?"s":""} bas`, p:bas});
   const flops = P.flatMap(p => p.buys.map(b => ({...b, p}))).filter(b => b.price >= 15).map(b => ({...b, loss:b.price - b.c.val})).sort((a,b) => b.loss-a.loss)[0];
   if(flops && flops.loss > 0) t.push({ic:"💸", t:"Flop du mercato", d:`${flops.c.n} : payé ${flops.price}, vaut ${flops.c.val}`, p:flops.p});
@@ -805,7 +859,7 @@ function mcTable(center, dockHtml="", cls=""){
   const showHand = false;
   return `<div class="mct ${cls}">
    <div class="mct-top"><button class="iconbtn" data-act="quit" aria-label="Quitter">${ICON.back}</button>
-    <span class="mct-season">P${M.period}<small>/6</small></span>
+    <span class="mct-season">${M.season>1?`<small>S${M.season}·</small>`:""}P${M.period}<small>/6</small></span>
     <button class="mct-ev" data-act="mcevent">🏆 ${pos}ᵉ · ${me.pts} pts</button>
     <button class="iconbtn mct-help" data-act="mcmute" aria-label="Son">${PROFILE.best.mcMute?"🔇":"🔊"}</button>
     <button class="iconbtn mct-help" data-act="mcrules" aria-label="Règles">?</button></div>
@@ -844,10 +898,13 @@ function mcSheet(){
   let body = "";
   if(s.t==="card"){ const st = me.hand[s.i], C = MC_CARDS[st];
     body = `<div class="sheet-card">${mcHandCard(st, s.i, {big:true})}</div>
-      <button class="btn" data-act="mcplay" data-v="${s.i}" ${M.played>=MC.plays?"disabled":""}>${M.played>=MC.plays?"Déjà 2 cartes jouées":C.tg==="self"?"Jouer":"Choisir le président visé"}</button>`; }
-  if(s.t==="target"){ const st = me.hand[s.i], C = MC_CARDS[st], to = M.players[s.seat], list = mcTargets(me, st, to);
-    body = `<h3>${C.ic} ${C.t} → ${to.ic} ${esc(to.n)}</h3><p class="bid-note">Choisis le joueur visé</p>
-      <div class="tgt-grid">${list.map(c => `<button class="tgt" data-act="mcpicktgt" data-v="${c.uid}">${cardHTML(c.id,{small:true})}${mcTraitTag(c)}<span>💪${mcOvr(c)}${st==="clause"?` · ${Math.round(c.val*MC.clauseMult)} M€`:""}</span></button>`).join("")}</div>`; }
+      <button class="btn" data-act="mcplay" data-v="${s.i}" ${M.played>=MC.plays?"disabled":""}>${M.played>=MC.plays?"Déjà 2 cartes jouées":C.tg==="self"?"Jouer":"Choisir la cible"}</button>`; }
+  if(s.t==="target"){ const st = me.hand[s.i], C = MC_CARDS[st];
+    body = `<h3>${C.ic} ${C.t}</h3><p class="bid-note">${esc(C.d)}${st==="clause"?" Il ne peut pas refuser.":""}</p>
+      ${M.players.slice(1).map((p, k) => { const err = mcCheck(me, st, p), seat = k+1;
+        if(!C.pick) return `<button class="tgt-p" data-act="mcpickseat" data-v="${seat}" ${err?"disabled":""}><span class="lg-av">${p.ic}</span><b>${esc(p.club)} <small>${esc(mcShort(p))}</small></b><em>${err?esc(err):"Choisir"}</em></button>`;
+        const list = err ? [] : mcTargets(me, st, p);
+        return `<div class="tgt-club"><p><span>${p.ic}</span> <b>${esc(p.club)}</b> <small>${esc(mcShort(p))}${err?` · ${esc(err)}`:""}</small></p>${list.length?`<div class="tgt-grid">${list.map(c => `<button class="tgt" data-act="mcpicktgt" data-v="${seat}|${c.uid}">${cardHTML(c.id,{small:true})}${mcTraitTag(c)}<span>💪${mcOvr(c)}${st==="clause"?` · ${Math.round(c.val*MC.clauseMult)} M€`:""}</span></button>`).join("")}</div>`:""}</div>`; }).join("")}`; }
   if(s.t==="bid"){ const c = M.market.find(x => x.uid===s.u), b = M.sel[s.u] ?? c.price, used = Object.entries(M.sel).filter(([u]) => u!==s.u).reduce((a,[,v]) => a+v, 0);
     const weak = !mcFree(me, c) ? me.team.filter(o => mcSlot(o)===mcSlot(c)).sort((a,b) => mcOvr(a)-mcOvr(b))[0] : null;
     body = `<div class="bid-head">${cardHTML(c.id,{small:true})}<div><b>${esc(c.n)}</b><small>${MC_POS_FR[c.pos]}${c.from?` · chez ${esc(c.from.n)}`:" · libre"}</small><span class="bid-pp">💪 ${mcOvr(c)}<small> · ${c.age} ans</small></span>
@@ -903,6 +960,7 @@ function screenMercatoPick(){
   <div class="subhead"><button class="iconbtn" data-act="nav" data-v="home" aria-label="Retour">${ICON.back}</button><h1>Mercato FC</h1></div>
   <div class="mc-hero"><div class="mc-hero-row"><span class="mc-hero-av" style="--pc:#ff4d6d">🦈</span><span class="mc-hero-av" style="--pc:#3ed38f">🧮</span><span class="mc-hero-av" style="--pc:#a98bff">🎓</span><span class="mc-hero-av" style="--pc:#ff9f3a">🔍</span></div>
    <p class="mc-hero-t">Mercato FC</p><p>Une saison, 20 clubs, 3 présidents rivaux.<br>Achète, revends, trahis… et finis devant eux.</p></div>
+  ${(() => { const sv = mcSaved(); if(!sv) return ""; const c = sv.clubs[0]; return `<button class="mc-daily mc-resume" data-act="mcresume"><span>${c.ic}</span><span><b>Reprendre ma carrière</b><small>${esc(c.n)} · saison ${sv.season + (sv.seasonDone?1:0)}${sv.seasonDone?"":` · période ${sv.period}`} · ${MC_DIFF[sv.diff].t}</small></span><em>▶</em></button>`; })()}
   <button class="mc-daily" data-act="mcstart" data-v="normal" data-d="1"><span>🎯</span><span><b>Partie du jour</b><small>Même tirage pour tout le monde · niveau Moyen</small></span><em>${day?`${day.pts} pts`:"Jouer"}</em></button>
   <div class="pick-list">${Object.entries(MC_DIFF).map(([k,d]) => `<button class="mode diff-${k}" data-act="mcstart" data-v="${k}"><span class="lgtag">${d.t}</span><b>${d.b}</b><small>${d.d}</small>${b["mercato_"+k]?`<span class="rec">🏆 ${b["mercato_"+k]}</span>`:""}</button>`).join("")}</div>
   ${tabbar()}`};
@@ -921,7 +979,8 @@ function screenMercato(){
       <div class="power-pick">${Object.entries(MC_PROFILES).map(([k,P],i) => `<button class="power-c club-c" data-act="mcclub" data-v="${k}" style="animation-delay:${i*0.15}s"><span>${P.ic}</span><span><b>${P.n}</b><small>${P.t} · ${P.d}</small><em>💰 ${P.money} M€ · 🎯 objectif top ${P.goal}</em></span></button>`).join("")}</div></div>`};
   const me = mcMe();
   if(M.phase==="secret") return {key:"mcs-"+M.v, html:`<div class="tuto">
-      <span class="eyebrow">2/3 · Ton objectif secret</span><h1 class="display">Choisis une carte</h1><p>Personne ne la verra. +${MC.secretPts} pts si tu la remplis.</p>
+      <span class="eyebrow">${M.season>1?`Saison ${M.season} · ${esc(me.n)}`:"2/3 · Ton objectif secret"}</span><h1 class="display">${M.season>1?"Nouvel objectif secret":"Choisis une carte"}</h1>
+      ${M.season>1 && M.seasonNotes ? `<div class="snotes">${M.seasonNotes.map(x => `<p>${esc(x)}</p>`).join("")}<p>🎯 Objectif de la direction : top ${me.goal}</p></div>` : ""}<p>Personne ne la verra. +${MC.secretPts} pts si tu la remplis.</p>
       <div class="secret-pick">${M.secretChoice.map((k,i) => `<button class="secret-c" data-act="mcsecret" data-v="${k}" style="animation-delay:${i*0.2}s"><span>${MC_SECRETS[k].ic}</span><b>${MC_SECRETS[k].t}</b><small>${MC_SECRETS[k].d}</small></button>`).join("")}</div></div>`};
   if(M.phase==="power") return {key:"mcp-"+M.v, html:`<div class="tuto">
       <span class="eyebrow">3/3 · Quel président es-tu ?</span><h1 class="display">Ton pouvoir</h1>
@@ -1010,7 +1069,9 @@ function screenMercato(){
      <button class="btn ghost" data-act="mcshare">${ICON.share} Partager mon résultat</button>
      ${summaryBlock()}</div>
      ${mcSheet()}
-     ${dock(`<button class="btn" data-act="mcstart" data-v="${M.diff}" ${M.daily?'data-d="1"':""}>Rejouer</button><button class="btn ghost" data-act="nav" data-v="mercatoPick">Changer de niveau</button>`)}`};
+     ${M.palmares && M.palmares.length>1 ? `<div class="palm"><b>Ton palmarès</b>${M.palmares.map(x => `<span>S${x.s} · ${x.pos}ᵉ${x.champ?" 🏆":""}${x.rank===1?" 👑":""}</span>`).join("")}</div>` : ""}
+     ${dock(M.daily ? `<button class="btn" data-act="mcstart" data-v="${M.diff}" data-d="1">Rejouer</button><button class="btn ghost" data-act="nav" data-v="mercatoPick">Retour</button>`
+       : `<button class="btn" data-act="mcnextseason">Saison ${M.season+1} avec ${esc(me.n)} →</button><button class="btn ghost" data-act="nav" data-v="mercatoPick">Nouvelle partie</button>`)}`};
   }
   return {key:"mc-x", html:""};
 }
@@ -1018,6 +1079,7 @@ function screenMercato(){
 /* ---------- actions (appelées depuis app.js) */
 function mcAct(a, v, el){
   if(a==="mcstart"){ mcSfx("tap"); return startMercato(v, {daily: !!(el && el.dataset && el.dataset.d)}); }
+  if(a==="mcresume"){ mcSfx("tap"); return mcLoad(); }
   if(!M) return;
   const me = M.players && mcMe();
   if(!["mcbid","mcdealamt"].includes(a)) mcSfx("tap");
@@ -1025,8 +1087,10 @@ function mcAct(a, v, el){
     case "mctuto": if(M.tuto < mcTutoSlides().length-1){ M.tuto++; mcR(); } else { PROFILE.best.mercatoTuto4 = 1; saveProfile(); M.phase = "club"; mcR(); } break;
     case "mctutoskip": PROFILE.best.mercatoTuto4 = 1; saveProfile(); M.phase = "club"; mcR(); break;
     case "mcclub": mcSetup(v); break;
-    case "mcsecret": me.secret = v; M.phase = "power"; mcR(); break;
-    case "mcpower": me.power = v; mcPeriodStart(); break;
+    case "mcsecret": me.secret = v; if(me.power){ mcSave(); mcPeriodStart(); } else { M.phase = "power"; mcR(); } break;
+    case "mcnextseason": mcNewSeason(); break;
+    case "mcresume": mcLoad(); break;
+    case "mcpower": me.power = v; mcSave(); mcPeriodStart(); break;
     case "mcnews": mcNewsChoose(+v); break;
     case "mcgomkt": if(M.news && !M.news.done && MC_NEWS[M.news.key].auto){ M.news.out = MC_NEWS[M.news.key].a[0][1](M.news); M.news.done = true; }
       M.phase = "mercato"; M.drawn = []; M.botBids = M.players.map(p => p.bot ? mcBotBids(p) : null);
@@ -1056,7 +1120,8 @@ function mcAct(a, v, el){
     case "mccard": M.aim = null; M.sheet = {t:"card", i:+v}; mcSfx("card"); mcR("sheet"); break;
     case "mcplay": mcPlay(+v); break;
     case "mcaim": mcPlay(M.aim, +v); break;
-    case "mcpicktgt": mcPlay(M.sheet.i, M.sheet.seat, v); break;
+    case "mcpicktgt": { const [seat, u] = v.split("|"); mcPlay(M.sheet.i, +seat, u); break; }
+    case "mcpickseat": mcPlay(M.sheet.i, +v); break;
     case "mcaimno": toast(mcCheck(me, me.hand[M.aim], M.players[+v]) || "Cible impossible."); break;
     case "mcaimcancel": M.aim = null; mcR(); break;
     case "mcendturn": M.aim = null; M.phase = "botsplay"; mcBotsStart(); break;

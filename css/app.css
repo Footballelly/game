@@ -931,3 +931,11 @@ button.lg-r{cursor:pointer}
 .log-list{display:flex;flex-direction:column;gap:6px}
 .log-l{display:grid;grid-template-columns:auto 1fr;gap:8px;margin:0;font-size:13.5px;background:#0c124010;border-radius:10px;padding:7px 10px}
 .log-l>span:first-child{white-space:nowrap}.log-l.res-blocked{background:#c8f7dc}.log-l.res-refused{background:#fff1b8}
+/* v8 : carrière + ciblage des cartes */
+.tgt-club{margin-top:6px}.tgt-club>p{margin:4px 0 6px;font-size:14px}.tgt-club small{color:var(--ink-soft)}
+.tgt-p{width:100%;display:grid;grid-template-columns:30px 1fr auto;align-items:center;gap:8px;text-align:left;background:#0c12400d;border-radius:12px;padding:10px;margin-top:6px;font:inherit;color:inherit}
+.tgt-p em{font-style:normal;font-weight:800;font-size:12.5px;background:var(--ink);color:#fff;border-radius:8px;padding:4px 8px}.tgt-p[disabled]{opacity:.5}.tgt-p[disabled] em{background:#999;font-weight:600}
+.tgt-p b small{font-weight:600;color:var(--ink-soft)}
+.mc-resume{background:linear-gradient(135deg,#3ed38f,#1f9a5c);box-shadow:0 4px 0 #0c5a32}
+.snotes{background:#0c1240aa;border-radius:14px;padding:8px 14px;margin:6px 0;text-align:left;font-size:14px;max-width:340px}.snotes p{margin:4px 0}
+.palm{display:flex;flex-wrap:wrap;gap:6px;align-items:center;color:#fff}.palm b{width:100%}.palm span{background:#ffffff1f;border-radius:8px;padding:3px 8px;font-size:13px}
