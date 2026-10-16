@@ -127,7 +127,7 @@ function mcMake(card, kind, r){
   if(kind==="legend"){ c.ovr = (card.r==="icon" ? 89 : 85) + x%5; c.age = 29 + (x>>4)%6; }
   else if(kind==="rare"){ c.ovr = 78 + x%7; c.age = 23 + (x>>4)%9; }
   else if(kind==="common"){ c.ovr = 68 + x%10; c.age = 21 + (x>>4)%12; }
-  else { c.ovr = 58 + x%10; c.age = 17 + (x>>4)%3; c.pot = 72 + (x>>6)%19; }
+  else { c.ovr = 58 + x%10; c.age = 18 + (x>>4)%2; c.pot = 72 + (x>>6)%19; }
   if(!c.pot) c.pot = c.ovr + (c.age < 24 ? 2 + x%4 : 0);
   c.kind = kind==="pepite" ? "pepite" : kind==="legend" ? "legend" : "regular";
   mcRevalue(c); return c;
@@ -802,7 +802,7 @@ function mcActHTML(a, anim){
 }
 function mcTable(center, dockHtml="", cls=""){
   const me = mcMe(), step = mcStepOf(M.phase), si = MC_STEPS.findIndex(s => s[0]===step), pos = mcPos(me);
-  const showHand = M.phase==="coups" && !M.inbox.length;
+  const showHand = false;
   return `<div class="mct ${cls}">
    <div class="mct-top"><button class="iconbtn" data-act="quit" aria-label="Quitter">${ICON.back}</button>
     <span class="mct-season">P${M.period}<small>/6</small></span>
@@ -810,7 +810,7 @@ function mcTable(center, dockHtml="", cls=""){
     <button class="iconbtn mct-help" data-act="mcmute" aria-label="Son">${PROFILE.best.mcMute?"🔇":"🔊"}</button>
     <button class="iconbtn mct-help" data-act="mcrules" aria-label="Règles">?</button></div>
    <div class="seats">${M.players.slice(1).map(mcSeat).join("")}</div>
-   <div class="fixture"><span>${MC_PERIODS[M.period-1]} · journées ${M.round+1} à ${M.round+MC.rounds[M.period-1]}</span><b>🎯 Objectif : top ${me.goal} <em class="${pos<=me.goal?"ok":"ko"}">${pos<=me.goal?"en bonne voie":"à rattraper"}</em></b></div>
+   <div class="fixture"><span>${MC_PERIODS[M.period-1]} · J${M.round+1}-${M.round+MC.rounds[M.period-1]}</span><b>🎯 top ${me.goal} <em class="${pos<=me.goal?"ok":"ko"}">${pos<=me.goal?"✓":"✗"}</em></b></div>
    <div class="steps">${MC_STEPS.map((s,k) => `<span class="${k<si?"done":k===si?"cur":""}">${s[1]} ${s[2]}</span>`).join("")}</div>
    <div class="mct-c">${center}</div>
    <div class="me-zone" style="--pc:${me.col}">
@@ -883,6 +883,7 @@ function mcSheet(){
       <p class="bid-note">${M.deals}/${MC.deals} propositions cette période · 💰 tu as ${me.money} M€</p>
       <button class="btn" data-act="mcdealsend">💼 Envoyer la proposition</button>`; }
   if(s.t==="event") body = `<h3>Championnat · ${M.round}/38 journées</h3>${mcLeagueHTML(true, M.phase==="coups" && !M.inbox.length ? "mcclubpeek" : "")}<p class="bid-note">${M.phase==="coups"?"💼 Touche un club pour voir son effectif et lui faire une offre.<br>":""}🏆 Champion · 🔵 Top 4 · 🔻 Relégation. Fin de saison : points + objectif secret (+${MC.secretPts}) + objectif de la direction (+${MC.boardPts}).</p>`;
+  if(s.t==="log") body = `<h3>Pendant ce temps…</h3><div class="log-list">${M.show.map(a => { const C = mcCardOf(a.st); return `<p class="log-l res-${a.res}"><span>${a.by.ic} ${C.ic}${a.to?` → ${a.to.ic}`:""}</span><span>${esc(a.out)}</span></p>`; }).join("")}</div>`;
   if(s.t==="rules") body = `<h3>Comment on joue</h3>${mcTutoSlides().map(x => `<p class="rule-l"><span>${x[0]}</span><span><b>${x[1]}</b><small>${x[2]}</small></span></p>`).join("")}
       <h3>Traits des joueurs</h3>${Object.values(MC_TRAITS).map(x => `<p class="rule-l"><span>${x.ic}</span><span><b>${x.t}</b><small>${x.d}</small></span></p>`).join("")}`;
   const an = M.fx==="sheet" ? " anim" : "";
@@ -961,8 +962,11 @@ function screenMercato(){
       `<button class="btn" data-act="mcinbox" data-v="ok">✅ Accepter ${o.amt} M€</button><div class="dock-row"><button class="btn ghost" data-act="mcinbox" data-v="counter">↗️ ${Math.round(o.amt*1.2)} M€ ?</button><button class="btn ghost" data-act="mcinbox" data-v="no">✋ Refuser</button></div>`)};
     return {key, html:mcTable(M.aim!=null
       ? `<p class="mct-say aimsay">${MC_CARDS[me.hand[M.aim]].ic} Touche un président en haut</p><button class="linkbtn" data-act="mcaimcancel">Annuler</button>`
-      : `${M.flash ? mcActHTML(M.flash, M.fx==="bub") : `<p class="mct-say">💼 Ton bureau</p><p class="mct-hint">Touche un président pour négocier, ou cherche un joueur dans un autre club. Joue jusqu'à 2 cartes ↓</p>`}
-         <button class="btn ghost scout" data-act="mcevent">🔎 Chercher un joueur (les 20 clubs)</button>${mcCoalition()?`<p class="coal">👀 Rumeur : on complote contre le leader…</p>`:""}`,
+      : `${M.flash ? mcActHTML(M.flash, M.fx==="bub") : ""}
+         <p class="mct-say">🃏 Tes cartes <small>${MC.plays-M.played} à jouer</small></p>
+         <div class="hand center">${me.hand.length ? me.hand.map((st, i) => mcHandCard(st, i, {play:true})).join("") : `<span class="hand-empty">Pas de carte en main</span>`}</div>
+         <div class="bureau-acts"><button class="btn ghost scout" data-act="mcevent">🔎 Recruter dans un club</button><span class="mct-hint">ou touche un président en haut pour négocier</span></div>
+         ${mcCoalition()?`<p class="coal">👀 Rumeur : on complote contre le leader…</p>`:""}`,
       M.aim!=null ? "" : `<button class="btn" data-act="mcendturn">Fin du bureau</button>`)};
   }
   if(M.phase==="react" || M.phase==="offer"){ const {by, st, c, cost} = M.pending, C = mcCardOf(st);
@@ -973,7 +977,7 @@ function screenMercato(){
     return {key, html:mcTable(n
       ? `<p class="mct-say">Pendant ce temps… · ${M.si+1}/${n}</p>${mcActHTML(a, true)}`
       : `<p class="mct-say">Les présidents n'ont rien tenté…</p><p class="mct-hint">…en apparence.</p>`,
-      M.si < n-1 ? `<button class="btn" data-act="mcshownext">Suivant →</button>` : `<button class="btn" data-act="mcmatch">Lancer les ${MC.rounds[M.period-1]} journées ⚽</button>`)}; }
+      M.si < n-1 ? `<div class="dock-row"><button class="btn" data-act="mcshownext">Suivant →</button><button class="btn ghost" data-act="mcshowall">Tout voir</button></div>` : `<button class="btn" data-act="mcmatch">Lancer les ${MC.rounds[M.period-1]} journées ⚽</button>`)}; }
   if(M.phase==="match"){ const m = M.big, evs = m.ev.filter(e => e.min>0), pre = m.ev.filter(e => e.min===0), end = mcEvDelay(m.ev, null);
     const res = m.ga>m.gb ? "win" : m.ga===m.gb ? "draw" : "loss", anim = M.fx==="match", side = p => p===m.a ? "l" : "r", goals = evs.filter(e => e.goal);
     let sa = 0, sb = 0;
@@ -1059,6 +1063,7 @@ function mcAct(a, v, el){
     case "mcanswer": mcAnswer(v==="1"); break;
     case "mcshownext": M.si++; { const x = M.show[M.si]; mcSfx(x.res==="blocked" ? "block" : x.st==="deal" ? "coin" : x.to ? "hit" : "card"); } mcR("act"); break;
     case "mcmatch": mcPlayPeriod(); break;
+    case "mcshowall": M.sheet = {t:"log"}; M.si = M.show.length-1; mcR("sheet"); break;
     case "mcnext": mcNext(); break;
     case "mcshare": mcShare(); break;
     case "mcmute": PROFILE.best.mcMute = !PROFILE.best.mcMute; saveProfile(); mcR(); break;

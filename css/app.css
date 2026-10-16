@@ -920,3 +920,14 @@ button.lg-r{cursor:pointer}
 .pr{font-size:12px;font-weight:700;color:#fff;border-radius:8px;padding:3px 7px}.pr i{font-style:normal;opacity:.7;margin-right:4px;font-size:10px}
 .pr.big{outline:2px solid #ffd23f}
 .pr.f-V{background:#1f9a5c}.pr.f-N{background:#a88a00}.pr.f-D{background:#c8344f}
+/* v7.1 : UX bureau */
+.hand.center{justify-content:center;padding-top:4px;overflow:visible;flex-wrap:wrap}
+.hand.center .mcc{width:84px;height:116px}.hand.center .mcc-ic{font-size:32px}.hand.center .mcc b{font-size:11px}
+.mct-say small{font-size:12px;font-weight:700;opacity:.75;margin-left:4px}
+.bureau-acts{display:flex;flex-direction:column;align-items:center;gap:4px;width:100%}
+.fixture{flex-direction:row;justify-content:space-between;padding:6px 12px}
+.fixture b{font-size:12.5px}
+.seat{padding:8px 4px 6px}.seat-av{width:38px;height:38px;font-size:22px}.seat-pp{font-size:19px}
+.log-list{display:flex;flex-direction:column;gap:6px}
+.log-l{display:grid;grid-template-columns:auto 1fr;gap:8px;margin:0;font-size:13.5px;background:#0c124010;border-radius:10px;padding:7px 10px}
+.log-l>span:first-child{white-space:nowrap}.log-l.res-blocked{background:#c8f7dc}.log-l.res-refused{background:#fff1b8}
