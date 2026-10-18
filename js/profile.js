@@ -68,6 +68,8 @@ function recordGame(r){
   if(r.mode==="mercato" && r.won){ const k = "mercato_"+r.diff; PROFILE.best[k] = (PROFILE.best[k]||0)+1; rec.push(`Victoire ${MC_DIFF[r.diff].t} n°${PROFILE.best[k]}`); }
   const cards = [];
   PROFILE.xp += xp; PROFILE.games++;
+  PROFILE.played = PROFILE.played || {}; PROFILE.wins = PROFILE.wins || {};
+  PROFILE.played[r.mode] = (PROFILE.played[r.mode]||0) + 1; if(r.won) PROFILE.wins[r.mode] = (PROFILE.wins[r.mode]||0) + 1;
   let streak = null;
   if(r.daily){ PROFILE.daily[r.daily] = {kind:r.mode, score:r.dscore ?? r.score, total:r.dtotal ?? r.total, detail:r.detail||null, list:r.list||null, at:Date.now()}; streak = bumpStreak(r.daily); }
   saveProfile();

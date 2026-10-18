@@ -5,6 +5,9 @@ let VIEW = "home";      // onboard | home | chronoPick | friends | collection | 
 let VIEW_ARG = null;
 
 /* ---------- Petits composants ---------- */
+/* modes récents : badge « Nouveau » pendant 3 semaines, jusqu'à la première visite */
+const NEW_MODES = {tttPick:"2026-10-18", boxPick:"2026-10-18", xiPick:"2026-10-18", mercatoPick:"2026-10-15"};
+const isNew = v => NEW_MODES[v] && !(PROFILE.seen||{})[v] && (Date.parse(todayKey()) - Date.parse(NEW_MODES[v])) < 21*864e5;
 const dock = html => `<div class="dock"><div>${html}</div></div>`;
 const nameOf = id => (game.players.find(p => p.id===id) || {}).name || "?";
 const clock = () => deadline ? `<span class="chip" data-clock>--</span>` : "";
@@ -31,13 +34,13 @@ function ticket(r){ const s = slotById(r.slot); return `<div class="ticket"><spa
 const roundBar = (n, cur) => `<div class="rounds">${Array.from({length:n}, (_,k) => `<i class="${k<cur?"done":k===cur?"now":""}"></i>`).join("")}</div>`;
 function tabbar(){
   const t = [["home","Jouer",ICON.home],["collection","Collection",ICON.cards],["board","Classement",ICON.trophy]];
-  const cur = ["album","pack"].includes(VIEW) ? "collection" : ["pmPick","chronoPick","career","careerPick","saisonPick","mercato","mercatoPick","ttt","tttPick"].includes(VIEW) ? "home" : VIEW;
+  const cur = ["album","pack"].includes(VIEW) ? "collection" : ["pmPick","chronoPick","career","careerPick","saisonPick","mercato","mercatoPick","ttt","tttPick","box","boxPick","xi","xiPick"].includes(VIEW) ? "home" : VIEW;
   return `<nav class="tabbar" aria-label="Navigation"><div>${t.map(([v,l,i]) => `<button data-act="nav" data-v="${v}" ${cur===v?'aria-current="page"':""}>${i}<span>${l}</span></button>`).join("")}</div></nav>`;
 }
 function topbar(){
   const li = levelInfo(), st = WALLET.loaded ? WALLET.streak : streakAlive();
   return `<header class="topbar"><div class="wordmark">${BALL}<div>FOOTBALL<br><span>LEGENDS</span></div></div>
-   <div class="tb-right">${coinPill()}<div class="me-pill" title="${esc(titleOf(li.level))}"><span class="lvl">${li.level}</span><span class="nm">${esc(PROFILE.name)}</span>${st?`<span class="st">${ICON.flame}${st}</span>`:""}</div></div></header>`;
+   <div class="tb-right">${coinPill()}<button class="me-pill" data-act="nav" data-v="profile" title="Mon profil et mes stats"><span class="lvl">${li.level}</span><span class="nm">${esc(PROFILE.name)}</span>${st?`<span class="st">${ICON.flame}${st}</span>`:""}</button></div></header>`;
 }
 
 /* ======================================================================
@@ -94,6 +97,7 @@ function collectionTeaser(){
      <span class="t-cta${can?" on":""}">${can?`${ICON.pack} Ouvrir un pack`:`${ICON.coin} ${WALLET.loaded?WALLET.coins:"…"} pièces · joue pour en gagner`}</span></span>
   </button>`;
 }
+const newB = (v, rec) => isNew(v) ? `<span class="m-badge new">Nouveau</span>` : rec ? `<span class="m-badge">${rec}</span>` : "";
 function screenHome(){
   const li = levelInfo(), b = PROFILE.best;
   const m = (act, ic, cls, t, d, badge="", extra="") => `<button class="mtile ${cls}" data-act="${act}" ${extra}><span class="m-ic">${ic}</span><span class="m-bg" aria-hidden="true">${ic}</span>
@@ -106,17 +110,46 @@ function screenHome(){
   <div style="margin-top:12px">${dailyCard()}</div>
   <div class="sec-title"><h2>Jouer seul</h2><small>sans limite</small></div>
   <div class="mgrid">
-   ${m("nav",ICON.route,"m-pink","Parcours de carrière","Trouve le joueur à partir de ses clubs.", carRec || "Nouveau", 'data-v="careerPick"')}
+   ${m("nav",ICON.route,"m-pink","Parcours de carrière","Trouve le joueur à partir de ses clubs.", carRec, 'data-v="careerPick"')}
    ${m("pickpm",ICON.updown,"m-gold","Plus ou moins","Plus de buts ou moins ? Enchaîne.", pmRec?`Record ${pmRec}`:"")}
    ${m("pickchrono",ICON.clock,"m-sky","Chrono",`${LISTS.length} listes à vider avant la fin du temps.`, "")}
    ${m("nav",ICON.pitch,"m-green","Un joueur par saison","11 postes, 11 saisons de PL. Années 90, 2000 ou ère moderne.", b.saison||b.saisonModern||b.saison90?`Record ${Math.max(b.saison||0,b.saisonModern||0,b.saison90||0)}/11`:"", 'data-v="saisonPick"')}
-   <button class="mtile m-ttt" data-act="nav" data-v="tttPick"><span class="m-ic">✕◯</span><span class="m-txt"><b>Tiki-Taka-Toe</b><small>Morpion foot en 1 contre 1, contre un pote ou l'ordi.</small></span><span class="m-badge">Nouveau</span></button>
-   <button class="mtile m-mercato" data-act="nav" data-v="mercatoPick"><span class="m-ic">${ICON.coin}</span><span class="m-txt"><b>Mercato FC</b><small>Une saison à 20 clubs : mercato, transferts et trahisons.</small></span><span class="m-badge">${b.mercato_hard?`Requins ${b.mercato_hard}`:b.mercato_normal||b.mercato_easy?`Victoires ${(b.mercato_normal||0)+(b.mercato_easy||0)}`:"Nouveau"}</span></button>
+   <button class="mtile m-ttt" data-act="nav" data-v="tttPick"><span class="m-ic">✕◯</span><span class="m-txt"><b>Tiki-Taka-Toe</b><small>Morpion foot en 1 contre 1, contre un pote ou l'ordi.</small></span>${newB("tttPick", ["easy","normal","hard"].reduce((t,k) => t+(b["ttt_"+k]||0), 0) ? `Victoires ${["easy","normal","hard"].reduce((t,k) => t+(b["ttt_"+k]||0), 0)}` : "")}</button>
+   <button class="mtile m-box" data-act="nav" data-v="boxPick"><span class="m-ic">🧩</span><span class="m-txt"><b>Box2Box</b><small>La grille du jour à remplir seul. Les pépites rapportent gros.</small></span>${newB("boxPick", b.boxDay && b.boxDay.day===todayKey() ? `Aujourd'hui ${b.boxDay.score}` : b.box ? `Record ${b.box}` : "")}</button>
+   <button class="mtile m-xi" data-act="nav" data-v="xiPick"><span class="m-ic">📋</span><span class="m-txt"><b>Missing XI</b><small>Retrouve le onze d'un match culte en 3 minutes.</small></span>${newB("xiPick", (() => { const n = XI_MATCHES.filter(m => b["xi_"+m.id]===11).length; return n ? `${n} onze${n>1?"s":""} complet${n>1?"s":""}` : ""; })())}</button>
+   <button class="mtile m-mercato" data-act="nav" data-v="mercatoPick"><span class="m-ic">${ICON.coin}</span><span class="m-txt"><b>Mercato FC</b><small>Une saison à 20 clubs : mercato, transferts et trahisons.</small></span>${newB("mercatoPick", b.mercato_hard?`Requins ${b.mercato_hard}`:b.mercato_normal||b.mercato_easy?`Victoires ${(b.mercato_normal||0)+(b.mercato_easy||0)}`:"")}</button>
   </div>
   <div class="sec-title"><h2>Collection</h2><small>${WALLET.loaded?`${WALLET.coins} pièces`:""}</small></div>
   ${collectionTeaser()}
   <div class="sec-title"><h2>Entre potes</h2><small>chacun sur son téléphone</small></div>
   <button class="friends-tile" data-act="nav" data-v="friends"><span class="ic">${ICON.users}</span><span><b>Jouer avec des amis</b><small>Crée un salon, partage le code, et que le meilleur gagne.</small></span><span class="arrow" aria-hidden="true">›</span></button>
+  ${tabbar()}`};
+}
+function screenProfile(){
+  const li = levelInfo(), b = PROFILE.best, pl = PROFILE.played || {}, wn = PROFILE.wins || {}, st = PROFILE.streak || {};
+  const days = Object.keys(PROFILE.daily || {}).length, own = typeof ownedIds==="function" ? ownedIds().length : 0;
+  const ttw = ["easy","normal","hard"].reduce((t,k) => t+(b["ttt_"+k]||0), 0), mcw = ["easy","normal","hard"].reduce((t,k) => t+(b["mercato_"+k]||0), 0);
+  const chBest = Object.values(b.chrono || {}).reduce((m,v) => Math.max(m, v), 0), xiFull = XI_MATCHES.filter(m => b["xi_"+m.id]===11).length;
+  const modes = [
+    ["Parcours de carrière", pl.career, b.career_hard ? `Expert ${b.career_hard}` : b.career ? `${b.career}/50` : ""],
+    ["Plus ou moins", pl.plusmoins, Math.max(b.pm||0, b.pmLdc||0, b.pmMod||0) ? `série de ${Math.max(b.pm||0, b.pmLdc||0, b.pmMod||0)}` : ""],
+    ["Chrono", pl.chrono, chBest ? `${chBest} noms` : ""],
+    ["Un joueur par saison", pl.saison, Math.max(b.saison||0, b.saisonModern||0, b.saison90||0) ? `${Math.max(b.saison||0, b.saisonModern||0, b.saison90||0)}/11` : ""],
+    ["Tiki-Taka-Toe", pl.ttt, ttw ? `${ttw} victoire${ttw>1?"s":""}` : ""],
+    ["Box2Box", pl.box, b.box ? `${b.box} pts` : ""],
+    ["Missing XI", pl.xi, xiFull ? `${xiFull} onze${xiFull>1?"s":""} complet${xiFull>1?"s":""}` : ""],
+    ["Mercato FC", pl.mercato, mcw ? `${mcw} victoire${mcw>1?"s":""}` : ""]];
+  const tot = Object.values(pl).reduce((a,c) => a+c, 0), wins = Object.values(wn).reduce((a,c) => a+c, 0);
+  return {key:"profile"+PROFILE.xp+own, html:`
+  <div class="subhead"><button class="iconbtn" data-act="nav" data-v="home" aria-label="Retour">${ICON.back}</button><h1>Mon profil</h1></div>
+  <div class="card prof-card"><div class="prof-top"><span class="prof-lvl">${li.level}</span><div><b>${esc(PROFILE.name)}</b><small>${esc(titleOf(li.level))} · ${li.into}/${li.need} XP</small></div></div>
+   <div class="xpbar"><i style="width:${li.pct}%"></i></div></div>
+  <div class="kpis prof-k"><div><small>Parties</small><b>${PROFILE.games||0}</b></div><div><small>Victoires</small><b>${wins}</b><i>${tot?` · ${Math.round(wins/tot*100)} %`:""}</i></div>
+   <div><small>Série en cours</small><b>${streakAlive()} j</b><i> · record ${st.best||0} j</i></div><div><small>Défis du jour</small><b>${days}</b></div>
+   <div><small>Cartes</small><b>${own}</b><i> / ${CARDS.length}</i></div><div><small>Succès Mercato</small><b>${Object.keys(b.mcAch||{}).length}</b><i> / 5</i></div></div>
+  <div class="sec-title"><h2>Par mode</h2><small>parties · record</small></div>
+  <div class="prof-modes">${modes.map(([t,n,r]) => `<p><b>${t}</b><span>${n||0}</span><em>${r||"—"}</em></p>`).join("")}</div>
+  <p class="solo-note" style="margin-top:12px">Les parties jouées sont comptées depuis le 18 octobre 2026. Tout reste sur ton téléphone.</p>
   ${tabbar()}`};
 }
 function screenChronoPick(){

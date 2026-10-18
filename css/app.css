@@ -1058,3 +1058,32 @@ button.lg-r{cursor:pointer}
 @media (prefers-reduced-motion:reduce){.sign-fx,.sign-card,.sign-st{animation-duration:1.4s}}
 .sheet .btn.ghost{color:var(--ink);border-color:#0c124033;background:#0c124008}
 .sheet .dock-row{display:flex;gap:8px}.sheet .dock-row .btn{flex:1;font-size:15px}
+
+/* ---------- Box2Box, Missing XI, profil, badges Nouveau */
+button.me-pill{font:inherit;color:inherit;border:0;cursor:pointer}
+.mtile .m-badge.new{background:#ff4d6d;color:#fff;animation:newpulse 1.8s ease-in-out infinite}
+@keyframes newpulse{0%,100%{box-shadow:0 0 0 0 #ff4d6d88}50%{box-shadow:0 0 0 6px #ff4d6d00}}
+.m-box{background:linear-gradient(150deg,#d9fbe9,#7fe0ae)}.m-xi{background:linear-gradient(150deg,#e3ecff,#9bb8ff)}
+.m-box .m-ic,.m-xi .m-ic{font-size:20px}
+.bx-hero{background:linear-gradient(135deg,#0c1240,#137a4f)}
+.tt-club.crit i{background:#ffd23f;color:#0c1240;font-size:16px}
+.tt-club.crit b{white-space:normal;font-size:10px;line-height:1.15}
+.tt-cell.bx em{font-style:normal;font-size:10px;font-weight:800;color:#3ed38f}
+.tt-cell.gem{background:linear-gradient(135deg,#0c1240,#5b2bd1)}
+.tt-cell .bx-miss{color:#8a8fb3;font-style:italic}
+.xi-pitch{background:linear-gradient(180deg,#1f8f4e,#167a40);border-radius:18px;padding:14px 6px;display:flex;flex-direction:column;gap:12px;box-shadow:inset 0 0 0 3px #ffffff30;position:relative}
+.xi-row{display:flex;justify-content:space-around;gap:4px}
+.xi-slot{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0;flex:1;max-width:84px}
+.xi-slot i{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:900;font-size:13px;background:#ffffff26;color:#fff;border:2px dashed #ffffff80}
+.xi-slot.got i{background:var(--cc);border:2px solid #fff}.xi-slot.new i{animation:pop .35s both}.xi-slot.miss i{background:#0c124099;border:2px solid #ff7c95}
+.xi-slot small{color:#fff;font-size:10.5px;font-weight:700;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-height:13px}
+.xi-slot.miss small{color:#ffc2cd}
+.mode.xi-m{border-left:6px solid var(--cc)}
+.dock .dock-row{display:flex;gap:8px;margin-top:8px}.dock .dock-row .btn{flex:1}
+.prof-card{display:flex;flex-direction:column;gap:10px}.prof-top{display:flex;gap:12px;align-items:center}
+.prof-lvl{font-family:var(--f-display);font-size:26px;background:var(--flash);color:var(--ink);border-radius:14px;min-width:52px;height:52px;display:grid;place-items:center}
+.prof-top b{font-size:20px;display:block}.prof-top small{color:var(--ink-soft)}
+.prof-k{grid-template-columns:repeat(2,1fr);margin-top:12px}.prof-k div{background:var(--paper);color:var(--ink)}
+.prof-modes{display:flex;flex-direction:column;gap:6px}
+.prof-modes p{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;margin:0;background:var(--paper);color:var(--ink);border-radius:12px;padding:10px 12px}
+.prof-modes span{font-family:var(--f-mono);font-weight:700}.prof-modes em{font-style:normal;color:var(--ink-soft);font-size:13px;min-width:70px;text-align:right}

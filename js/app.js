@@ -19,6 +19,11 @@ function view(){
     case "mercatoPick": return screenMercatoPick();
     case "ttt": return screenTtt();
     case "tttPick": return screenTttPick();
+    case "box": return screenBox();
+    case "boxPick": return screenBoxPick();
+    case "xi": return screenXi();
+    case "xiPick": return screenXiPick();
+    case "profile": return screenProfile();
     case "saisonPick": return screenSaisonPick();
     case "friends": return screenFriends();
     case "collection": return screenCollection();
@@ -83,7 +88,7 @@ function revealFx(from, to){
   const hasL = p.cards.slice(from, to).findIndex(c => c.rarity==="legend" || c.rarity==="icon"), hasR = p.cards.slice(from, to).some(c => c.rarity==="rare");
   if(hasL>=0) setTimeout(() => celebrate("gold"), 450 + hasL*260); else if(hasR) setTimeout(() => buzz(35), 450); else buzz(12);
 }
-function go(v, arg=null){ VIEW = v; VIEW_ARG = arg; L.shareFallback = null; L.packErr = null; if(v==="collection") loadWallet(true); render(true); }
+function go(v, arg=null){ if(NEW_MODES[v]){ PROFILE.seen = PROFILE.seen || {}; if(!PROFILE.seen[v]){ PROFILE.seen[v] = 1; saveProfile(); } } VIEW = v; VIEW_ARG = arg; L.shareFallback = null; L.packErr = null; if(v==="collection") loadWallet(true); render(true); }
 
 /* ---------- Cartes : inclinaison 3D et reflet qui suit le doigt / la souris ---------- */
 app.addEventListener("pointermove", e => {
@@ -102,6 +107,7 @@ app.addEventListener("submit", e => {
   if(f==="career") return careerGuess(e.target.querySelector("#carguess"));
   if(f==="answer") return submitGuess(e.target.querySelector("#guess").value);
   if(f==="ttt") return ttSubmit();
+  if(f==="box" || f==="xi") return m2Submit(f);
   if(f==="onboard"){ const v = e.target.querySelector("#ob-name").value.replace(/\s+/g," ").trim().slice(0,18);
     if(v.length<2){ L.err = "Choisis un pseudo d'au moins 2 caractères."; return render(true); }
     PROFILE.name = v; saveProfile(); L.err = null; go("home"); }
@@ -111,6 +117,7 @@ app.addEventListener("click", e => {
   const a = el.dataset.act, v = el.dataset.v;
   if(a.startsWith("mc")) return mcAct(a, v, el);
   if(a.startsWith("tt")) return ttAct(a, v, el);
+  if(a.startsWith("bx") || a.startsWith("xi")) return m2Act(a, v, el);
   switch(a){
     /* navigation */
     case "nav": go(v); break;
