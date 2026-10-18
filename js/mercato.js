@@ -108,6 +108,7 @@ const mcSulk = c => { if((c.bn||0) < 2 || c.ovr < 76 || c.age <= 21 || c.trait==
   const k = M && M.clubs && mcOwner(c); if(!k || k.cpu) return false; const st = k.team.filter(o => mcSlot(o)===mcSlot(c) && !o.inj);
   return !st.length || c.ovr >= Math.min(...st.map(o => o.ovr)) - 3; };
 const mcHeal = c => 3 + Math.round(c.val * 0.1);
+const mcListPrice = c => Math.max(1, Math.round(c.val * (c.inj>0 ? 0.88 : 1.05)));
 const mcRenew = c => Math.max(2, Math.round(c.val * 0.2));
 const mcCN = k => !k ? "Libre" : typeof k==="string" ? k : k.cpu ? k.n : (k.prof==="me" ? k.n : k.club || k.n);
 /* journal des transferts (saison en cours + fiche de chaque joueur) */
@@ -308,7 +309,7 @@ function mcGain(p, c, v){ if(c.paid==null || p.cpu) return; const g = v - c.paid
 function mcRefill(club){ if(!club.cpu) return; while(club.team.length < 5){ const g = !club.team.some(c => c.pos==="G"); const kind = club.tier===3 ? "rare" : "common"; const c = mcDrawPlayer(kind, g ? "G" : "F"); if(!c) break; club.team.push(c); } mcLineup(club); }
 function mcTransfer(from, to, c, amt){
   mcRemove(from, c); from.money += amt; to.money -= amt; mcGain(from, c, amt); mcLog(c, from, to, amt, "deal");
-  c.paid = amt; c.boughtAt = M.period; c.ct = Math.max(c.ct||0, c.age<=24 ? 3 : 2); c.bn = 0; mcLineup(from); mcRefill(from);
+  c.listed = false; c.paid = amt; c.boughtAt = M.period; c.ct = Math.max(c.ct||0, c.age<=24 ? 3 : 2); c.bn = 0; mcLineup(from); mcRefill(from);
   if(to===mcMe()) M.signC = c;
   return mcPlace(to, c);
 }
@@ -518,6 +519,7 @@ const MC_NEWS = {
 
 /* ---------- début de période */
 function mcPeriodStart(){
+  M.tab = "jeu";
   M.susp = new Set(); M.won = {}; M.sel = {}; M.results = []; M.played = 0; M.bub = {}; M.show = []; M.si = 0; M.flash = null; M.aim = null; M.sheet = null; M.spy = null;
   M.buys = MC.buys; M.deals = 0; M.inbox = [];
   M.pacts = M.pacts.filter(x => x.until >= M.period);
@@ -675,6 +677,10 @@ function mcBureau(){
     if(amt > p.money - 3 || M.inbox.some(o => o.c===best.c)) return;
     M.inbox.push({by:p, c:best.c, amt, max:best.w});
   });
+  // joueurs mis sur la liste des transferts : un club appelle à coup sûr
+  mcRoster(me).filter(c => c.listed && !M.inbox.some(o => o.c===c)).forEach(c => {
+    const by = M.cpu[Math.floor(M.r()*M.cpu.length)], amt = Math.round(mcListPrice(c) * (0.92 + M.r()*0.2));
+    M.inbox.push({by, c, amt, max:Math.round(amt*1.08), listed:true}); });
   // un club IA s'intéresse parfois à ton meilleur jeune
   const young = mcRoster(me).filter(c => c.age<=22 && c.trait!=="fidele").sort((a,b) => b.val-a.val)[0];
   if(young && M.r() < 0.35){ const club = M.cpu.filter(k => k.tier===3)[Math.floor(M.r()*3)]; const amt = Math.round(young.val*(1.3 + M.r()*0.5)); M.inbox.push({by:club, c:young, amt, max:Math.round(amt*1.1)}); }
@@ -1082,8 +1088,12 @@ function mcActHTML(a, anim){
     <p class="act-out">${a.res==="blocked"?"🛡️ ":a.res==="refused"?"✋ ":"→ "}${esc(a.out)}</p>
     ${C.p && a.res==="ok"?`<i>${esc(C.p)}</i>`:""}</div>`;
 }
+const MC_TABS = [["jeu","⚽","Partie"],["club","👥","Mon club"],["ligue","🏆","Championnat"]];
 function mcTable(center, dockHtml="", cls=""){
   const me = mcMe(), step = mcStepOf(M.phase), si = MC_STEPS.findIndex(s => s[0]===step), pos = mcPos(me);
+  const lockTab = ["flash","react","offer"].includes(M.phase) || (M.phase==="coups" && M.inbox.length);
+  const tab = lockTab ? "jeu" : (M.tab || "jeu");
+  if(tab!=="jeu"){ center = tab==="club" ? mcClubView() : mcLeagueView(); dockHtml = `<button class="btn" data-act="mctab" data-v="jeu">⚽ Retour à la partie · ${MC_STEPS[Math.max(0, si)][2]}</button>`; cls += " tab-"+tab; }
   const showHand = false;
   return `<div class="mct ${cls}">
    <div class="mct-top"><button class="iconbtn" data-act="quit" aria-label="Quitter">${ICON.back}</button>
@@ -1091,11 +1101,12 @@ function mcTable(center, dockHtml="", cls=""){
     <button class="mct-ev" data-act="mcevent">🏆 ${pos}ᵉ · ${me.pts} pts</button>
     <button class="iconbtn mct-help" data-act="mcmute" aria-label="Son">${PROFILE.best.mcMute?"🔇":"🔊"}</button>
     <button class="iconbtn mct-help" data-act="mcrules" aria-label="Règles">?</button></div>
+   ${lockTab ? "" : `<div class="mc-tabs">${MC_TABS.map(([k,ic,t]) => `<button class="${tab===k?"on":""}" data-act="mctab" data-v="${k}">${ic} ${t}${k==="club" && mcRoster(me).some(c => c.inj>0 || mcSulk(c)) ? `<i class="dot"></i>` : ""}</button>`).join("")}</div>`}
    <div class="seats">${M.players.slice(1).map(mcSeat).join("")}</div>
    <div class="fixture"><span>${MC_PERIODS[M.period-1]} · J${M.round+1}-${M.round+MC.rounds[M.period-1]}</span><b>🎯 top ${me.goal} <em class="${pos<=me.goal?"ok":"ko"}">${pos<=me.goal?"✓":"✗"}</em></b></div>
-   <div class="steps">${MC_STEPS.map((s,k) => `<span class="${k<si?"done":k===si?"cur":""}">${s[1]} ${s[2]}</span>`).join("")}</div>
+   <div class="steps"${tab!=="jeu"?' hidden':""}>${MC_STEPS.map((s,k) => `<span class="${k<si?"done":k===si?"cur":""}">${s[1]} ${s[2]}</span>`).join("")}</div>
    <div class="mct-c">${center}</div>
-   <div class="me-zone" style="--pc:${me.col}">
+   <div class="me-zone" style="--pc:${me.col}"${tab!=="jeu"?' hidden':""}>
     <div class="me-bar"><span class="seat-av me">${me.power?MC_POWERS[me.power].ic:me.ic}</span><span class="me-st"><b>${esc(me.n)} · ${mcRating(me).total}</b><small>💰 ${me.money} M€ · 💸 −${mcWages(me)}/pér. · ${pos}ᵉ</small></span>
      <span class="me-form">${me.form.slice(-5).map(f => `<i class="f-${f}">${f}</i>`).join("")}</span>
      ${me.shield?`<span class="me-sh">🛡️${me.shield>1?" "+me.shield:""}</span>`:""}${mcAllies(me).length?`<span class="me-sh">🤫🤝${mcAllies(me).map(q => q.ic).join("")}</span>`:""}
@@ -1107,6 +1118,32 @@ function mcTable(center, dockHtml="", cls=""){
    ${mcSheet()}
    ${M.signC ? `<div class="sign-fx" style="--d:${M.phase==="reveal" ? (M.results.length*0.2 + 0.5).toFixed(1) : 0.1}s"><div class="sign-card">${cardHTML(M.signC.id)}</div><b class="sign-st">OFFICIEL</b><small>${esc(M.signC.n)} signe chez ${esc(mcMe().n)}</small></div>` : ""}
   </div>`;
+}
+/* ---------- vue « Mon club » : effectif, finances, alertes, actions sur chaque joueur */
+function mcClubView(){
+  const me = mcMe(), sc = mcRating(me), val = mcRoster(me).reduce((t,c) => t+c.val, 0);
+  const row = c => { const bench = me.bench.includes(c), tags = [c.inj>0 ? `🚑 ${plural(c.inj,"période")}` : "", M.susp.has(c.uid) ? "📸 suspendu" : "", mcSulk(c) && bench && me.power!=="motivateur" ? "😒 boude" : "", (M.len||1)>1 && c.ct===1 ? "📝 fin de contrat" : "", c.listed ? "📢 en vente" : ""].filter(Boolean);
+    return `<div class="cv-row${bench?" bn":""}"><button class="cv-card" data-act="mcpl" data-v="${c.uid}">${cardHTML(c.id,{small:true})}</button>
+      <button class="cv-main" data-act="mcpl" data-v="${c.uid}"><b>${esc(cardName(c.n))} ${c.trait?MC_TRAITS[c.trait].ic:""}</b><small>${bench?"Banc":"Titulaire"} · ${MC_POS_FR[c.pos]} · ${c.age} ans · 💪 ${mcOvr(c)} · ${c.val} M€${c.paid!=null?` <em class="${c.val>=c.paid?"up":"down"}">(${c.val-c.paid>=0?"+":""}${c.val-c.paid})</em>`:""}</small>${tags.length?`<span class="cv-tags">${tags.join(" · ")}</span>`:""}</button>
+      <span class="cv-acts">${c.inj>0?`<button class="mini-btn" data-act="mcheal" data-v="${c.uid}">🚑 ${mcHeal(c)}</button>`:""}<button class="mini-btn" data-act="mcmove" data-v="${c.uid}">${bench?"↑":"↓"}</button>
+       <button class="mini-btn go" data-act="mcsellask" data-v="${c.uid}">Vendre</button></span></div>`; };
+  return `<div class="cv"><div class="kpis cv-k"><div><small>Note d'équipe</small><b>${sc.total}</b></div><div><small>Trésorerie</small><b>${me.money} M€</b></div><div><small>Salaires</small><b>−${mcWages(me)}<i>/pér.${mcWages(me)>MC.wageCap?" 🧾":""}</i></b></div><div><small>Valeur</small><b>${val} M€</b></div></div>
+    <div class="lines">${sc.lines.filter(x => x.v).map((x,k) => `<span class="${x.v<0?"neg":k?"bonus":""}">${esc(x.t)} ${k&&x.v>0?"+":""}${x.v}</span>`).join("")}</div>
+    <p class="cv-t">Titulaires</p>${me.team.map(row).join("")}
+    <p class="cv-t">Banc <small>${me.bench.length}/${MC.bench}</small></p>${me.bench.map(row).join("") || `<p class="mct-hint">Personne sur le banc.</p>`}
+    <p class="mct-hint">« Vendre » : à la banque tout de suite, ou mis sur la liste des transferts (un club t'appellera au prochain bureau).</p>
+    <div class="dock-row cv-b"><button class="btn ghost" data-act="mcdash">📊 Tableau de bord</button><button class="btn ghost" data-act="mcsecretpeek">🔒 Objectifs</button></div></div>`;
+}
+/* ---------- vue « Championnat » : classement, présidents, transferts, buteurs */
+function mcLeagueView(){
+  const me = mcMe(), sc = M.clubs.flatMap(k => mcRoster(k).map(c => ({c, k}))).filter(x => x.c.gs).sort((a,b) => b.c.gs-a.c.gs).slice(0, 5);
+  const tl = [...(M.tlog||[])].filter(e => e.s===(M.season||1) && e.k!=="bank").reverse().slice(0, 6);
+  return `<div class="cv">
+    <p class="cv-t">Présidents</p><div class="cv-pres">${mcRank().map(p => `<button class="cv-p${p===me?" me":""}" style="--pc:${p.col}" ${p===me?"":`data-act="mcpeek" data-v="${mcIdx(p)}"`}><span>${p.ic}</span><b>${esc(p===me?"Toi":mcShort(p))}</b><small>${mcPos(p)}ᵉ · ${p.pts} pts · 💰${p.money} · note ${mcRating(p).total}</small>${p!==me && p.grudge===me?`<i>😠</i>`:""}${p!==me && mcAllied(p, me)?`<i>🤝</i>`:""}</button>`).join("")}</div>
+    <p class="cv-t">Classement <small>J${M.round}/38</small></p>${mcLeagueHTML(true, M.phase==="coups" && !M.inbox.length ? "mcclubpeek" : "")}
+    ${M.cup ? `<p class="mct-hint">🏆 Coupe : ${M.cup.winner!=null ? `vainqueur ${esc(mcCN(M.clubs[M.cup.winner]))}` : `${M.cup.alive.length} clubs en course${M.cup.alive.includes(0)?", dont toi":" · tu es éliminé"}`}</p>` : ""}
+    ${sc.length ? `<p class="cv-t">👟 Buteurs</p><div class="tlog">${sc.map((x,k) => `<p class="${x.k===me?"me":""}"><span>${k+1}</span><b>${esc(cardName(x.c.n))}<small>${esc(mcCN(x.k))}</small></b><em>${x.c.gs}</em></p>`).join("")}</div>` : ""}
+    <p class="cv-t">📜 Derniers transferts</p>${tl.length ? `<div class="tlog">${tl.map(e => `<p class="${e.f===me.n||e.t===me.n?"me":""}"><span>P${e.p}</span><b>${esc(cardName(e.n))}<small>${esc(e.f)} → ${esc(e.t)}</small></b><em>${e.k==="free"?"libre":e.a+" M€"}</em></p>`).join("")}</div><button class="linkbtn" data-act="mctlog">Tout voir</button>` : `<p class="mct-hint">Aucun transfert pour l'instant.</p>`}</div>`;
 }
 /* classement : complet (20) ou compact (top 5 + présidents + voisins) */
 function mcLeagueHTML(full, act){
@@ -1159,7 +1196,7 @@ function mcSheet(){
       <div class="lines">${sc.lines.filter(x => x.v).map((x,k) => `<span class="${x.v<0?"neg":k?"bonus":""}">${esc(x.t)} ${k&&x.v>0?"+":""}${x.v}</span>`).join("")}</div>
       ${sel?`<div class="chip-acts"><b>${esc(sel.n)}</b> · ${MC_POS_FR[sel.pos]}<br><small>${mcPlayerLine(sel)}${sel.paid!=null?` (acheté ${sel.paid})`:""} · salaire ${mcWage(sel)} M€/période</small>${sel.trait?`<br>${MC_TRAITS[sel.trait].ic} ${MC_TRAITS[sel.trait].t} : ${MC_TRAITS[sel.trait].d}`:""}
         ${sel.inj>0?`<br>🚑 Blessé encore ${plural(sel.inj, "période")}`:""}${mcSulk(sel) && me.bench.includes(sel)?`<br>😒 Il boude : ${sel.bn} périodes sur le banc`:""}
-        <div><button class="btn ghost" data-act="mcmove" data-v="${sel.uid}">${me.bench.includes(sel)?"↑ Titulaire":"↓ Au banc"}</button><button class="btn" data-act="mcsell" data-v="${sel.uid}">Banque : ${mcBank(me, sel)} M€</button></div>
+        <div><button class="btn ghost" data-act="mcmove" data-v="${sel.uid}">${me.bench.includes(sel)?"↑ Titulaire":"↓ Au banc"}</button><button class="btn" data-act="mcsellask" data-v="${sel.uid}">💰 Vendre…</button></div>
         <div>${sel.inj>0?`<button class="btn ghost" data-act="mcheal" data-v="${sel.uid}">🚑 Soigner vite : ${mcHeal(sel)} M€</button>`:""}${(M.len||1)>1?`<button class="btn ghost" data-act="mcrenew" data-v="${sel.uid}">✍️ +2 saisons : ${mcRenew(sel)} M€</button>`:""}<button class="btn ghost" data-act="mcpl" data-v="${sel.uid}">📄 Fiche</button></div>
         ${M.phase==="coups"?`<p class="bid-note">💡 Pour en tirer plus, propose-le à un président : touche son siège.</p>`:""}</div>`
         :`<p class="bid-note">La note de l'équipe = moyenne de tes 5 titulaires (un remplaçant prend la place d'un absent) + bonus.<br>Le chiffre jaune : note du joueur. L'étiquette verte/rouge : sa cote en M€.<br>Les jeunes progressent, les plus de 32 ans déclinent.</p>`}`; }
@@ -1217,8 +1254,13 @@ function mcSheet(){
       <p class="bid-note">${st.join(" · ")}${c.age<=21 ? ` · potentiel ${c.scouted || me.power==="chasseur" ? c.pot : mcPotTxt(c).replace("pot. ","")}` : ""}${c.paid!=null && mine ? ` · acheté ${c.paid} M€ (${c.val-c.paid>=0?"+":""}${c.val-c.paid})` : ""}</p>
       <p class="dash-t">Note</p>${sp(oh, "")}<p class="dash-t">Cote (M€)</p>${sp(vh, "alt")}
       <p class="dash-t">Transferts</p>${(c.th||[]).length ? `<div class="tlog">${[...c.th].reverse().map(e => `<p><span>S${e.s}·P${e.p}</span><b>${esc(e.f)} → ${esc(e.t)}</b><em>${e.k==="free"?"libre":e.a+" M€"}</em></p>`).join("")}</div>` : `<p class="bid-note">Aucun transfert depuis le début de la partie.</p>`}
-      ${mine ? `<div class="dock-row">${c.inj>0?`<button class="btn ghost" data-act="mcheal" data-v="${c.uid}">🚑 ${mcHeal(c)} M€</button>`:""}${(M.len||1)>1?`<button class="btn ghost" data-act="mcrenew" data-v="${c.uid}">✍️ +2 saisons · ${mcRenew(c)} M€</button>`:""}</div>`
+      ${mine ? `<div class="dock-row"><button class="btn" data-act="mcsellask" data-v="${c.uid}">💰 Vendre</button>${c.inj>0?`<button class="btn ghost" data-act="mcheal" data-v="${c.uid}">🚑 ${mcHeal(c)} M€</button>`:""}${(M.len||1)>1?`<button class="btn ghost" data-act="mcrenew" data-v="${c.uid}">✍️ +2 saisons · ${mcRenew(c)} M€</button>`:""}</div>`
         : k && M.phase==="coups" && !M.inbox.length && c.trait!=="fidele" ? `<button class="btn" data-act="mcdealfrom" data-v="${M.clubs.indexOf(k)}|${c.uid}">💼 Faire une offre</button>` : ""}`; }
+  if(s.t==="sellask"){ const c = mcRoster(me).find(x => x.uid===s.u); if(!c){ M.sheet = null; return ""; }
+    body = `<h3>Vendre ${esc(cardName(c.n))} ?</h3><div class="bid-head">${cardHTML(c.id,{small:true})}<div><b>${esc(c.n)}</b><small>${mcPlayerLine(c)}${c.inj>0?` · 🚑 blessé ${plural(c.inj,"période")}`:""}${c.paid!=null?` · acheté ${c.paid} M€`:""}</small></div></div>
+      <button class="btn" data-act="mcsell" data-v="${c.uid}">🏦 Tout de suite à la banque : ${mcBank(me, c)} M€</button>
+      <button class="btn ghost" data-act="mclist" data-v="${c.uid}">${c.listed ? "Retirer de la liste des transferts" : `📢 Liste des transferts : un club appellera (≈ ${mcListPrice(c)} M€)`}</button>
+      <p class="bid-note">${c.inj>0 ? "Blessé, il intéresse moins les clubs. " : ""}La liste des transferts rapporte souvent plus que la banque, mais l'offre n'arrive qu'au prochain 💼 Bureau${M.phase==="coups"?" (la période suivante)":""}.</p>`; }
   if(s.t==="tlog"){ const list = [...(M.tlog||[])].filter(e => e.s===(M.season||1)).reverse();
     body = `${s.back?`<button class="linkbtn sheet-back" data-act="mcback">← Retour</button>`:""}<h3>📜 Transferts · saison ${M.season||1}</h3>
       ${list.length ? `<div class="tlog">${list.map(e => `<p class="${e.f===me.n||e.t===me.n?"me":""}"><span>P${e.p}</span><b>${esc(cardName(e.n))}<small>${esc(e.f)} → ${esc(e.t)}</small></b><em>${e.k==="free"?"libre":e.a+" M€"}</em></p>`).join("")}</div>` : `<p class="bid-note">Aucun transfert pour l'instant.</p>`}`; }
@@ -1292,7 +1334,7 @@ function screenMercato(){
     if((M.len||1) > 1 && M.period >= MC.flashPeriod) mcRoster(me).filter(c => c.ct===1).slice(0, 1).forEach(c => alerts.push(`📝 Contrat de ${cardName(c.n)} : fin de saison. Prolonge-le (${mcRenew(c)} M€) ou il part libre`));
     const hurt = mcRoster(me).filter(c => c.inj > 0);
     const memo = alerts.length || hurt.length ? `<div class="memo"><b>📬 Le point de la direction</b>${alerts.slice(0, 4).map(x => `<p>${esc(x)}</p>`).join("")}
-      ${hurt.map(c => `<p class="memo-act">🚑 ${esc(cardName(c.n))} blessé (${plural(c.inj, "période")}) <button class="mini-btn go" data-act="mcheal" data-v="${c.uid}">Soigner · ${mcHeal(c)} M€</button></p>`).join("")}</div>` : "";
+      ${hurt.map(c => `<p class="memo-act">🚑 ${esc(cardName(c.n))} blessé (${plural(c.inj, "période")}) <span><button class="mini-btn go" data-act="mcheal" data-v="${c.uid}">Soigner · ${mcHeal(c)} M€</button> <button class="mini-btn" data-act="mcsellask" data-v="${c.uid}">Vendre</button></span></p>`).join("")}</div>` : "";
     return {key, html:mcTable(head + memo + card,
       choose ? `<div class="dock-row">${N.a.map(([t], k) => `<button class="btn${k?" ghost":""}" data-act="mcnews" data-v="${k}">${t}</button>`).join("")}</div>` : `<button class="btn" data-act="mcgomkt">Au mercato →</button>`)}; }
   if(M.phase==="mercato"){
@@ -1455,13 +1497,13 @@ function mcAct(a, v, el){
     case "mcmute": PROFILE.best.mcMute = !PROFILE.best.mcMute; saveProfile(); mcR(); break;
     case "mcteam": M.sheet = {t:"team"}; mcR("sheet"); break;
     case "mcchip": M.sheet = {t:"team", u:M.sheet && M.sheet.u===v ? null : v}; mcR(); break;
-    case "mcsell": { const c = mcRoster(me).find(x => x.uid===v); if(c){ const g = mcSell(me, c); mcLineup(me); mcSfx("coin"); toast(`${cardName(c.n)} vendu : +${g} M€`); M.sheet = {t:"team"}; mcR(); } break; }
-    case "mcmove": { const b = me.bench.find(c => c.uid===v), t = me.team.find(c => c.uid===v);
+    case "mcsell": { const c = mcRoster(me).find(x => x.uid===v); if(c){ const g = mcSell(me, c); mcLineup(me); mcSfx("coin"); toast(`${cardName(c.n)} vendu : +${g} M€`); M.sheet = M.tab==="club" ? null : {t:"team"}; mcR(); } break; }
+    case "mcmove": { const fromTeam = M.sheet && M.sheet.t==="team", b = me.bench.find(c => c.uid===v), t = me.team.find(c => c.uid===v);
       if(b && mcFree(me, b)){ me.bench.splice(me.bench.indexOf(b), 1); me.team.push(b); }
       else if(b){ const w = me.team.filter(o => mcSlot(o)===mcSlot(b)).sort((x,y) => mcOvr(x)-mcOvr(y))[0]; me.team.splice(me.team.indexOf(w), 1, b); me.bench.splice(me.bench.indexOf(b), 1, w); }
       else if(t && me.bench.length < MC.bench){ me.team.splice(me.team.indexOf(t), 1); me.bench.push(t); }
       else return toast("Banc plein.");
-      M.sheet = {t:"team", u:v}; mcR(); break; }
+      M.sheet = fromTeam ? {t:"team", u:v} : null; mcR(); break; }
     case "mcsecretpeek": M.sheet = {t:"secret"}; mcR("sheet"); break;
     case "mcpeek": M.sheet = {t:"peek", i:+v}; mcR("sheet"); break;
     case "mcevent": M.sheet = {t:"event"}; mcR("sheet"); break;
@@ -1475,6 +1517,9 @@ function mcAct(a, v, el){
     case "mcpress": mcPressAnswer(+v); break;
     case "mcplay2": mcPlayPeriod(); break;
     case "mcrules": M.sheet = {t:"rules"}; mcR("sheet"); break;
+    case "mctab": M.tab = v; M.sheet = null; mcR(); window.scrollTo(0, 0); break;
+    case "mcsellask": M.sheet = {t:"sellask", u:v}; mcR("sheet"); break;
+    case "mclist": { const c = mcRoster(me).find(x => x.uid===v); if(!c) break; c.listed = !c.listed; toast(c.listed ? `${cardName(c.n)} est sur la liste des transferts.` : "Retiré de la liste.", "ok"); M.sheet = null; mcR(); break; }
     case "mcpl": M.sheet = {t:"player", u:v, back:M.sheet && M.sheet.t!=="player" ? M.sheet : M.sheet && M.sheet.back || null}; mcR(M.sheet.back ? "" : "sheet"); break;
     case "mcback": M.sheet = M.sheet && M.sheet.back || null; mcR(); break;
     case "mctlog": M.sheet = {t:"tlog", back:M.sheet && M.sheet.t!=="tlog" ? M.sheet : null}; mcR(M.sheet.back ? "" : "sheet"); break;

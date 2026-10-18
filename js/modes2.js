@@ -8,6 +8,8 @@
    BOX2BOX
    ====================================================================== */
 const BX_TRIES = 12;
+const BX_DIFF = {easy:{t:"Facile", tries:15, mult:1, d:"15 essais · nombre de réponses affiché"}, normal:{t:"Moyen", tries:12, mult:1, d:"12 essais"}, hard:{t:"Difficile", tries:9, mult:1.5, d:"9 essais · toujours un critère · points ×1,5"}};
+const bxDiff = () => BX_DIFF[PROFILE.bxDiff] ? PROFILE.bxDiff : "normal";
 const BX_CRIT = [
   {id:"gk", t:"Gardien", ic:"🧤", f:p => p.p.includes("GK")},
   {id:"def", t:"Défenseur", ic:"🧱", f:p => p.p.includes("DEF")},
@@ -25,12 +27,12 @@ function bxSet(h){   // ensemble des joueurs qui valident un en-tête (club ou c
   return BX_SET[h] = c ? new Set(P.map((p,i) => i).filter(i => c.f(P[i]))) : (TT_BYCLUB[h] || new Set());
 }
 const bxAns = (a, b) => { const B = bxSet(b); return [...bxSet(a)].filter(i => B.has(i)); };
-function bxGrid(r){
+function bxGrid(r, hard){
   const clubs = Object.keys(TT_BYCLUB).filter(c => TT_BYCLUB[c].size >= 40);
   for(let tries=0; tries<1500; tries++){
     const pick = mcShuffle([...clubs], r).slice(0, 6), rows = pick.slice(0, 3);
     let cols = pick.slice(3);
-    if(r() < 0.75){ const cr = BX_CRIT[Math.floor(r()*BX_CRIT.length)]; cols[Math.floor(r()*3)] = cr.id; }
+    if(hard || r() < 0.75){ const cr = BX_CRIT[Math.floor(r()*BX_CRIT.length)]; cols[Math.floor(r()*3)] = cr.id; }
     if(rows.flatMap(a => cols.map(b => bxAns(a, b))).every(x => x.length >= 3)) return {rows, cols};
   }
   return {rows:["Arsenal","Chelsea","Liverpool"], cols:["Man Utd","Man City","Tottenham"]};
@@ -38,8 +40,8 @@ function bxGrid(r){
 const bxRare = i => { const n = plSeasons(P[i]); return n <= 2 ? 10 : n <= 5 ? 5 : n <= 9 ? 2 : 0; };
 let BX = null;
 function startBox(daily){
-  const key = todayKey(), seed = daily ? hashStr("box2box"+key) >>> 0 : Date.now() % 1e9, r = rng(seed);
-  BX = {daily:!!daily, day:key, seed, grid:bxGrid(r), cells:Array(9).fill(null), tries:BX_TRIES, used:[], sel:null, last:null, phase:"play"};
+  const key = todayKey(), seed = daily ? hashStr("box2box"+key) >>> 0 : Date.now() % 1e9, r = rng(seed), diff = daily ? "normal" : bxDiff();
+  BX = {daily:!!daily, diff, day:key, seed, grid:bxGrid(r, diff==="hard"), cells:Array(9).fill(null), tries:BX_DIFF[diff].tries, used:[], sel:null, last:null, phase:"play"};
   L.summary = null; VIEW = "box"; render(true);
 }
 function bxGuess(name){
@@ -49,7 +51,7 @@ function bxGuess(name){
   BX.tries--;
   if(good==null){ BX.last = {k, ok:false, t:`${cardName(P[hits[0]].n)} ne coche pas les deux cases`}; }
   else if(BX.used.includes(good)){ BX.tries++; BX.last = {k, ok:false, t:`${cardName(P[good].n)} est déjà dans ta grille`}; }
-  else { const pts = 10 + bxRare(good); BX.cells[k] = {i:good, pts}; BX.used.push(good); BX.sel = null;
+  else { const pts = Math.round((10 + bxRare(good)) * BX_DIFF[BX.diff||"normal"].mult); BX.cells[k] = {i:good, pts}; BX.used.push(good); BX.sel = null;
     BX.last = {k, ok:true, t:`${P[good].n} ✓ +${pts}${pts>=20?" 💎 pépite":""}`}; }
   if(BX.cells.every(Boolean) || BX.tries <= 0) return bxEnd();
   render(true);
@@ -76,25 +78,27 @@ function bxShare(){
 }
 function screenBoxPick(){
   const b = PROFILE.best, d = b.boxDay && b.boxDay.day===todayKey() ? b.boxDay : null;
-  return {key:"boxPick"+(d?d.score:""), html:`
+  return {key:"boxPick"+(d?d.score:"")+bxDiff(), html:`
   <div class="subhead"><button class="iconbtn" data-act="nav" data-v="home" aria-label="Retour">${ICON.back}</button><h1>Box2Box</h1></div>
   <div class="tt-hero bx-hero"><div class="tt-mini">${["🟩","⬛","💎","🟩","🟩","⬛","⬛","💎","🟩"].map(x => `<i>${x}</i>`).join("")}</div>
-   <p>Remplis la grille seul : chaque case croise un club et un club, ou un critère. ${BX_TRIES} essais pour 9 cases. Un joueur rare rapporte plus : 💎 = moins de 3 saisons de PL.</p></div>
+   <p>Remplis la grille seul : chaque case croise un club et un club, ou un critère. 12 essais pour 9 cases. Un joueur rare rapporte plus : 💎 = moins de 3 saisons de PL.</p></div>
   <button class="mc-daily" data-act="bxstart" data-v="day"><span>📅</span><span><b>Grille du jour</b><small>La même pour tout le monde · nouvelle grille dans <span data-live="cd">${fmtCountdown(msToTomorrow())}</span></small></span><em>${d?`${d.score} pts`:"Jouer"}</em></button>
-  <div class="pick-list"><button class="mode" data-act="bxstart" data-v="free"><span class="lgtag">Entraînement</span><b>Grille au hasard</b><small>Autant que tu veux.</small>${b.box?`<span class="rec">Ton record : ${b.box} pts</span>`:""}</button></div>
+  <div class="sec-title"><h2>Grilles libres</h2><small>autant que tu veux</small></div>
+  <div class="diffbar" role="group" aria-label="Difficulté">${Object.entries(BX_DIFF).map(([k,d]) => `<button data-act="bxdiff" data-v="${k}" aria-pressed="${bxDiff()===k}"><b>${d.t}</b><small>${d.d}</small></button>`).join("")}</div>
+  <div class="pick-list"><button class="mode" data-act="bxstart" data-v="free"><span class="lgtag">${BX_DIFF[bxDiff()].t}</span><b>Grille au hasard</b><small>Une nouvelle grille à chaque fois.</small>${b.box?`<span class="rec">Ton record : ${b.box} pts</span>`:""}</button></div>
   ${tabbar()}`};
 }
 function screenBox(){
   if(!BX){ VIEW = "boxPick"; return screenBoxPick(); }
   const end = BX.phase==="end", sel = BX.sel;
   return {key:"bx-"+BX.seed+"-"+BX.tries+"-"+(sel??"")+"-"+BX.phase+"-"+(BX.last?.t||"")+"-"+(L.summary&&L.summary.coins), html:`
-  <div class="subhead"><button class="iconbtn" data-act="bxquit" aria-label="Quitter">${ICON.back}</button><h1>Box2Box${BX.daily?" du jour":""}</h1><span class="tt-timer">${end?`${bxScore()} pts`:`${BX.tries} essais`}</span></div>
+  <div class="subhead"><button class="iconbtn" data-act="bxquit" aria-label="Quitter">${ICON.back}</button><h1>Box2Box${BX.daily?" du jour":` · ${BX_DIFF[BX.diff].t}`}</h1><span class="tt-timer">${end?`${bxScore()} pts`:`${BX.tries} essais`}</span></div>
   <p class="tt-say">${end ? `${BX.cells.filter(Boolean).length}/9 cases · ${bxScore()} points` : sel==null ? "Choisis une case" : "Un joueur qui coche les deux cases ?"}</p>
   <div class="tt-grid">
    <span class="tt-corner">🧩</span>${BX.grid.cols.map(c => `<span class="tt-h col">${bxHead(c)}</span>`).join("")}
    ${BX.grid.rows.map((rw, ri) => `<span class="tt-h row">${bxHead(rw)}</span>${[0,1,2].map(ci => { const k = ri*3+ci, c = BX.cells[k];
      const hint = end && !c ? bxAns(rw, BX.grid.cols[ci]).filter(i => !BX.used.includes(i)).sort((a,b) => bxRare(b)-bxRare(a))[0] : null;
-     return `<button class="tt-cell bx${c?" m0":""}${c && c.pts>=20?" gem":""}${sel===k?" sel":""}${BX.last && BX.last.k===k && !BX.last.ok?" miss":""}" ${!c && !end ? `data-act="bxcell" data-v="${k}"` : "disabled"}>${c ? `<i>${c.pts>=20?"💎":"✓"}</i><small>${esc(cardName(P[c.i].n))}</small><em>+${c.pts}</em>` : hint!=null ? `<small class="bx-miss">${esc(cardName(P[hint].n))}</small>` : ""}</button>`; }).join("")}`).join("")}
+     return `<button class="tt-cell bx${c?" m0":""}${c && c.pts>=20?" gem":""}${sel===k?" sel":""}${BX.last && BX.last.k===k && !BX.last.ok?" miss":""}" ${!c && !end ? `data-act="bxcell" data-v="${k}"` : "disabled"}>${c ? `<i>${c.pts>=20?"💎":"✓"}</i><small>${esc(cardName(P[c.i].n))}</small><em>+${c.pts}</em>` : hint!=null ? `<small class="bx-miss">${esc(cardName(P[hint].n))}</small>` : BX.diff==="easy" && !end ? `<small class="bx-miss">${bxAns(rw, BX.grid.cols[ci]).length} réponses</small>` : ""}</button>`; }).join("")}`).join("")}
   </div>
   ${BX.last ? `<p class="tt-last ${BX.last.ok?"ok":"ko"}">${esc(BX.last.t)}</p>` : ""}
   ${end ? `<p class="mct-hint" style="color:#fff">Dans les cases vides : une réponse possible.</p><div style="margin-top:10px">${summaryBlock()}</div>` : ""}
@@ -108,6 +112,8 @@ function screenBox(){
    lignes de haut en bas : attaque → gardien. "Nom|surnom;surnom"
    ====================================================================== */
 const XI_TIME = 180;
+const XI_DIFF = {easy:{t:"Facile", time:300, hints:6, d:"5 min · 6 indices"}, normal:{t:"Moyen", time:180, hints:3, d:"3 min · 3 indices"}, hard:{t:"Difficile", time:120, hints:0, d:"2 min · aucun indice"}};
+const xiDiff = () => XI_DIFF[PROFILE.xiDiff] ? PROFILE.xiDiff : "normal";
 const XI_MATCHES = [
   {id:"mu99", c:"Man Utd", t:"Man Utd – Bayern", d:"Finale de la Ligue des champions 1999 · 2-1, le triplé", lines:[["Andy Cole","Dwight Yorke"],["Ryan Giggs","David Beckham","Nicky Butt","Jesper Blomqvist"],["Denis Irwin","Jaap Stam","Ronny Johnsen","Gary Neville"],["Peter Schmeichel"]]},
   {id:"lfc05", c:"Liverpool", t:"Liverpool – Milan", d:"Finale de la Ligue des champions 2005 · le miracle d'Istanbul", lines:[["Milan Baroš"],["Harry Kewell"],["John Arne Riise","Xabi Alonso","Steven Gerrard","Luis García"],["Djimi Traoré","Sami Hyypiä","Jamie Carragher","Steve Finnan"],["Jerzy Dudek"]]},
@@ -129,7 +135,8 @@ function startXi(id){
   // nom de famille seul accepté s'il est unique dans le onze
   const last = n => norm(n).split(" ").slice(-1)[0], cnt = {}; ps.forEach(p => { const l = last(p.n); cnt[l] = (cnt[l]||0)+1; });
   ps.forEach(p => { const l = last(p.n); if(cnt[l]===1 && l.length > 2) p.al.push(l); const w = norm(p.n).split(" "); if(w.length > 2) p.al.push(w.slice(1).join(" ")); });
-  XI = {m, ps, found:[], hints:[], wrong:0, deadlineAt:Date.now() + XI_TIME*1000, phase:"play", last:null};
+  const D = XI_DIFF[xiDiff()];
+  XI = {m, ps, diff:xiDiff(), maxH:D.hints, found:[], hints:[], wrong:0, deadlineAt:Date.now() + D.time*1000, phase:"play", last:null};
   L.summary = null; VIEW = "xi"; render(true);
 }
 function xiGuess(name){
@@ -144,7 +151,7 @@ function xiGuess(name){
   render(true);
 }
 function xiHint(){
-  if(XI.hints.length >= 3) return toast("3 indices maximum.");
+  if(XI.hints.length >= XI.maxH) return toast(XI.maxH ? `${XI.maxH} indices maximum.` : "Pas d'indice en Difficile.");
   const left = XI.ps.map((p,k) => k).filter(k => !XI.found.includes(k) && !XI.hints.includes(k));
   if(!left.length) return; XI.hints.push(left[Math.floor(Math.random()*left.length)]); render(true);
 }
@@ -152,6 +159,7 @@ function xiEnd(){
   if(!XI || XI.phase==="end") return;
   XI.phase = "end";
   const n = XI.found.length, key = "xi_"+XI.m.id;
+  if(XI.diff==="hard" && n===11){ PROFILE.best["xih_"+XI.m.id] = 1; }
   if(n===11 && typeof celebrate==="function") celebrate("gold");
   const r = {mode:"xi", solo:true, score:n, total:11, won:n===11, found:XI.found.map(k => XI.ps[k].n), pepites:[]};
   L.summary = Object.assign(recordGame(r), {r, coins:null, bonus:null});
@@ -168,10 +176,11 @@ function xiTick(){
 setInterval(xiTick, 250);
 function screenXiPick(){
   const b = PROFILE.best;
-  return {key:"xiPick", html:`
+  return {key:"xiPick"+xiDiff(), html:`
   <div class="subhead"><button class="iconbtn" data-act="nav" data-v="home" aria-label="Retour">${ICON.back}</button><h1>Missing XI</h1></div>
-  <p class="muted" style="margin:0 0 12px">Retrouve le onze de départ d'un match ou d'une saison culte. 3 minutes, nom de famille accepté, 3 indices.</p>
-  <div class="pick-list">${XI_MATCHES.map(m => `<button class="mode xi-m" data-act="xistart" data-v="${m.id}" style="--cc:${CLUB[m.c]||"#2b59c3"}"><span class="lgtag">${esc(m.c)}</span><b>${esc(m.t)}</b><small>${esc(m.d)}</small>${b["xi_"+m.id]!=null?`<span class="rec">Ton record : ${b["xi_"+m.id]}/11</span>`:""}</button>`).join("")}</div>
+  <p class="muted" style="margin:0 0 12px">Retrouve le onze de départ d'un match ou d'une saison culte. Le nom de famille suffit.</p>
+  <div class="diffbar" role="group" aria-label="Difficulté">${Object.entries(XI_DIFF).map(([k,d]) => `<button data-act="xidiff" data-v="${k}" aria-pressed="${xiDiff()===k}"><b>${d.t}</b><small>${d.d}</small></button>`).join("")}</div>
+  <div class="pick-list">${XI_MATCHES.map(m => `<button class="mode xi-m" data-act="xistart" data-v="${m.id}" style="--cc:${CLUB[m.c]||"#2b59c3"}"><span class="lgtag">${esc(m.c)}</span><b>${esc(m.t)}</b><small>${esc(m.d)}</small>${b["xi_"+m.id]!=null?`<span class="rec">Ton record : ${b["xi_"+m.id]}/11${b["xih_"+m.id]?" · ⭐ réussi en Difficile":""}</span>`:""}</button>`).join("")}</div>
   ${tabbar()}`};
 }
 function screenXi(){
@@ -189,7 +198,7 @@ function screenXi(){
   ${end ? `<div style="margin-top:10px">${summaryBlock()}</div>` : ""}
   ${end ? dock(`<button class="btn" data-act="xistart" data-v="${XI.m.id}">Rejouer</button><button class="btn ghost" data-act="nav" data-v="xiPick">Autre match</button>`)
     : dock(`<form class="tt-form" data-form="xi"><input class="input" id="xi-guess" autocomplete="off" spellcheck="false" placeholder="Un titulaire" aria-label="Nom d'un titulaire"><button class="btn">OK</button></form>
-      <div class="dock-row"><button class="btn ghost" data-act="xihint" ${XI.hints.length>=3?"disabled":""}>💡 Indice (${3-XI.hints.length})</button><button class="btn ghost" data-act="xigiveup">J'arrête</button></div>`)}`};
+      <div class="dock-row">${XI.maxH ? `<button class="btn ghost" data-act="xihint" ${XI.hints.length>=XI.maxH?"disabled":""}>💡 Indice (${XI.maxH-XI.hints.length})</button>` : ""}<button class="btn ghost" data-act="xigiveup">J'arrête</button></div>`)}`};
 }
 
 /* ---------- actions et saisies */
@@ -202,6 +211,8 @@ function m2Act(a, v){
     case "bxquit": BX = null; VIEW = "boxPick"; render(true); break;
     case "xistart": startXi(v); setTimeout(() => { const g = document.getElementById("xi-guess"); if(g) g.focus(); }, 50); break;
     case "xihint": xiHint(); break;
+    case "bxdiff": PROFILE.bxDiff = v; saveProfile(); render(true); break;
+    case "xidiff": PROFILE.xiDiff = v; saveProfile(); render(true); break;
     case "xigiveup": xiEnd(); break;
     case "xiquit": XI = null; VIEW = "xiPick"; render(true); break;
   }

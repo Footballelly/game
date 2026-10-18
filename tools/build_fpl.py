@@ -13,8 +13,8 @@ CODE = {3:"Arsenal",7:"Aston Villa",91:"Bournemouth",90:"Burnley",94:"Brentford"
         11:"Everton",54:"Fulham",2:"Leeds",13:"Leicester",14:"Liverpool",102:"Luton",43:"Man City",1:"Man Utd",4:"Newcastle",
         45:"Norwich",17:"Nottingham Forest",49:"Sheffield Utd",20:"Southampton",6:"Tottenham",57:"Watford",35:"West Brom",
         21:"West Ham",39:"Wolves",40:"Ipswich",56:"Sunderland",88:"Hull",25:"Middlesbrough",110:"Stoke",80:"Swansea",
-        38:"Huddersfield",97:"Cardiff"}
-NAME = {"Spurs":"Tottenham","Nott'm Forest":"Nottingham Forest","Man Utd":"Man Utd","Man City":"Man City","Sheffield Utd":"Sheffield Utd"}
+        38:"Huddersfield",97:"Cardiff",9:"Coventry"}
+NAME = {"Coventry City":"Coventry","Hull City":"Hull","Ipswich Town":"Ipswich","Spurs":"Tottenham","Nott'm Forest":"Nottingham Forest","Man Utd":"Man Utd","Man City":"Man City","Sheffield Utd":"Sheffield Utd"}
 POS = {"1":"GK","2":"DEF","3":"MID","4":"ATT"}
 MIN_NEW = 3000   # minutes PL cumulées pour ajouter un nouveau joueur (éviter les inconnus)
 
@@ -61,6 +61,18 @@ for s in SEASONS:
             else:  # match où un seul camp a des lignes : club de fin de saison
                 x = next((r for r in raw if r["id"] == g["element"]), None)
                 if x: seen[code][y][CODE[int(x["team_code"])]] += m
+
+# ---------- saison en cours (2026-27) : club actuel d'après players_raw (transferts de l'été inclus)
+CUR_Y, CUR = 2026, {}
+if os.path.exists(f"{FPL}/2026-27/players_raw.csv"):
+    for x in csv.DictReader(open(f"{FPL}/2026-27/players_raw.csv", encoding="utf-8")):
+        code, club = x["code"], CODE.get(int(x["team_code"]))
+        if not club: continue
+        if code not in info:
+            info[code] = {"first": x["first_name"], "second": x["second_name"], "web": x["web_name"], "pos": POS.get(x["element_type"], "MID"), "dob": x.get("birth_date") or ""}
+        m = int(float(x.get("minutes") or 0))
+        if m > 0: seen[code][CUR_Y][club] += m
+        else: CUR[code] = club     # pas encore joué : compté seulement pour un joueur déjà connu
 
 def stints(code):
     """liste de [club, debut, fin] à partir des saisons ; l'ordre dans une saison suit les journées pour 2020+ (approximatif sinon)"""
@@ -138,11 +150,15 @@ for code, i in info.items():
             hits = {k for k, p in enumerate(P) if key in norm(p["n"]).replace(" ", "")
                     and any(c in clubs and b >= 2014 for c, a, b in p["s"])}
     if len(hits) == 1:
+        if code in CUR and CUR_Y not in seen[code]:
+            c = CUR[code]
+            if st and st[-1][0] == c and st[-1][2] >= CUR_Y - 1: st[-1][2] = CUR_Y
+            else: st.append([c, CUR_Y, CUR_Y])
         upd[P[next(iter(hits))]["n"]] = st
         continue
     if len(hits) > 1: continue
     first_year = min(seen[code]); total = sum(sum(c.values()) for c in seen[code].values())
-    if total < MIN_NEW: continue
+    if total < MIN_NEW and sum(seen[code].get(CUR_Y, {}).values()) < 60: continue   # les recrues 2026-27 qui jouent déjà entrent tout de suite
     # né en 1998 ou après : pas de carrière en PL avant 2016, parcours complet ; sinon on marque x (avant 2016 inconnu)
     complete = bool(re.match(r"\d{4}", i["dob"] or "")) and i["dob"][:4] >= "1998"
     n = dn if norm(dn) not in used else f"{i['first'].split()[0]} {i['second'].split()[-1]}"
@@ -162,7 +178,7 @@ for code, i in info.items():
 
 add.sort(key=lambda e: e["n"])
 clubs = sorted({s[0] for e in add for s in e["s"]} | {s[0] for v in upd.values() for s in v})
-out = f"""// Football Legends — passages en Premier League de 2016-17 à 2025-26 (généré par build_fpl.py).
+out = f"""// Football Legends — passages en Premier League de 2016-17 à 2026-27 (généré par build_fpl.py).
 // Source : données officielles du Fantasy Premier League, dépôt vaastav/Fantasy-Premier-League (licence MIT). Un passage = au moins 1 minute jouée.
 // upd : joueurs déjà dans la base (on remplace leurs saisons à partir de 2016) ; add : nouveaux joueurs (x = carrière avant 2016 inconnue, exclus du Parcours).
 (function(){{
