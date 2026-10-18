@@ -988,3 +988,35 @@ button.lg-r{cursor:pointer}
 .gflash.mine{background:radial-gradient(circle,#ffd23f55,transparent 70%)}.gflash.them{background:radial-gradient(circle,#ff4d6d44,transparent 70%)}.gflash.them b{color:#ff8fa3;font-size:46px}
 @keyframes mcgoal{0%{opacity:0;transform:scale(.4)}15%{opacity:1;transform:scale(1.1)}30%{transform:scale(1)}75%{opacity:1}100%{opacity:0}}
 @media (prefers-reduced-motion:reduce){.gflash,.pitch-strip .ball{animation:none;display:none}}
+/* Tiki-Taka-Toe */
+.m-ttt{background:linear-gradient(150deg,#ffe0f0,#ff9ad0)}.m-ttt .m-ic{font-weight:900;font-size:18px;letter-spacing:-2px}
+.tt-hero{display:grid;grid-template-columns:96px 1fr;gap:14px;align-items:center;background:linear-gradient(135deg,#0c1240,#3a1a8a);color:#fff;border-radius:20px;padding:14px;margin-bottom:6px}
+.tt-hero p{margin:0;font-size:14px;line-height:1.4}
+.tt-mini{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}.tt-mini i{aspect-ratio:1;background:#ffffff1a;border-radius:6px;display:grid;place-items:center;font-style:normal;font-weight:900;font-size:16px}
+.tt-mini i.X,.tt-p.m0 span,.tt-cell.m0 i,.tt-pl .m0{color:#ffd23f}.tt-mini i.O,.tt-p.m1 span,.tt-cell.m1 i,.tt-pl .m1{color:#ff7cc0}
+.tt-lobby{text-align:center}.tt-code{display:block;font-family:var(--f-display);font-size:52px;letter-spacing:.1em;color:var(--ink)}.tt-pl{display:flex;justify-content:center;gap:14px;font-weight:800}
+.tt-timer{margin-left:auto;font-family:var(--f-mono);font-weight:700;background:#ffffff1f;color:#fff;border-radius:99px;padding:4px 10px}.tt-timer.warn{background:#ff4d6d}
+.tt-players{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0}
+.tt-p{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:8px;align-items:center;background:#0c1240aa;color:#fff;border-radius:14px;padding:8px 12px;border:2px solid transparent}
+.tt-p span{grid-row:span 2;font-size:26px;font-weight:900}.tt-p small{opacity:.7;font-size:12px}.tt-p.on{border-color:#ffd23f;box-shadow:0 0 14px #ffd23f66}
+.tt-say{color:#fff;text-align:center;font-weight:800;font-size:16px;margin:6px 0}
+.tt-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.tt-corner{display:grid;place-items:center;font-size:24px}
+.tt-h{display:flex;align-items:center;justify-content:center;min-width:0}
+.tt-club{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0;text-align:center}
+.tt-club i{width:34px;height:34px;border-radius:50%;background:var(--cc);color:#fff;display:grid;place-items:center;font-style:normal;font-weight:900;font-size:12px;box-shadow:0 0 0 2px #fff}
+.tt-club b{color:#fff;font-size:10.5px;line-height:1.1;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tt-cell{aspect-ratio:1;background:#ffffff;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--ink);font:inherit;border:3px solid transparent;transition:transform .12s}
+.tt-cell[disabled]{cursor:default}.tt-cell:not([disabled]):hover{transform:scale(1.03)}
+.tt-cell.sel{border-color:#ffd23f;animation:mcpulse 1s infinite}
+.tt-cell i{font-style:normal;font-size:30px;font-weight:900;line-height:1}.tt-cell small{font-size:10.5px;font-weight:700;max-width:95%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tt-cell.m0{background:#0c1240}.tt-cell.m1{background:#3a1a8a}.tt-cell.m0 small,.tt-cell.m1 small{color:#fff}
+.tt-cell.win{box-shadow:0 0 0 3px #3ed38f,0 0 20px #3ed38f}
+.tt-cell.miss{animation:mcshake .45s}
+.tt-last{text-align:center;font-weight:700;font-size:14px;margin:8px 0 0;color:#fff}.tt-last.ko{color:#ffb4c0}.tt-last.ok{color:#8ff0bd}
+.tt-form{display:flex;gap:8px}.tt-form .input{flex:1;min-width:0}.tt-form .btn{width:auto;padding:0 18px;margin:0}
+/* classement partie du jour Mercato */
+.dcard{background:#0c1240aa;color:#fff;border-radius:16px;padding:10px 14px;margin-bottom:12px}.dcard summary{font-weight:800;cursor:pointer}
+.dboard{display:flex;flex-direction:column;gap:4px;margin-top:8px}.dboard p{display:grid;grid-template-columns:24px 1fr auto auto;gap:8px;align-items:center;margin:0;font-size:13.5px;padding:4px 6px;border-radius:8px}
+.dboard p.me{background:#ffd23f;color:var(--ink)}.dboard small{opacity:.75;font-size:11.5px}.dboard em{font-style:normal;font-family:var(--f-display);font-size:18px}.dcount{opacity:.7;font-size:12px}
+.card .dboard p{color:var(--ink)}

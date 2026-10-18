@@ -17,6 +17,8 @@ function view(){
     case "careerPick": return screenCareerPick();
     case "mercato": return screenMercato();
     case "mercatoPick": return screenMercatoPick();
+    case "ttt": return screenTtt();
+    case "tttPick": return screenTttPick();
     case "saisonPick": return screenSaisonPick();
     case "friends": return screenFriends();
     case "collection": return screenCollection();
@@ -99,6 +101,7 @@ app.addEventListener("submit", e => {
   if(f==="chrono") return chronoGuess(e.target.querySelector("#chguess"));
   if(f==="career") return careerGuess(e.target.querySelector("#carguess"));
   if(f==="answer") return submitGuess(e.target.querySelector("#guess").value);
+  if(f==="ttt") return ttSubmit();
   if(f==="onboard"){ const v = e.target.querySelector("#ob-name").value.replace(/\s+/g," ").trim().slice(0,18);
     if(v.length<2){ L.err = "Choisis un pseudo d'au moins 2 caractères."; return render(true); }
     PROFILE.name = v; saveProfile(); L.err = null; go("home"); }
@@ -107,6 +110,7 @@ app.addEventListener("click", e => {
   const el = e.target.closest("[data-act]"); if(!el) return;
   const a = el.dataset.act, v = el.dataset.v;
   if(a.startsWith("mc")) return mcAct(a, v, el);
+  if(a.startsWith("tt")) return ttAct(a, v, el);
   switch(a){
     /* navigation */
     case "nav": go(v); break;

@@ -31,7 +31,7 @@ function ticket(r){ const s = slotById(r.slot); return `<div class="ticket"><spa
 const roundBar = (n, cur) => `<div class="rounds">${Array.from({length:n}, (_,k) => `<i class="${k<cur?"done":k===cur?"now":""}"></i>`).join("")}</div>`;
 function tabbar(){
   const t = [["home","Jouer",ICON.home],["collection","Collection",ICON.cards],["board","Classement",ICON.trophy]];
-  const cur = ["album","pack"].includes(VIEW) ? "collection" : ["pmPick","chronoPick","career","careerPick","saisonPick","mercato","mercatoPick"].includes(VIEW) ? "home" : VIEW;
+  const cur = ["album","pack"].includes(VIEW) ? "collection" : ["pmPick","chronoPick","career","careerPick","saisonPick","mercato","mercatoPick","ttt","tttPick"].includes(VIEW) ? "home" : VIEW;
   return `<nav class="tabbar" aria-label="Navigation"><div>${t.map(([v,l,i]) => `<button data-act="nav" data-v="${v}" ${cur===v?'aria-current="page"':""}>${i}<span>${l}</span></button>`).join("")}</div></nav>`;
 }
 function topbar(){
@@ -110,6 +110,7 @@ function screenHome(){
    ${m("pickpm",ICON.updown,"m-gold","Plus ou moins","Plus de buts ou moins ? Enchaîne.", pmRec?`Record ${pmRec}`:"")}
    ${m("pickchrono",ICON.clock,"m-sky","Chrono",`${LISTS.length} listes à vider avant la fin du temps.`, "")}
    ${m("nav",ICON.pitch,"m-green","Un joueur par saison","11 postes, 11 saisons de PL. Années 2000 ou ère moderne.", b.saison||b.saisonModern?`Record ${Math.max(b.saison||0,b.saisonModern||0)}/11`:"", 'data-v="saisonPick"')}
+   <button class="mtile m-ttt" data-act="nav" data-v="tttPick"><span class="m-ic">✕◯</span><span class="m-txt"><b>Tiki-Taka-Toe</b><small>Morpion foot en 1 contre 1, contre un pote ou l'ordi.</small></span><span class="m-badge">Nouveau</span></button>
    <button class="mtile m-mercato" data-act="nav" data-v="mercatoPick"><span class="m-ic">${ICON.coin}</span><span class="m-txt"><b>Mercato FC</b><small>Une saison à 20 clubs : mercato, transferts et trahisons.</small></span><span class="m-badge">${b.mercato_hard?`Requins ${b.mercato_hard}`:b.mercato_normal||b.mercato_easy?`Victoires ${(b.mercato_normal||0)+(b.mercato_easy||0)}`:"Nouveau"}</span></button>
   </div>
   <div class="sec-title"><h2>Collection</h2><small>${WALLET.loaded?`${WALLET.coins} pièces`:""}</small></div>
