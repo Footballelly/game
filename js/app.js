@@ -34,7 +34,7 @@ function view(){
 }
 function render(force){
   const v = view();
-  if(!force && v.key===lastKey){ updateLive(v.html); return; }
+  if(!force && v.key===lastKey){ updateLive(v.html); rollCoins(); return; }
   const prevBase = lastKey && lastKey.split("-")[0], sameScreen = prevBase && v.key.split("-")[0]===prevBase;
   const y = window.scrollY; lastKey = v.key;
   app.innerHTML = v.html;
@@ -43,11 +43,24 @@ function render(force){
   const cg = document.getElementById("chguess"); if(cg) cg.focus({preventScroll:true});
   const cg2 = document.getElementById("carguess"); if(cg2) cg2.focus({preventScroll:true});
   const g = document.getElementById("guess"); if(g && !L.mine){ g.focus({preventScroll:true}); const n = g.value.length; try{ g.setSelectionRange(n,n); }catch(e){} }
-  tickClock();
+  tickClock(); rollCoins();
+}
+/* compteur de pièces qui défile façon machine à sous */
+let COIN_SHOWN = null, COIN_RAF = 0;
+function rollCoins(){
+  const els = document.querySelectorAll('[data-live="coins"]'); if(!els.length || !WALLET.loaded) return;
+  const to = WALLET.coins;
+  if(COIN_SHOWN==null || COIN_SHOWN===to){ COIN_SHOWN = to; els.forEach(e => e.textContent = to); return; }
+  const from = COIN_SHOWN, t0 = performance.now(), D = 900; COIN_SHOWN = to; cancelAnimationFrame(COIN_RAF);
+  els.forEach(e => e.closest(".coins") && e.closest(".coins").classList.add("roll"));
+  const step = t => { const k = Math.min(1, (t-t0)/D), v = Math.round(from + (to-from)*(1-Math.pow(1-k, 3)));
+    document.querySelectorAll('[data-live="coins"]').forEach(e => e.textContent = v);
+    if(k < 1) COIN_RAF = requestAnimationFrame(step); else document.querySelectorAll(".coins.roll").forEach(e => e.classList.remove("roll")); };
+  COIN_RAF = requestAnimationFrame(step);
 }
 function updateLive(html){
   const tmp = document.createElement("div"); tmp.innerHTML = html;
-  app.querySelectorAll("[data-live]").forEach(el => { const n = tmp.querySelector(`[data-live="${el.dataset.live}"]`); if(!n) return;
+  app.querySelectorAll("[data-live]").forEach(el => { if(el.dataset.live==="coins") return; const n = tmp.querySelector(`[data-live="${el.dataset.live}"]`); if(!n) return;
     if(el.hasAttribute("data-html")){ if(el.innerHTML!==n.innerHTML) el.innerHTML = n.innerHTML; } else el.textContent = n.textContent; });
 }
 function tickClock(){
@@ -65,6 +78,15 @@ setInterval(() => { if(VIEW!=="game" && document.visibilityState==="visible"){ c
 function toast(msg, kind){ const t = document.createElement("div"); t.className = "toast"+(kind?" "+kind:""); t.textContent = msg; t.setAttribute("role","status"); document.body.appendChild(t); setTimeout(() => t.remove(), 2200); }
 /* petites récompenses sensorielles : vibration (si dispo) et confettis */
 function buzz(p){ try{ navigator.vibrate && navigator.vibrate(p); }catch(e){} }
+/* jackpot plein écran quand on bat un record */
+function jackpot(text){
+  if(document.querySelector(".jackpot")) return;
+  const el = document.createElement("div"); el.className = "jackpot"; el.setAttribute("role","status");
+  const sym = ["⚽","🏆","💰","⭐","🔥"], reel = k => `<span class="jp-reel"><span style="animation-delay:${k*0.25}s">${[...sym, ...sym, "🏆"].map(x => `<i>${x}</i>`).join("")}</span></span>`;
+  el.innerHTML = `<div class="jp-box"><div class="jp-reels">${reel(0)}${reel(1)}${reel(2)}</div><b>JACKPOT</b><small>${esc(text)}</small></div>`;
+  el.addEventListener("click", () => el.remove()); document.body.appendChild(el);
+  setTimeout(() => celebrate("gold"), 1300); setTimeout(() => el.remove(), 3600);
+}
 function celebrate(kind){
   if(window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   const cols = kind==="gold" ? ["#ffd23f","#fff4c2","#e0a800","#ffffff"] : ["#ffd23f","#19c37d","#8fb6ff","#ff4d5e","#ffffff"];
@@ -127,6 +149,8 @@ app.addEventListener("click", e => {
     /* solo */
     case "daily": playDaily(); break;
     case "pickpm": go("pmPick"); break;
+    case "luckyspin": if(!luckyOn()){ PROFILE.lucky = todayKey(); saveProfile(); L.spin = true; render(true); buzz([20,40,20,40,20,40,120]);
+      setTimeout(() => { L.spin = false; const x = luckyToday(); toast(`🎰 ${x[1]} : XP ×2 aujourd'hui !`, "ok"); celebrate("gold"); }, 2600); } break;
     case "pm": startSolo("plusmoins", {theme:v||"pl"}); break;
     case "lgfilter": L.lgFilter = v; render(true); break;
     case "colfilter": L.colFilter = v; render(true); break;

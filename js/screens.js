@@ -98,31 +98,66 @@ function collectionTeaser(){
   </button>`;
 }
 const newB = (v, rec) => isNew(v) ? `<span class="m-badge new">Nouveau</span>` : rec ? `<span class="m-badge">${rec}</span>` : "";
+/* ---------- roulette du jour : un mode tiré au sort chaque jour rapporte double XP */
+const LUCKY = [["careerPick","Parcours de carrière","🧭","career"],["pmPick","Plus ou moins","↕️","plusmoins"],["chronoPick","Chrono","⏱️","chrono"],["saisonPick","Un joueur par saison","🗓️","saison"],
+  ["boxPick","Box2Box","🧩","box"],["xiPick","Missing XI","📋","xi"],["tttPick","Tiki-Taka-Toe","✕◯","ttt"],["mercatoPick","Mercato FC","💰","mercato"]];
+const luckyToday = () => LUCKY[(hashStr("lucky"+todayKey()) >>> 0) % LUCKY.length];
+const luckyOn = () => PROFILE.lucky===todayKey();
+function luckyCard(){
+  const L0 = luckyToday(), k = LUCKY.indexOf(L0), spin = L.spin, shown = luckyOn();
+  if(!shown) return `<button class="lucky idle" data-act="luckyspin"><span class="lk-ic">🎰</span><span><b>Roulette du jour</b><small>Tire le mode qui rapporte <em>XP ×2</em> aujourd'hui</small></span><span class="lk-go">Lancer</span></button>`;
+  const reel = [...LUCKY, ...LUCKY, ...LUCKY.slice(0, k+1)];
+  return `<div class="lucky${spin?" spinning":""}"><span class="lk-ic">🎰</span>
+    <span class="lk-reel" aria-label="Mode du jour : ${esc(L0[1])}"><span class="lk-in" style="--to:${reel.length-1}">${reel.map(x => `<i>${x[2]} ${esc(x[1])}</i>`).join("")}</span></span>
+    <button class="lk-go" data-act="nav" data-v="${L0[0]}">XP ×2 →</button></div>`;
+}
+/* ---------- vitrine Mercato FC */
+function mercatoHero(){
+  const b = PROFILE.best, sv = typeof mcSaved==="function" ? mcSaved() : null, day = b.mercatoDay && b.mercatoDay.day===todayKey() ? b.mercatoDay : null;
+  const wins = ["easy","normal","hard"].reduce((t,k) => t+(b["mercato_"+k]||0), 0), ach = Object.keys(b.mcAch||{}).length;
+  return `<section class="mhero" aria-label="Mercato FC">
+    <div class="mh-bg" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="mh-top"><span class="mh-tag">⭐ Le grand jeu</span>${isNew("mercatoPick")?`<span class="m-badge new">Nouveau</span>`:""}</div>
+    <div class="mh-av" aria-hidden="true">${["🦈","🧮","🎓","🔍"].map((x,i) => `<span style="animation-delay:${i*0.25}s">${x}</span>`).join("")}</div>
+    <h2 class="mh-t">MERCATO FC</h2>
+    <p class="mh-d">20 clubs, 3 présidents rivaux. Achète, revends, trahis… et finis devant eux.</p>
+    <div class="mh-stats"><span>🏆 ${wins} victoire${wins>1?"s":""}</span><span>🏅 ${ach}/5 succès</span><span>🎯 ${day?`${day.pts} pts aujourd'hui`:"partie du jour à jouer"}</span></div>
+    <div class="mh-btns">${sv ? `<button class="btn" data-act="mcresume">▶ Reprendre · ${esc(sv.clubs[0].n)} S${sv.season + (sv.seasonDone?1:0)}</button><button class="btn ghost" data-act="nav" data-v="mercatoPick">Nouvelle partie</button>`
+      : `<button class="btn" data-act="nav" data-v="mercatoPick">Jouer à Mercato FC</button>`}</div>
+  </section>`;
+}
 function screenHome(){
   const li = levelInfo(), b = PROFILE.best;
-  const m = (act, ic, cls, t, d, badge="", extra="") => `<button class="mtile ${cls}" data-act="${act}" ${extra}><span class="m-ic">${ic}</span><span class="m-bg" aria-hidden="true">${ic}</span>
-    <span class="m-txt"><b>${t}</b><small>${d}</small></span>${badge?`<span class="m-badge">${badge}</span>`:""}</button>`;
+  const m = (act, ic, cls, t, d, badge="", extra="") => `<button class="mtile rail-t ${cls}" data-act="${act}" ${extra}><span class="m-ic">${ic}</span><span class="m-bg" aria-hidden="true">${ic}</span>
+    <span class="m-txt"><b>${t}</b><small>${d}</small></span>${badge}</button>`;
+  const lk = luckyOn() ? luckyToday()[0] : null, hot = v => v===lk ? `<span class="m-badge lucky-b">🎰 XP ×2</span>` : "";
   const pmRec = Math.max(b.pm||0, b.pmLdc||0, b.pmMod||0), carRec = b.career_hard ? `Expert ${b.career_hard}` : b.career ? `Record ${b.career}/50` : b.career_easy ? `Facile ${b.career_easy}` : "";
-  return {key:"home"+JSON.stringify([dailyDone(), PROFILE.xp, L.shareFallback, !!DEFERRED_INSTALL, PROFILE.seenInstall, WALLET.loaded, WALLET.streak, WALLET.coins, ownedIds().length]), html:`
+  const sRec = Math.max(b.saison||0,b.saisonModern||0,b.saison90||0), ttw = ["easy","normal","hard"].reduce((t,k) => t+(b["ttt_"+k]||0), 0);
+  const xiFull = XI_MATCHES.filter(x => b["xi_"+x.id]===11).length;
+  const B = (v, rec) => hot(v) || newB(v, rec);
+  return {key:"home"+JSON.stringify([dailyDone(), PROFILE.xp, L.shareFallback, !!DEFERRED_INSTALL, PROFILE.seenInstall, WALLET.loaded, WALLET.streak, ownedIds().length, PROFILE.lucky, !!L.spin]), html:`
   ${topbar()}
   <div class="lvl-strip"><span class="lvl-n">Niv. ${li.level}</span><span class="lvl-t">${esc(titleOf(li.level))}</span><span class="xpbar"><i style="width:${li.pct}%"></i></span><span class="lvl-x">${li.into}/${li.need} XP</span></div>
   ${installBanner()}
+  <div style="margin-top:10px">${mercatoHero()}</div>
+  ${luckyCard()}
   <div style="margin-top:12px">${dailyCard()}</div>
-  <div class="sec-title"><h2>Jouer seul</h2><small>sans limite</small></div>
-  <div class="mgrid">
-   ${m("nav",ICON.route,"m-pink","Parcours de carrière","Trouve le joueur à partir de ses clubs.", carRec, 'data-v="careerPick"')}
-   ${m("pickpm",ICON.updown,"m-gold","Plus ou moins","Plus de buts ou moins ? Enchaîne.", pmRec?`Record ${pmRec}`:"")}
-   ${m("pickchrono",ICON.clock,"m-sky","Chrono",`${LISTS.length} listes à vider avant la fin du temps.`, "")}
-   ${m("nav",ICON.pitch,"m-green","Un joueur par saison","11 postes, 11 saisons de PL. Années 90, 2000 ou ère moderne.", b.saison||b.saisonModern||b.saison90?`Record ${Math.max(b.saison||0,b.saisonModern||0,b.saison90||0)}/11`:"", 'data-v="saisonPick"')}
-   <button class="mtile m-ttt" data-act="nav" data-v="tttPick"><span class="m-ic">✕◯</span><span class="m-txt"><b>Tiki-Taka-Toe</b><small>Morpion foot en 1 contre 1, contre un pote ou l'ordi.</small></span>${newB("tttPick", ["easy","normal","hard"].reduce((t,k) => t+(b["ttt_"+k]||0), 0) ? `Victoires ${["easy","normal","hard"].reduce((t,k) => t+(b["ttt_"+k]||0), 0)}` : "")}</button>
-   <button class="mtile m-box" data-act="nav" data-v="boxPick"><span class="m-ic">🧩</span><span class="m-txt"><b>Box2Box</b><small>La grille du jour à remplir seul. Les pépites rapportent gros.</small></span>${newB("boxPick", b.boxDay && b.boxDay.day===todayKey() ? `Aujourd'hui ${b.boxDay.score}` : b.box ? `Record ${b.box}` : "")}</button>
-   <button class="mtile m-xi" data-act="nav" data-v="xiPick"><span class="m-ic">📋</span><span class="m-txt"><b>Missing XI</b><small>Retrouve le onze d'un match culte en 3 minutes.</small></span>${newB("xiPick", (() => { const n = XI_MATCHES.filter(m => b["xi_"+m.id]===11).length; return n ? `${n} onze${n>1?"s":""} complet${n>1?"s":""}` : ""; })())}</button>
-   <button class="mtile m-mercato" data-act="nav" data-v="mercatoPick"><span class="m-ic">${ICON.coin}</span><span class="m-txt"><b>Mercato FC</b><small>Une saison à 20 clubs : mercato, transferts et trahisons.</small></span>${newB("mercatoPick", b.mercato_hard?`Requins ${b.mercato_hard}`:b.mercato_normal||b.mercato_easy?`Victoires ${(b.mercato_normal||0)+(b.mercato_easy||0)}`:"")}</button>
+  <div class="sec-title"><h2>Jouer seul</h2><small>glisse →</small></div>
+  <div class="rail">
+   ${m("nav",ICON.route,"m-pink","Parcours de carrière","Trouve le joueur à partir de ses clubs.", B("careerPick", carRec), 'data-v="careerPick"')}
+   ${m("nav","🧩","m-box","Box2Box","La grille du jour. Les pépites rapportent gros.", B("boxPick", b.boxDay && b.boxDay.day===todayKey() ? `Auj. ${b.boxDay.score}` : b.box ? `Record ${b.box}` : ""), 'data-v="boxPick"')}
+   ${m("nav","📋","m-xi","Missing XI","Retrouve le onze d'un match culte.", B("xiPick", xiFull ? `${xiFull} complet${xiFull>1?"s":""}` : ""), 'data-v="xiPick"')}
+   ${m("pickpm",ICON.updown,"m-gold","Plus ou moins","Plus de buts ou moins ? Enchaîne.", B("pmPick", pmRec?`Record ${pmRec}`:""))}
+   ${m("pickchrono",ICON.clock,"m-sky","Chrono",`${LISTS.length} listes à vider avant la fin du temps.`, B("chronoPick", ""))}
+   ${m("nav",ICON.pitch,"m-green","Un joueur par saison","11 postes, 11 saisons : années 90, 2000 ou ère moderne.", B("saisonPick", sRec?`Record ${sRec}/11`:""), 'data-v="saisonPick"')}
+  </div>
+  <div class="sec-title"><h2>Entre potes</h2><small>chacun sur son téléphone</small></div>
+  <div class="duo">
+   <button class="mtile m-ttt" data-act="nav" data-v="tttPick"><span class="m-ic">✕◯</span><span class="m-txt"><b>Tiki-Taka-Toe</b><small>Morpion foot en 1 contre 1.</small></span>${B("tttPick", ttw ? `Victoires ${ttw}` : "")}</button>
+   <button class="mtile m-friends" data-act="nav" data-v="friends"><span class="m-ic">${ICON.users}</span><span class="m-txt"><b>Salon entre amis</b><small>Un code, des manches, du débat.</small></span></button>
   </div>
   <div class="sec-title"><h2>Collection</h2><small>${WALLET.loaded?`${WALLET.coins} pièces`:""}</small></div>
   ${collectionTeaser()}
-  <div class="sec-title"><h2>Entre potes</h2><small>chacun sur son téléphone</small></div>
-  <button class="friends-tile" data-act="nav" data-v="friends"><span class="ic">${ICON.users}</span><span><b>Jouer avec des amis</b><small>Crée un salon, partage le code, et que le meilleur gagne.</small></span><span class="arrow" aria-hidden="true">›</span></button>
   ${tabbar()}`};
 }
 function screenProfile(){
@@ -395,6 +430,7 @@ function screenVoting(){
 /* bilan commun à toutes les fins de partie */
 function summaryBlock(){
   const s = L.summary; if(!s) return "";
+  const jr = (s.rec||[]).filter(x => !x.startsWith("🎰")); if(jr.length && !s.jp){ s.jp = true; setTimeout(() => jackpot(jr[0]), 400); }
   return `<div class="summary">
     <div class="xpline"><b>+${s.xp} XP</b>${s.levelUp?`<span class="lvup">${ICON.star} Niveau ${s.levelUp}</span>`:`<span class="muted" style="color:var(--ink-soft);font-size:13px">Niveau ${levelInfo().level}</span>`}</div>
     <div class="xpbar"><i style="width:${levelInfo().pct}%"></i></div>
