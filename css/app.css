@@ -1020,3 +1020,41 @@ button.lg-r{cursor:pointer}
 .dboard{display:flex;flex-direction:column;gap:4px;margin-top:8px}.dboard p{display:grid;grid-template-columns:24px 1fr auto auto;gap:8px;align-items:center;margin:0;font-size:13.5px;padding:4px 6px;border-radius:8px}
 .dboard p.me{background:#ffd23f;color:var(--ink)}.dboard small{opacity:.75;font-size:11.5px}.dboard em{font-style:normal;font-family:var(--f-display);font-size:18px}.dcount{opacity:.7;font-size:12px}
 .card .dboard p{color:var(--ink)}
+
+/* ---------- Mercato P2 : fiche joueur, transferts, blessures, signature, succès */
+.prow-l .pl-main{background:none;border:0;color:inherit;text-align:left;padding:0;font:inherit;cursor:pointer}
+.prow-l .pl-main b{text-decoration:underline dotted #0c124055;text-underline-offset:3px}
+.ct-end{font-style:normal;color:#c26a00;font-weight:700}
+.memo .memo-act{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.sheet-back{display:block;margin:-4px 0 6px}
+.pf-head{display:grid;grid-template-columns:96px 1fr;gap:12px;align-items:start;margin-bottom:8px}
+.pf-head>div:first-child{width:96px}
+.pf-head b{font-size:18px;display:block}.pf-head small{color:var(--ink-soft);font-size:12.5px}
+.pf-k{margin-top:8px}.pf-k b{font-size:18px}
+.spark.alt{color:#1f9a5c}
+.tlog{display:flex;flex-direction:column;gap:4px;margin:4px 0 8px}
+.tlog p{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;margin:0;padding:6px 10px;background:#0c12400d;border-radius:10px;font-size:13px}
+.tlog p span{font-size:11px;color:var(--ink-soft);font-weight:700}.tlog p b{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tlog p b small{display:block;font-weight:500;color:var(--ink-soft);font-size:11.5px}.tlog p em{font-style:normal;font-weight:800;font-variant-numeric:tabular-nums}
+.tlog p.me{background:#ffd23f40}
+.rel{font-size:13px;background:#0c12400d;border-radius:10px;padding:6px 10px;margin:0 0 8px}
+.sstats{background:var(--paper);color:var(--ink);border-radius:18px;padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.sstats>b{font-size:16px}.sstats .kpis i{display:block;color:var(--ink-soft)}.sstats .kpis b{font-size:18px}
+.ach-new{display:flex;flex-direction:column;gap:6px}
+.ach-new p{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;margin:0;background:linear-gradient(135deg,#ffd23f,#ff9f3a);color:#0c1240;border-radius:14px;padding:10px 12px;animation:pop .5s both}
+.ach-new span{grid-row:span 2;font-size:28px}.ach-new small{font-size:12.5px}
+.ach-list{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.ach-list p{display:grid;grid-template-columns:28px 1fr;gap:2px 8px;margin:0;opacity:.7}.ach-list p.ok{opacity:1}
+.ach-list span{grid-row:span 2;font-size:20px}.ach-list b small{display:block;font-weight:500;font-size:12px;opacity:.85}.ach-list em{grid-column:2;font-style:normal;font-size:12px;color:#ffd23f}
+.power-c.locked{opacity:.55;filter:grayscale(.6);cursor:default}
+.career-end.fired{border-color:#ff4d6d}
+.sign-fx{position:fixed;inset:0;z-index:80;pointer-events:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:radial-gradient(circle,#0c1240dd 0,#0c124099 60%,transparent 100%);opacity:0;animation:signfx 2.6s var(--d,0s) both}
+.sign-card{width:150px;animation:signcard 2.6s var(--d,0s) both}
+.sign-st{font-family:var(--f-display);font-size:44px;color:#ffd23f;letter-spacing:.06em;transform:rotate(-6deg);border:4px solid #ffd23f;border-radius:10px;padding:0 14px;animation:signst 2.6s var(--d,0s) both}
+.sign-fx small{color:#fff;font-weight:700;font-size:15px}
+@keyframes signfx{0%{opacity:0}10%{opacity:1}80%{opacity:1}100%{opacity:0}}
+@keyframes signcard{0%{transform:translateY(60px) rotate(-12deg) scale(.6)}18%{transform:translateY(0) rotate(3deg) scale(1.05)}26%{transform:rotate(0) scale(1)}100%{transform:scale(1)}}
+@keyframes signst{0%,22%{opacity:0;transform:rotate(-6deg) scale(2.4)}32%{opacity:1;transform:rotate(-6deg) scale(1)}100%{opacity:1;transform:rotate(-6deg) scale(1)}}
+@media (prefers-reduced-motion:reduce){.sign-fx,.sign-card,.sign-st{animation-duration:1.4s}}
+.sheet .btn.ghost{color:var(--ink);border-color:#0c124033;background:#0c124008}
+.sheet .dock-row{display:flex;gap:8px}.sheet .dock-row .btn{flex:1;font-size:15px}

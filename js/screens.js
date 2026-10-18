@@ -109,7 +109,7 @@ function screenHome(){
    ${m("nav",ICON.route,"m-pink","Parcours de carrière","Trouve le joueur à partir de ses clubs.", carRec || "Nouveau", 'data-v="careerPick"')}
    ${m("pickpm",ICON.updown,"m-gold","Plus ou moins","Plus de buts ou moins ? Enchaîne.", pmRec?`Record ${pmRec}`:"")}
    ${m("pickchrono",ICON.clock,"m-sky","Chrono",`${LISTS.length} listes à vider avant la fin du temps.`, "")}
-   ${m("nav",ICON.pitch,"m-green","Un joueur par saison","11 postes, 11 saisons de PL. Années 2000 ou ère moderne.", b.saison||b.saisonModern?`Record ${Math.max(b.saison||0,b.saisonModern||0)}/11`:"", 'data-v="saisonPick"')}
+   ${m("nav",ICON.pitch,"m-green","Un joueur par saison","11 postes, 11 saisons de PL. Années 90, 2000 ou ère moderne.", b.saison||b.saisonModern||b.saison90?`Record ${Math.max(b.saison||0,b.saisonModern||0,b.saison90||0)}/11`:"", 'data-v="saisonPick"')}
    <button class="mtile m-ttt" data-act="nav" data-v="tttPick"><span class="m-ic">✕◯</span><span class="m-txt"><b>Tiki-Taka-Toe</b><small>Morpion foot en 1 contre 1, contre un pote ou l'ordi.</small></span><span class="m-badge">Nouveau</span></button>
    <button class="mtile m-mercato" data-act="nav" data-v="mercatoPick"><span class="m-ic">${ICON.coin}</span><span class="m-txt"><b>Mercato FC</b><small>Une saison à 20 clubs : mercato, transferts et trahisons.</small></span><span class="m-badge">${b.mercato_hard?`Requins ${b.mercato_hard}`:b.mercato_normal||b.mercato_easy?`Victoires ${(b.mercato_normal||0)+(b.mercato_easy||0)}`:"Nouveau"}</span></button>
   </div>
@@ -132,11 +132,11 @@ function screenChronoPick(){
   ${tabbar()}`};
 }
 function screenSaisonPick(){
-  const b = PROFILE.best, card = (k, rec) => `<button class="mode" data-act="saison" data-v="${k}"><span class="lgtag">${ERAS[k].d}</span><b>${ERAS[k].t}</b><small>${k==="modern"?"Salah, De Bruyne, Saka, Haaland… 11 postes, 11 saisons récentes.":"Henry, Lampard, Gerrard, Ronaldo… 11 postes, 11 saisons de la grande époque."}</small>${rec?`<span class="rec">Ton record : ${rec}/11</span>`:""}</button>`;
+  const b = PROFILE.best, card = (k, rec) => `<button class="mode" data-act="saison" data-v="${k}"><span class="lgtag">${ERAS[k].d}</span><b>${ERAS[k].t}</b><small>${k==="modern"?"Salah, De Bruyne, Saka, Haaland… 11 postes, 11 saisons récentes.":k==="nineties"?"Cantona, Shearer, Zola, Le Tissier… 11 postes, 11 saisons des débuts de la PL.":"Henry, Lampard, Gerrard, Ronaldo… 11 postes, 11 saisons de la grande époque."}</small>${rec?`<span class="rec">Ton record : ${rec}/11</span>`:""}</button>`;
   return {key:"saisonPick", html:`
   <div class="subhead"><button class="iconbtn" data-act="nav" data-v="home" aria-label="Retour">${ICON.back}</button><h1>Un joueur par saison</h1></div>
   <p class="muted" style="margin:0 0 14px">Pour chaque poste, une saison de Premier League tirée au hasard : cite un joueur qui y jouait, de mémoire. 45 s par manche.</p>
-  <div class="pick-list">${card("classic", b.saison)}${card("modern", b.saisonModern)}</div>
+  <div class="pick-list">${card("nineties", b.saison90)}${card("classic", b.saison)}${card("modern", b.saisonModern)}</div>
   ${tabbar()}`};
 }
 function screenPmPick(){
@@ -393,8 +393,8 @@ function screenResults(){
    <div class="hero"><span class="eyebrow">${g.daily?`Défi n°${dayNumber(g.daily)} · `:""}Un joueur par saison</span><h1 class="display" style="font-size:clamp(36px,11vw,52px)">${g.solo?`${filled} <span>sur 11</span>`:tie?`Égalité, <span>débat obligatoire</span>`:`${esc(w.name)} <span>gagne</span>`}</h1></div>
    ${g.solo?"":`<div class="podium">${res.map((r,k) => `<div class="pod${k===0?" first":""}"><span class="rk">${k+1}</span><span><b>${esc(r.name)}</b><small>${r.filled}/11 postes · ${plural(r.gems,"exclu")}</small></span><span class="sc">${r.avg.toFixed(1)}/10</span></div>`).join("")}</div>`}
    <div><div class="eyebrow" style="margin-bottom:8px">${g.solo?"Ton 11":"Carte à partager"}</div>
-    <div class="share"><div class="share-top"><div><div class="eyebrow">Un joueur par saison · ${g.era==="modern"?"Ère moderne":"PL"}</div><div class="display">${esc(g.solo?PROFILE.name:w.name)}</div></div><span class="badge">${g.solo?`${filled}/11`:w.avg.toFixed(1)}</span></div>
-     ${pitch(myTeam(g.solo?ME.id:w.id), true)}<div class="share-foot"><span>De mémoire · ${g.era==="modern"?"15/16 → 25/26":"04/05 → 14/15"}</span><span>FOOTBALL LEGENDS</span></div></div></div>
+    <div class="share"><div class="share-top"><div><div class="eyebrow">Un joueur par saison · ${g.era==="modern"?"Ère moderne":g.era==="nineties"?"Années 90":"PL"}</div><div class="display">${esc(g.solo?PROFILE.name:w.name)}</div></div><span class="badge">${g.solo?`${filled}/11`:w.avg.toFixed(1)}</span></div>
+     ${pitch(myTeam(g.solo?ME.id:w.id), true)}<div class="share-foot"><span>De mémoire · ${g.era==="modern"?"15/16 → 25/26":g.era==="nineties"?"92/93 → 03/04":"04/05 → 14/15"}</span><span>FOOTBALL LEGENDS</span></div></div></div>
    ${summaryBlock()}</div>${endButtons("saison", g.era)}`};
 }
 function duelCards(A, B, showB, theme="pl"){ const U = PM_THEMES[theme].u;

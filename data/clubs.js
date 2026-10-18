@@ -45,6 +45,13 @@ window.FL_CLUBS = {
  "Huddersfield":"#0e63ad",
  "Luton":"#f78f1e",
  "Ipswich":"#2b5ca8",
+ "Wimbledon":"#1c2c5b",
+ "Coventry":"#3a9ad9",
+ "Sheffield Wed":"#1e5cb3",
+ "Oldham":"#0b4ea2",
+ "Swindon":"#d0102b",
+ "Barnsley":"#d71920",
+ "Bradford":"#7a1f2b",
 };
 
 // Tenue type de chaque club pour les mini-joueurs (couleurs traditionnelles, pas de logo ni de design officiel)
@@ -95,4 +102,11 @@ window.FL_KITS = {
  "Huddersfield":{s:"#0e63ad",t:"#ffffff",sh:"#ffffff",so:"#ffffff",p:"stripes"},
  "Luton":{s:"#f78f1e",t:"#002d62",sh:"#002d62",so:"#f78f1e",p:"plain"},
  "Ipswich":{s:"#2b5ca8",t:"#ffffff",sh:"#ffffff",so:"#2b5ca8",p:"plain"},
+ "Wimbledon":{s:"#1c2c5b",t:"#f5d000",sh:"#1c2c5b",so:"#1c2c5b",p:"plain"},
+ "Coventry":{s:"#6cb4e4",t:"#ffffff",sh:"#6cb4e4",so:"#6cb4e4",p:"plain"},
+ "Sheffield Wed":{s:"#1e5cb3",t:"#ffffff",sh:"#111111",so:"#1e5cb3",p:"stripes"},
+ "Oldham":{s:"#0b4ea2",t:"#ffffff",sh:"#0b4ea2",so:"#0b4ea2",p:"plain"},
+ "Swindon":{s:"#d0102b",t:"#ffffff",sh:"#ffffff",so:"#d0102b",p:"plain"},
+ "Barnsley":{s:"#d71920",t:"#ffffff",sh:"#ffffff",so:"#d71920",p:"plain"},
+ "Bradford":{s:"#7a1f2b",t:"#f2a900",sh:"#111111",so:"#7a1f2b",p:"stripes"},
 };

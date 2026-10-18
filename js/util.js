@@ -24,7 +24,8 @@ const LEAGUES = window.FL_LEAGUES || {};
 
 /* ---------- Constantes de jeu ---------- */
 const SEASONS = [2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014];
-const ERAS = {classic:{t:"Années 2000", d:"De 2004-05 à 2014-15", s:SEASONS},
+const ERAS = {nineties:{t:"Années 90", d:"De 1992-93 à 2003-04", s:[1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003]},
+              classic:{t:"Années 2000", d:"De 2004-05 à 2014-15", s:SEASONS},
               modern:{t:"Ère moderne", d:"De 2015-16 à 2025-26", s:[2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025]}};
 const sLbl = y => `${y}-${String(y+1).slice(2)}`;
 const sShort = y => `${String(y).slice(2)}/${String(y+1).slice(2)}`;
