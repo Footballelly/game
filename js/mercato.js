@@ -66,7 +66,7 @@ const MC_POWERS = {
   tacticien:{ic:"📋", t:"Le Tacticien", d:"Tes combos rapportent 2× plus."},
   trader:{ic:"📈", t:"Le Trader", d:"Tu revends à la banque à 100 % de la cote (au lieu de 80 %)."},
   motivateur:{ic:"📣", t:"Le Motivateur", d:"Bonus de série doublé, et personne ne boude sur ton banc.", lock:"hard"},
-  chasseur:{ic:"🎯", t:"Le Chasseur de têtes", d:"Rapports du recruteur gratuits et Pépites du marché −20 %.", lock:"gain50"},
+  chasseur:{ic:"🎯", t:"Le Chasseur de têtes", d:"Rapports du recruteur à moitié prix et Pépites du marché −20 %.", lock:"gain50"},
   mecene:{ic:"🏦", t:"Le Mécène", d:"+4 M€ de recettes à chaque période.", lock:"rich150"}
 };
 /* succès : chacun débloque un club ou un pouvoir */
@@ -370,9 +370,9 @@ function mcLineup(p){
   return notes;
 }
 /* où jouerait un joueur, et qui il remplacerait */
-function mcWhere(p, c){
+function mcWhere(p, c, ov){
   const sys = mcSys(p); let best = {i:-1, gain:-99, rep:null, sl:null};
-  sys.s.forEach((sl, i) => { const occ = p.team.find(o => o.sl===i), g = mcOvr(c)*mcFit(c, sl) - (occ ? mcOvr(occ)*mcFit(occ, sl) : 40); if(g > best.gain) best = {i, gain:Math.round(g), rep:occ, sl}; });
+  sys.s.forEach((sl, i) => { const occ = p.team.find(o => o.sl===i), g = (ov ?? mcOvr(c))*mcFit(c, sl) - (occ ? mcOvr(occ)*mcFit(occ, sl) : 40); if(g > best.gain) best = {i, gain:Math.round(g), rep:occ, sl}; });
   return best;
 }
 function mcPlace(p, c){ c.sl = null; p.bench.push(c); return mcLineup(p); }
@@ -705,7 +705,7 @@ function mcNewsChoose(k){
 const MC_K = {easy:1.6, normal:2.8, hard:4.2};    // M€ par point de note et par période
 function mcGainOf(p, c){
   if(mcRoster(p).includes(c)) return 0;
-  const w = mcWhere(p, c);
+  const w = mcWhere(p, c, mcSeen(p, c));
   return Math.max(0, w.gain) / 4 + (mcRoster(p).length < 14 ? 0.5 : 0);
 }
 function mcWtp(p, c){
@@ -1308,7 +1308,7 @@ function mcActHTML(a, anim){
 }
 const MC_TIPS = {
   news:["📰 Le début de période", "Lis l'info du jour et le point de la direction (blessés, rumeurs, soupçons). Puis passe au mercato."],
-  mercato:["🔨 La salle des enchères", "C'est LE moment pour recruter. Touche un joueur pour glisser une offre secrète ; le plus offrant l'emporte. Les notes en orange sont estimées : le recruteur (2 M€) te donne la vraie. Ailleurs, les achats directs n'ouvrent qu'au mercato d'été et d'hiver."],
+  mercato:["🔨 La salle des enchères", "C'est LE moment pour recruter. Touche un joueur pour glisser une offre secrète ; le plus offrant l'emporte. Les notes en orange sont estimées, pour toi comme pour les ordis. Le recruteur te donne la vraie : 2 M€, puis 5, puis 10. Ailleurs, les achats directs n'ouvrent qu'au mercato d'été et d'hiver."],
   coups:["💼 Le bureau des affaires", "Choisis jusqu'à 2 affaires (chacune une seule fois par saison) : du légal, des magouilles qui rapportent mais font monter tes soupçons, des coups bas contre un rival, ou de l'espionnage en secret. Touche un président en haut pour lui acheter ou vendre un joueur."],
   press:["🎤 La conférence de presse", "Ta réponse donne un bonus ou un malus de note pour les matchs de la période."],
   match:["⚽ Le bilan de la période", "Tes résultats, tes finances et les enquêtes de la Ligue. Ton vrai score, ce sont les points de progression : regarde l'onglet Championnat."],
@@ -1401,6 +1401,10 @@ const mcKnown = c => !!c.scouted || (M.players && mcRoster(mcMe()).includes(c));
 const mcEst = c => { const a = (hashStr(c.uid) >>> 0) % 5 + 1, o = mcOvr(c); return {lo:o - a, hi:o + 6 - a}; };
 const mcOvrTxt = c => { if(mcKnown(c)) return `${mcOvr(c)}`; const e = mcEst(c); return `${e.lo}-${e.hi}`; };
 const mcOvrMid = c => { if(mcKnown(c)) return mcOvr(c); const e = mcEst(c); return (e.lo + e.hi)/2; };
+/* rapports du recruteur : de plus en plus chers dans la même période */
+const mcScoutCost = () => { const n = M.scouts||0; if(n >= 3) return null; const c = [2,5,10][n]; return mcMe().power==="chasseur" ? Math.ceil(c/2) : c; };
+/* les ordis aussi se trompent : chacun voit une note faussée, sauf pour ses propres joueurs */
+const mcSeen = (p, c) => { if(!p.bot || mcRoster(p).includes(c)) return mcOvr(c); const k = {easy:5, normal:3, hard:2}[M.diff], e = ((hashStr(p.prof + c.uid) >>> 0) % (2*k+1)) - k; return mcOvr(c) + e; };
 const mcWindow = () => M.period===1 || M.period===MC.flashPeriod;
 const mcPotTxt = c => c.age<=21 ? (c.scouted ? `pot. ${c.pot}` : `pot. ${c.pot>=85?"⭐⭐⭐":c.pot>=78?"⭐⭐":"⭐"}`) : "";
 /* une ligne de joueur avec tout ce qui compte, pour comparer sans ouvrir chaque fiche */
@@ -1409,7 +1413,7 @@ function mcRow(c, k, {act=true}={}){
   return `<div class="prow-l"><span class="pl-card">${cardHTML(c.id,{small:true})}</span>
     <button class="pl-main" data-act="mcpl" data-v="${c.uid}"><b>${esc(c.n)} ${c.trait?MC_TRAITS[c.trait].ic:""}${c.inj>0?" 🚑":""}</b><small>${c.po} · ${c.age} ans${c.age<=21?` · ${mcPotTxt(c)}`:""}${k?` · ${mcBadge(k, 11)} ${esc(k.cpu?k.n:k.club)}`:""}${k && k.team && !k.team.includes(c)?" · banc":""}${c.ct===1 && M.period>=MC.flashPeriod?` · <em class="ct-end">📝 fin de contrat</em>`:""}</small></button>
     <span class="pl-ovr${mcKnown(c)?"":" est"}">${mcOvrTxt(c)}</span><span class="pl-val">${c.val}<small>M€</small></span>
-    <span class="pl-acts">${!mcKnown(c) ? `<button class="mini-btn" data-act="mcscoutp" data-v="${c.uid}" title="Rapport du recruteur">🔎 ${me.power==="chasseur"?0:2}</button>` : ""}${can && mcWindow() && k!==me && c.trait!=="fidele" ? `<button class="mini-btn go" data-act="mcdealfrom" data-v="${ci}|${c.uid}">Offre</button>` : c.trait==="fidele" ? `<span class="mini-lock">🔒</span>` : ""}</span></div>`;
+    <span class="pl-acts">${!mcKnown(c) ? `<button class="mini-btn" data-act="mcscoutp" data-v="${c.uid}" title="Rapport du recruteur">🔎 ${mcScoutCost() ?? "✗"}</button>` : ""}${can && mcWindow() && k!==me && c.trait!=="fidele" ? `<button class="mini-btn go" data-act="mcdealfrom" data-v="${ci}|${c.uid}">Offre</button>` : c.trait==="fidele" ? `<span class="mini-lock">🔒</span>` : ""}</span></div>`;
 }
 const mcPlayerLine = c => `💪 ${mcKnown(c) ? mcOvr(c) : `${mcOvrTxt(c)} (estimée)`} · ${c.age} ans${c.age<=21?` · ${mcPotTxt(c)}`:""} · cote ${c.val} M€`;
 function mcSheet(){
@@ -1439,7 +1443,7 @@ function mcSheet(){
   if(s.t==="bid"){ const c = M.market.find(x => x.uid===s.u), b = M.sel[s.u] ?? c.price, used = Object.entries(M.sel).filter(([u]) => u!==s.u).reduce((a,[,v]) => a+v, 0);
     const weak = !mcFree(me, c) ? me.team.filter(o => mcSlot(o)===mcSlot(c)).sort((a,b) => mcOvr(a)-mcOvr(b))[0] : null;
     body = `<div class="bid-head">${cardHTML(c.id,{small:true})}<div><b>${esc(c.n)}</b><small>${mcPoFr(c)}${c.from?` · chez ${esc(c.from.n)}`:" · libre"}</small><span class="bid-pp">💪 ${mcOvrTxt(c)}<small> · ${c.age} ans</small></span>
-      <small>${mcPlayerLine(c)}${c.fav?" · ❤️ dans ta collection : −15 %":""}</small>${!mcKnown(c)?`<button class="mini-btn" data-act="mcscoutp" data-v="${c.uid}">🔎 Rapport du recruteur · ${me.power==="chasseur"?0:2} M€ : la vraie note</button>`:""}
+      <small>${mcPlayerLine(c)}${c.fav?" · ❤️ dans ta collection : −15 %":""}</small>${!mcKnown(c)?`<button class="mini-btn" data-act="mcscoutp" data-v="${c.uid}">🔎 Rapport du recruteur · ${mcScoutCost()!=null ? mcScoutCost()+" M€" : "plus de rapport cette période"} : la vraie note</button>`:""}
       ${c.trait?`<span class="trait-l">${MC_TRAITS[c.trait].ic} <b>${MC_TRAITS[c.trait].t}</b> · ${MC_TRAITS[c.trait].d}</span>`:""}
       <small>${(() => { const w = mcWhere(me, c); if(!mcKnown(c)) return `🧭 Poste : ${c.po}${(c.ps||[]).length?"/"+c.ps.join("/"):""} · note à vérifier`; return w.gain > 0 ? `🔄 Titulaire en ${w.sl}${w.rep?` à la place de ${esc(cardName(w.rep.n))} (${mcEff(w.rep, w.sl)} → ${mcEff(c, w.sl)})`:""}` : "🪑 Irait sur le banc"; })()}${mcFree(me, c) ? "" : " · effectif plein (16) : ton moins bon remplaçant sera vendu"}</small></div></div>
       <div class="bid-dial"><button data-act="mcbid" data-v="-5">−5</button><button data-act="mcbid" data-v="-1">−</button><b>${b}<small> M€</small></b><button data-act="mcbid" data-v="1">+</button><button data-act="mcbid" data-v="5">+5</button></div>
@@ -1479,7 +1483,7 @@ function mcSheet(){
       <div class="chips">${[["all","Tous"],["G","Gardiens"],["DEF","Déf."],["MIL","Milieux"],["ATT","Attaq."]].map(([k,t]) => `<button class="${pos===k?"on":""}" data-act="mcsf" data-v="${k}">${t}</button>`).join("")}</div>
       <div class="chips">${[["ovr","Meilleure note"],["val","Moins cher"],["age","Plus jeune"],["pot","Potentiel"]].map(([k,t]) => `<button class="${sort===k?"on":""}" data-act="mcss" data-v="${k}">${t}</button>`).join("")}</div>
       <div class="pl-list">${all.map(x => mcRow(x.c, x.k)).join("")}</div>
-      <p class="bid-note">💰 tu as ${me.money} M€ · notes en orange = estimées · 🔎 = rapport du recruteur (vraie note et potentiel), 4 par période.</p>`}`; }
+      <p class="bid-note">💰 tu as ${me.money} M€ · notes en orange = estimées · 🔎 = rapport du recruteur (vraie note et potentiel) : 2 M€, puis 5, puis 10 dans la même période (3 maximum).</p>`}`; }
   if(s.t==="dash"){ const H = M.hist || [], val = mcRoster(me).reduce((t,c) => t+c.val, 0), g = mcProg(me), pos = mcPos(me);
     const pres = [...M.players].map(p => ({p, t:mcProg(p).tot})).sort((a,b) => b.t-a.t), rk = pres.findIndex(x => x.p===me) + 1, mx = Math.max(10, ...pres.map(x => Math.abs(x.t)));
     const spark = (key, inv, fmt) => { const vs = [...H.map(x => x[key] ?? 0)]; if(vs.length < 2) return `<p class="bid-note">La courbe apparaît après 2 périodes.</p>`;
@@ -1522,7 +1526,7 @@ function mcSheet(){
       <div class="pf-head">${cardHTML(c.id)}<div><b>${esc(c.n)}</b><small>${mcPoFr(c)} · ${c.age} ans${k?` · ${mcBadge(k, 12)} ${esc(mcCN(k))}`:" · sur le marché"}</small>
         <div class="kpis pf-k"><div><small>Note${mcKnown(c)?"":" estimée"}</small><b>${mcOvrTxt(c)}</b>${mcKnown(c)?"":`<button class="mini-btn" data-act="mcscoutp" data-v="${c.uid}">🔎 vérifier</button>`}</div><div><small>Cote</small><b>${c.val} M€</b></div><div><small>Salaire</small><b>${mcWage(c)}<i>/pér.</i></b></div><div><small>Buts</small><b>${c.gs||0}<i> cette saison · ${c.gt||0} en tout</i></b></div></div></div></div>
       ${c.trait?`<p class="trait-l">${MC_TRAITS[c.trait].ic} <b>${MC_TRAITS[c.trait].t}</b> · ${MC_TRAITS[c.trait].d}</p>`:""}
-      <p class="bid-note">${st.join(" · ")}${c.age<=21 ? ` · potentiel ${c.scouted || me.power==="chasseur" ? c.pot : mcPotTxt(c).replace("pot. ","")}` : ""}${c.paid!=null && mine ? ` · acheté ${c.paid} M€ (${c.val-c.paid>=0?"+":""}${c.val-c.paid})` : ""}</p>
+      <p class="bid-note">${st.join(" · ")}${c.age<=21 ? ` · potentiel ${c.scouted ? c.pot : mcPotTxt(c).replace("pot. ","")}` : ""}${c.paid!=null && mine ? ` · acheté ${c.paid} M€ (${c.val-c.paid>=0?"+":""}${c.val-c.paid})` : ""}</p>
       ${mcKnown(c) ? `<p class="dash-t">Note</p>${sp(oh, "")}` : ""}<p class="dash-t">Cote (M€)</p>${sp(vh, "alt")}
       <p class="dash-t">Transferts</p>${(c.th||[]).length ? `<div class="tlog">${[...c.th].reverse().map(e => `<p><span>S${e.s}·P${e.p}</span><b>${esc(e.f)} → ${esc(e.t)}</b><em>${e.k==="free"?"libre":e.a+" M€"}</em></p>`).join("")}</div>` : `<p class="bid-note">Aucun transfert depuis le début de la partie.</p>`}
       ${mine ? `<div class="dock-row"><button class="btn" data-act="mcsellask" data-v="${c.uid}">💰 Vendre</button>${c.inj>0?`<button class="btn ghost" data-act="mcheal" data-v="${c.uid}">🚑 ${mcHeal(c)} M€</button>`:""}${(M.len||1)>1?`<button class="btn ghost" data-act="mcrenew" data-v="${c.uid}">✍️ +2 saisons · ${mcRenew(c)} M€</button>`:""}</div>`
@@ -1809,10 +1813,10 @@ function mcAct(a, v, el){
     case "mcscouttab": M.st = v; mcR(); break;
     case "mcsf": M.sf = v; mcR(); break;
     case "mcss": M.ss = v; mcR(); break;
-    case "mcscoutp": { const c = [...M.clubs.flatMap(mcRoster), ...M.market].find(x => x.uid===v); if(!c) break; const fee = me.power==="chasseur" ? 0 : 2;
-      if((M.scouts||0) >= 4) return toast("Ton recruteur a déjà fait 4 rapports cette période.");
-      if(me.money < fee) return toast("Pas assez d'argent."); me.money -= fee; c.scouted = true; M.scouts = (M.scouts||0) + 1;
-      toast(`Rapport : ${cardName(c.n)} vaut ${mcOvr(c)}${c.age<=21?`, potentiel ${c.pot}`:""}.`, "ok"); mcR(); break; }
+    case "mcscoutp": { const c = [...M.clubs.flatMap(mcRoster), ...M.market].find(x => x.uid===v); if(!c || mcKnown(c)) break; const fee = mcScoutCost();
+      if(fee==null) return toast("Ton recruteur a déjà fait 3 rapports cette période.");
+      if(me.money < fee) return toast(`Ce rapport coûte ${fee} M€.`); me.money -= fee; c.scouted = true; M.scouts = (M.scouts||0) + 1;
+      toast(`Rapport (${fee} M€) : ${cardName(c.n)} vaut ${mcOvr(c)}${c.age<=21?`, potentiel ${c.pot}`:""}.${mcScoutCost()!=null?` Le prochain coûtera ${mcScoutCost()} M€.`:""}`, "ok"); mcR(); break; }
     case "mcopen1": { const x = M.results[M.ri]; M.ri++; if(x && x.w===me){ M.signC = x.c; mcSfx("win"); } else mcSfx(x && x.w ? "hit" : "card"); mcR("open"); break; }
     case "mcopenall": { const mine = M.results.slice(M.ri).find(x => x.w===me); M.ri = M.results.length; if(mine) M.signC = mine.c; mcSfx("env"); mcR(); break; }
     case "mcdealfrom": { if(!mcWindow()) return toast("Fenêtre fermée : les achats directs n'ouvrent qu'au mercato d'été (P1) et d'hiver (P4). Passe par les enchères !"); if((M.direct||0) >= 1) return toast("Un seul achat direct par fenêtre de transferts."); const [ci, u] = v.split("|"), p = mcClub(+ci), c = mcRoster(p).find(x => x.uid===u); if(!c) break; M.sheet = {t:"deal", mode:"buy", club:+ci, u, amt:Math.max(1, Math.min(me.money, Math.round(c.val*1.2)))}; mcR(); break; }
