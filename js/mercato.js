@@ -102,19 +102,19 @@ const MC_AF = {
   miroir:{ic:"🔄", t:"Le transfert miroir", k:"self", sus:15, d:"Avec ton allié secret, vous vous échangez des joueurs à prix gonflés : la cote de vos 3 meilleurs prend +15 %.", need:p => mcAllies(p).length ? null : "Il te faut un allié secret (pacte)."},
   chantage:{ic:"📸", t:"Le dossier compromettant", k:"atk", pick:true, mise:5, sus:15, d:"Tu as des photos. Il te vend le joueur de ton choix à 60 % de sa cote."},
   fuite:{ic:"📰", t:"La fuite organisée", k:"atk", mise:4, sus:10, d:"Une rumeur bien placée sur sa star : −20 % de cote, et son équipe perd 2 de note."},
-  taupe:{ic:"🕵️", t:"La taupe dans le vestiaire", k:"atk", mise:5, sus:5, d:"Pendant 2 périodes, tu vois ses soupçons, ses parades et ses magouilles."},
+  taupe:{ic:"🕵️", t:"La taupe dans le vestiaire", k:"spy", cost:5, sus:5, d:"En secret : pendant 2 périodes, tu vois ses soupçons, ses parades et ses magouilles. Il ne saura jamais qu'il est observé."},
   pelouse:{ic:"🪣", t:"La pelouse arrosée", k:"atk", mise:4, sus:10, d:"Un jardinier zélé : −3 de note pour son équipe sur la période."},
-  detective:{ic:"🔎", t:"Le détective privé", k:"inv", cost:6, sus:0, d:"Il fouille chez un rival : soupçons et magouilles en cours. S'il triche, tu peux le dénoncer à la Ligue (prime de 10 M€). S'il est clean, la dénonciation te coûte cher."},
+  detective:{ic:"🔎", t:"Le détective privé", k:"inv", cost:6, sus:0, d:"En toute discrétion, il fouille chez un rival : soupçons et magouilles en cours. S'il triche, tu peux le dénoncer à la Ligue (prime de 10 M€). S'il est clean, la dénonciation te coûte cher."},
   gala:{ic:"🥂", t:"Gala de charité", k:"clean", cost:8, sus:0, d:"Une belle photo avec un chèque géant : −20 soupçons."},
   tenor:{ic:"👔", t:"Un ténor du barreau", k:"clean", cost:12, sus:0, d:"Il nettoie ton dossier : −35 soupçons."},
   mission:{ic:"🎯", t:"Mission secrète", k:"atk", sus:0, hidden:true, d:""}
 };
-const MC_AF_MENU = [["Légal", ["prime","clause","pacte","trahison"]], ["Magouilles", ["pari","arrange","comptes","retro","sponsor","miroir"]], ["Coups bas", ["chantage","fuite","taupe","pelouse"]], ["Enquêter et se blanchir", ["detective","gala","tenor"]]];
+const MC_AF_MENU = [["Légal", ["prime","clause","pacte","trahison"]], ["Magouilles", ["pari","arrange","comptes","retro","sponsor","miroir"]], ["Coups bas", ["chantage","fuite","pelouse"]], ["Espionner en secret", ["taupe","detective"]], ["Se blanchir", ["gala","tenor"]]];
 const MC_CASE = {pari:"paris truqués", arrange:"match arrangé", comptes:"comptes maquillés", retro:"rétrocommissions", sponsor:"sponsor fantôme", miroir:"transferts fictifs", chantage:"chantage", fuite:"fuites organisées", taupe:"espionnage", pelouse:"sabotage"};
 /* parades : on les pioche ou on les achète ; elles retournent le coup contre l'attaquant */
 const MC_PAR = {
   avocat:{ic:"⚖️", t:"L'avocat", vs:["chantage","fuite","clause","mission"], price:8, d:"Contre un chantage, une fuite ou une clause : coup annulé, l'attaquant perd sa mise et prend +20 soupçons."},
-  contre:{ic:"🔍", t:"Le contre-espionnage", vs:["taupe","pelouse"], price:6, d:"Contre une taupe ou une pelouse arrosée : c'est toi qui l'espionnes pendant 2 périodes, et il perd sa mise."},
+  contre:{ic:"🔍", t:"Le contre-espionnage", vs:["pelouse","chantage"], price:6, d:"Contre une pelouse arrosée ou un chantage : tu démasques l'attaquant, tu l'espionnes pendant 2 périodes et il perd sa mise."},
   ligue:{ic:"📞", t:"L'appel à la Ligue", vs:"*", price:9, d:"Contre n'importe quelle attaque : la Ligue enquête aussitôt sur l'attaquant."},
   presse:{ic:"🎙️", t:"La conférence de presse", vs:["fuite","pelouse"], price:5, d:"Contre une fuite ou une pelouse : l'affaire se retourne, −2 de note pour l'attaquant."}
 };
@@ -891,10 +891,10 @@ function mcAfTargets(by, k, to){
   if(k==="chantage") return mcRoster(to).filter(c => c.trait!=="fidele" && c.boughtAt!==M.period && by.money >= Math.round(c.val*0.6) + (MC_AF.chantage.mise||0));
   return [];
 }
-const mcAfNeedsSeat = k => ["atk","inv","pacte","betray"].includes(MC_AF[k].k);
+const mcAfNeedsSeat = k => ["atk","inv","spy","pacte","betray"].includes(MC_AF[k].k);
 function mcAfCheck(by, k, to, o={}){
   const A = MC_AF[k]; if(!A) return "Inconnu.";
-  if(A.once && (by.once||{})[k]===(M.season||1)) return "Déjà fait cette saison.";
+  if(!A.hidden && (by.once||{})[k]===(M.season||1)) return "Déjà utilisée cette saison.";
   if(by.money < mcAfMoney(k, o)) return `Il te faut ${mcAfMoney(k, o)} M€.`;
   if((k==="clause" || k==="chantage") && by.ban===M.period) return "Interdit de recruter cette période (sanction de la Ligue).";
   if(A.need){ const e = A.need(by, to); if(e) return e; }
@@ -912,7 +912,7 @@ function mcAfApply(by, k, to, c, o={}){
   const A = MC_AF[k];
   by.money -= (A.cost||0) + (A.mise||0);
   if(A.sus) mcSusUp(by, A.sus);
-  mcTagAf(by, k); if(A.once) (by.once ||= {})[k] = M.season||1;
+  mcTagAf(by, k); (by.once ||= {})[k] = M.season||1;
   if(A.k==="atk" && to){ to.hit = true; by.bas++; if(to.bot) to.grudge = by; M.feud ||= {}; M.feud[mcPair(by, to)] = mcFeud(by, to) + 1; }
   switch(k){
     case "prime": by.mods.push({t:"🏅 Prime de match", v:3}); return "+3 de note sur la période";
@@ -946,7 +946,7 @@ function mcBackfire(by, k, to, par){
   by.money -= lost; to.money += lost; mcSusUp(by, 20); mcTagAf(by, k); by.hit = true; if(to.bot) to.grudge = by;
   M.feud ||= {}; M.feud[mcPair(by, to)] = mcFeud(by, to) + 1;
   const who = by===mcMe() ? "tu perds" : `${by.n} perd`;
-  if(par==="contre"){ M.spies = (M.spies||[]).filter(x => !(x.by===to && x.on===by)); M.spies.push({by:to, on:by, until:M.period+1}); return `🔍 Taupe retournée : ${to===mcMe()?"tu vois":`${to.n} voit`} tout chez ${by===mcMe()?"toi":by.n} pendant 2 périodes. ${who} ${lost} M€.`; }
+  if(par==="contre"){ M.spies = (M.spies||[]).filter(x => !(x.by===to && x.on===by)); M.spies.push({by:to, on:by, until:M.period+1}); return `🔍 Démasqué ! ${to===mcMe()?"Tu espionnes":`${to.n} espionne`} désormais ${by===mcMe()?"toi":by.n} pendant 2 périodes. ${who} ${lost} M€.`; }
   if(par==="ligue"){ const t = mcEnquete(by); return `📞 La Ligue enquête aussitôt : ${t}. ${who} sa mise (${lost} M€).`.replace("tu perds sa", "tu perds ta"); }
   if(par==="presse"){ by.mods.push({t:"🎙️ Retour de bâton", v:-2}); return `🎙️ L'affaire se retourne : −2 de note pour ${by===mcMe()?"toi":by.n}, ${lost} M€ perdus.`; }
   return `⚖️ Coup annulé par l'avocat : ${who} ${lost} M€ et prend +20 soupçons.`;
@@ -1303,6 +1303,20 @@ function mcActHTML(a, anim){
     <p class="act-out">${a.res==="blocked"?"🛡️ ":a.res==="refused"?"✋ ":"→ "}${esc(a.out)}</p>
     ${C.p && a.res==="ok"?`<i>${esc(C.p)}</i>`:""}</div>`;
 }
+const MC_TIPS = {
+  news:["📰 Le début de période", "Lis l'info du jour et le point de la direction (blessés, rumeurs, soupçons). Puis passe au mercato."],
+  mercato:["✉️ Le mercato à l'aveugle", "Touche un joueur pour glisser une offre secrète. Les rivaux enchérissent aussi : le plus offrant l'emporte. 2 offres maximum."],
+  coups:["💼 Le bureau des affaires", "Choisis jusqu'à 2 affaires (chacune une seule fois par saison) : du légal, des magouilles qui rapportent mais font monter tes soupçons, des coups bas contre un rival, ou de l'espionnage en secret. Touche un président en haut pour lui acheter ou vendre un joueur."],
+  press:["🎤 La conférence de presse", "Ta réponse donne un bonus ou un malus de note pour les matchs de la période."],
+  match:["⚽ Le bilan de la période", "Tes résultats, tes finances et les enquêtes de la Ligue. Ton vrai score, ce sont les points de progression : regarde l'onglet Championnat."],
+  club:["👥 Ton club", "Choisis ton système, touche une case du terrain pour changer un joueur. Un joueur hors de son poste perd de sa note."],
+  ligue:["🏆 Qui gagne ?", "Le meilleur président est celui qui gagne le plus de points de progression : l'argent gagné × le coefficient de son club, plus les places au-dessus de son objectif."]
+};
+function mcTip(k){
+  const t = MC_TIPS[k]; if(!t || M.daily && M.season>1) return "";
+  const seen = PROFILE.best.mcTips || {}; if(seen[k]) return "";
+  return `<div class="coach"><b>${t[0]}</b><p>${esc(t[1])}</p><button class="mini-btn go" data-act="mctipok" data-v="${k}">OK, compris</button></div>`;
+}
 const MC_TABS = [["jeu","⚽","Partie"],["club","👥","Mon club"],["ligue","🏆","Championnat"]];
 function mcTable(center, dockHtml="", cls=""){
   const me = mcMe(), step = mcStepOf(M.phase), si = MC_STEPS.findIndex(s => s[0]===step), pos = mcPos(me);
@@ -1320,7 +1334,7 @@ function mcTable(center, dockHtml="", cls=""){
    <div class="seats">${M.players.slice(1).map(mcSeat).join("")}</div>
    <div class="fixture"><span>${MC_PERIODS[M.period-1]} · J${M.round+1}-${M.round+MC.rounds[M.period-1]}</span><b>🎯 top ${me.goal} <em class="${pos<=me.goal?"ok":"ko"}">${pos<=me.goal?"✓":"✗"}</em></b></div>
    <div class="steps"${tab!=="jeu"?' hidden':""}>${MC_STEPS.map((s,k) => `<span class="${k<si?"done":k===si?"cur":""}">${s[1]} ${s[2]}</span>`).join("")}</div>
-   <div class="mct-c">${center}</div>
+   <div class="mct-c">${mcTip(tab!=="jeu" ? tab : M.phase)}${center}</div>
    <div class="me-zone" style="--pc:${me.col}"${tab!=="jeu"?' hidden':""}>
     <div class="me-bar"><span class="seat-av me">${me.power?MC_POWERS[me.power].ic:me.ic}</span><span class="me-st"><b>${esc(me.n)} · ${mcRating(me).total}</b><small>💰 ${me.money} M€ · 💸 −${mcWages(me)}/pér. · ${pos}ᵉ</small></span>
      <span class="me-form">${me.form.slice(-5).map(f => `<i class="f-${f}">${f}</i>`).join("")}</span>
@@ -1457,19 +1471,29 @@ function mcSheet(){
       <div class="chips">${[["ovr","Meilleure note"],["val","Moins cher"],["age","Plus jeune"],["pot","Potentiel"]].map(([k,t]) => `<button class="${sort===k?"on":""}" data-act="mcss" data-v="${k}">${t}</button>`).join("")}</div>
       <div class="pl-list">${all.map(x => mcRow(x.c, x.k)).join("")}</div>
       <p class="bid-note">💰 tu as ${me.money} M€ · 🔎 2 = rapport du recruteur sur un jeune (2 M€) : potentiel exact.</p>`}`; }
-  if(s.t==="dash"){ const H = M.hist || [], val = mcRoster(me).reduce((t,c) => t+c.val, 0), last = H.at(-1);
-    const spark = (key, inv, fmt) => { if(H.length < 2) return `<p class="bid-note">La courbe apparaît après 2 périodes.</p>`;
-      const vs = H.map(x => x[key]), mn = Math.min(...vs), mx = Math.max(...vs), W = 260, Hh = 54, sx = i => 8 + i*(W-16)/(vs.length-1), sy = v => mx===mn ? Hh/2 : (inv ? 6 + (v-mn)/(mx-mn)*(Hh-12) : Hh-6 - (v-mn)/(mx-mn)*(Hh-12));
-      const pts = vs.map((v,i) => `${sx(i).toFixed(1)},${sy(v).toFixed(1)}`).join(" ");
-      return `<svg class="spark" viewBox="0 0 ${W} ${Hh}" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>${vs.map((v,i) => `<circle cx="${sx(i).toFixed(1)}" cy="${sy(v).toFixed(1)}" r="${i===vs.length-1?4:2.5}" fill="currentColor"/>`).join("")}</svg><div class="spark-l">${H.map(x => `<span>P${x.p}<b>${fmt(x[key])}</b></span>`).join("")}</div>`; };
-    body = `<h3>📊 ${esc(me.n)} · saison ${M.season}</h3>
-      <div class="kpis"><div><small>Trésorerie</small><b>${me.money} M€</b></div><div><small>Masse salariale</small><b>−${mcWages(me)}<i>/pér.</i></b></div><div><small>Valeur effectif</small><b>${val} M€</b></div><div><small>Dernier bilan</small><b class="${last && last.income-last.wages<0?"neg":"pos"}">${last?`${last.income-last.wages>=0?"+":""}${last.income-last.wages} M€`:"—"}</b></div></div>
-      <p class="bid-note">🧾 Fair-play financier : au-delà de ${MC.wageCap} M€ de salaires par période, chaque M€ en plus est taxé une 2ᵉ fois.${mcWages(me) > MC.wageCap ? ` <b>Tu dépasses de ${mcWages(me)-MC.wageCap} M€.</b>` : ""}</p>
-      <button class="btn ghost" data-act="mctlog">📜 Tous les transferts de la saison</button>
-      <p class="dash-t">Classement <small>(objectif top ${me.goal})</small></p>${spark("pos", true, v => v+"ᵉ")}
+  if(s.t==="dash"){ const H = M.hist || [], val = mcRoster(me).reduce((t,c) => t+c.val, 0), g = mcProg(me), pos = mcPos(me);
+    const pres = [...M.players].map(p => ({p, t:mcProg(p).tot})).sort((a,b) => b.t-a.t), rk = pres.findIndex(x => x.p===me) + 1, mx = Math.max(10, ...pres.map(x => Math.abs(x.t)));
+    const spark = (key, inv, fmt) => { const vs = [...H.map(x => x[key] ?? 0)]; if(vs.length < 2) return `<p class="bid-note">La courbe apparaît après 2 périodes.</p>`;
+      const mn = Math.min(...vs), mx2 = Math.max(...vs), W = 260, Hh = 50, sx = i => 8 + i*(W-16)/(vs.length-1), sy = v => mx2===mn ? Hh/2 : (inv ? 6 + (v-mn)/(mx2-mn)*(Hh-12) : Hh-6 - (v-mn)/(mx2-mn)*(Hh-12));
+      return `<svg class="spark" viewBox="0 0 ${W} ${Hh}" preserveAspectRatio="none"><polyline points="${vs.map((v,i) => `${sx(i).toFixed(1)},${sy(v).toFixed(1)}`).join(" ")}" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>${vs.map((v,i) => `<circle cx="${sx(i).toFixed(1)}" cy="${sy(v).toFixed(1)}" r="${i===vs.length-1?4:2.5}" fill="currentColor"/>`).join("")}</svg><div class="spark-l">${H.map(x => `<span>P${x.p}<b>${fmt(x[key] ?? 0)}</b></span>`).join("")}</div>`; };
+    const last = H.at(-1), net = me.income!=null ? me.income - (me.wages||0) - (me.tax||0) - (me.int||0) : null;
+    const used = Object.keys(MC_AF).filter(k => !MC_AF[k].hidden && (me.once||{})[k]===(M.season||1));
+    body = `<h3>📊 Tableau de bord · saison ${M.season}</h3>
+      <div class="db-hero"><div><small>Points de progression</small><b>${g.tot}</b><em>${rk===1?"🥇 tu mènes":`${rk}ᵉ des présidents`}</em></div>
+        <div class="db-chips"><span>💰 fortune ${g.fort>=0?"+":""}${g.fort}</span><span>🏆 classement ${g.rank>=0?"+":""}${g.rank}</span>${g.cas?`<span class="neg">🚨 casseroles ${g.cas}</span>`:""}${g.bon?`<span>🏦 +${g.bon}</span>`:""}</div></div>
+      <div class="db-bars">${pres.map(x => `<p class="${x.p===me?"me":""}"><span>${x.p.ic} ${esc(x.p===me?"Toi":mcShort(x.p))}</span><i><b class="${x.t<0?"neg":""}" style="width:${Math.round(Math.abs(x.t)/mx*100)}%"></b></i><em>${x.t}</em></p>`).join("")}</div>
+      <div class="kpis db-k">
+        <div><small>Classement</small><b class="${pos<=me.goal?"pos":"neg"}">${pos}ᵉ</b><i>objectif top ${me.goal}</i></div>
+        <div><small>Trésorerie</small><b>${me.money} M€</b>${me.loan?`<i>dont ${me.loan} à rembourser</i>`:me.debt?`<i>dettes ${me.debt} M€</i>`:""}</div>
+        <div><small>Soupçons</small><b class="${(me.sus||0)>=60?"neg":""}">${me.sus||0} %</b><i>risque d'enquête ${Math.round((me.sus||0)*0.35)} %</i></div>
+        <div><small>Valeur de l'effectif</small><b>${val} M€</b><i>${mcRoster(me).length} joueurs</i></div></div>
+      ${net!=null ? `<p class="dash-t">Dernière période</p><div class="db-flow"><span class="pos">Recettes +${me.income}</span><span class="neg">Salaires −${me.wages||0}</span>${me.tax?`<span class="neg">Taxe −${me.tax}</span>`:""}${me.int?`<span class="neg">Intérêts −${me.int}</span>`:""}<b class="${net>=0?"pos":"neg"}">= ${net>=0?"+":""}${net} M€</b></div>` : ""}
+      <p class="dash-t">Affaires utilisées cette saison <small>(une seule fois chacune)</small></p><p class="bid-note">${used.length ? used.map(k => `${MC_AF[k].ic} ${MC_AF[k].t}`).join(" · ") : "Aucune pour l'instant."}</p>
+      <p class="dash-t">Points de progression</p>${spark("prog", false, v => v)}
+      <p class="dash-t">Classement</p>${spark("pos", true, v => v+"ᵉ")}
       <p class="dash-t">Trésorerie</p>${spark("money", false, v => v)}
-      <p class="dash-t">Valeur de l'effectif</p>${spark("value", false, v => v)}
-      ${M.cup ? `<p class="bid-note">🏆 Coupe : ${M.cup.alive.includes(0) ? (M.cup.winner===0 ? "vainqueur !" : `encore en course (${M.cup.alive.length} clubs restants)`) : "éliminé"}</p>` : ""}`; }
+      ${M.cup ? `<p class="bid-note">🏆 Coupe : ${M.cup.alive.includes(0) ? (M.cup.winner===0 ? "vainqueur !" : `encore en course (${M.cup.alive.length} clubs)`) : "éliminé"}</p>` : ""}
+      <button class="btn ghost" data-act="mctlog">📜 Tous les transferts de la saison</button>`; }
   if(s.t==="sellpick"){ const p = mcClub(s.club);
     body = `<h3>Vendre à ${p.ic} ${esc(p.n)}</h3><p class="bid-note">Quel joueur lui proposes-tu ?</p><div class="pl-list">${mcRoster(me).sort((a,b) => b.val-a.val).map(c => `<button class="cand" data-act="mcdealsell" data-v="${c.uid}"><b>${esc(cardName(c.n))}</b><small>${c.po} · 💪 ${mcOvr(c)}</small><em>${c.val} M€</em></button>`).join("")}</div>`; }
   if(s.t==="deal"){ const p = mcClub(s.club), c = mcRoster(s.mode==="buy" ? p : me).find(x => x.uid===s.u);
@@ -1503,7 +1527,12 @@ function mcSheet(){
     body = `${s.back?`<button class="linkbtn sheet-back" data-act="mcback">← Retour</button>`:""}<h3>📜 Transferts · saison ${M.season||1}</h3>
       ${list.length ? `<div class="tlog">${list.map(e => `<p class="${e.f===me.n||e.t===me.n?"me":""}"><span>P${e.p}</span><b>${esc(cardName(e.n))}<small>${esc(e.f)} → ${esc(e.t)}</small></b><em>${e.k==="free"?"libre":e.a+" M€"}</em></p>`).join("")}</div>` : `<p class="bid-note">Aucun transfert pour l'instant.</p>`}`; }
   if(s.t==="log") body = `<h3>Pendant ce temps…</h3><div class="log-list">${M.show.map(a => { const C = mcCardOf(a.st); return `<p class="log-l res-${a.res}"><span>${a.by.ic} ${C.ic}${a.to?` → ${a.to.ic}`:""}</span><span>${esc(a.out)}</span></p>`; }).join("")}</div>`;
-  if(s.t==="rules") body = `<h3>Comment on joue</h3>${mcTutoSlides().map(x => `<p class="rule-l"><span>${x[0]}</span><span><b>${x[1]}</b><small>${x[2]}</small></span></p>`).join("")}
+  if(s.t==="rules") body = `<h3>Le but en 30 secondes</h3>
+      <div class="rule-goal"><p>🏆 Le meilleur président n'est pas forcément le champion : c'est celui qui <b>fait le plus progresser son club</b>.</p>
+      <p>💰 Argent gagné (caisse + valeur de l'effectif) × coefficient du club · 📈 +3 pts par place au-dessus de ton objectif, −3 en dessous · 🚨 les sanctions retirent des points.</p></div>
+      <h3>Une période en 5 étapes</h3><ol class="rule-steps"><li><b>Infos</b> : la news du jour et le point de la direction.</li><li><b>Mercato</b> : enchères à l'aveugle sur le marché.</li><li><b>Bureau</b> : 2 affaires max, négociations avec les présidents.</li><li><b>Conférence de presse</b> : un bonus ou un malus.</li><li><b>Matchs</b> : 6 ou 7 journées, dont un gros match en direct.</li></ol>
+      <button class="btn ghost" data-act="mctipsreset">💡 Revoir les conseils à chaque écran</button>
+      <h3>Comment on joue</h3>${mcTutoSlides().map(x => `<p class="rule-l"><span>${x[0]}</span><span><b>${x[1]}</b><small>${x[2]}</small></span></p>`).join("")}
       <h3>Les affaires</h3>${Object.values(MC_AF).filter(x => !x.hidden).map(x => `<p class="rule-l"><span>${x.ic}</span><span><b>${x.t}${x.sus?` · 🕵️ +${x.sus}`:""}</b><small>${esc(x.d)}</small></span></p>`).join("")}
       <h3>Les parades</h3>${Object.values(MC_PAR).map(x => `<p class="rule-l"><span>${x.ic}</span><span><b>${x.t} · ${x.price} M€</b><small>${esc(x.d)}</small></span></p>`).join("")}
       <h3>Soupçons et enquêtes</h3><p class="bid-note">À chaque fin de période, la Ligue enquête au hasard : risque = soupçons × 0,35. Sanction selon la gravité : amende de 10 à 30 M€, points retirés au classement, interdiction de recruter, et une casserole qui coûte des points de progression. Une période sans magouille fait baisser les soupçons de 10.</p>
@@ -1515,9 +1544,9 @@ function mcTutoSlides(){ return [
   ["🏟️","Un championnat à 20","Toi, 3 présidents rivaux et 16 clubs. 38 journées découpées en 6 périodes."],
   ["📈","Gagner = progresser","Le meilleur président n'est pas le champion : c'est celui qui fait le plus progresser son club (argent, classement), coefficient du club compris."],
   ["📋","Ton onze","11 titulaires, 5 systèmes de jeu, des postes précis. Pressing bat possession, possession bat contre-attaque, contre-attaque bat pressing."],
-  ["🤫","Les magouilles","Paris truqués, comptes maquillés, chantage… ça rapporte vite, mais chaque coup fait monter tes soupçons. Gare aux enquêtes de la Ligue."],
+  ["🤫","Les magouilles","Paris truqués, comptes maquillés, chantage… 2 affaires par période, chacune une seule fois par saison. Ça rapporte vite, mais chaque coup fait monter tes soupçons. Gare aux enquêtes de la Ligue."],
   ["🛡️","Les parades","Avocat, contre-espionnage, appel à la Ligue : quand on t'attaque, riposte, et l'attaquant perd sa mise."],
-  ["🔎","Démasquer les tricheurs","Envoie un détective. S'il triche, dénonce-le à la Ligue et touche une prime. S'il est clean… ça te coûtera cher."]]; }
+  ["🔎","Espionner en secret","Taupe ou détective : ta cible ne le saura jamais. Envoie un détective. S'il triche, dénonce-le à la Ligue et touche une prime. S'il est clean… ça te coûtera cher."]]; }
 
 function screenMercatoPick(){
   const b = PROFILE.best, day = b.mercatoDay && b.mercatoDay.day===todayKey() ? b.mercatoDay : null;
@@ -1611,7 +1640,7 @@ function screenMercato(){
     return {key, html:mcTable(`${M.flash ? mcActHTML(M.flash, M.fx==="bub") : ""}
          <p class="mct-say">💼 Bureau des affaires <small>${MC.plays-M.played} affaire${MC.plays-M.played>1?"s":""} possible${MC.plays-M.played>1?"s":""} · 🕵️ soupçons ${me.sus||0}%</small></p>
          ${me.ban===M.period ? `<p class="coal">🚫 Sanction de la Ligue : interdit de recruter cette période.</p>` : ""}
-         ${MC_AF_MENU.map(([t, ks]) => `<p class="af-t">${t}</p><div class="af-grid">${ks.map(k => { const A = MC_AF[k], done = A.once && (me.once||{})[k]===(M.season||1);
+         ${MC_AF_MENU.map(([t, ks]) => `<p class="af-t">${t}</p><div class="af-grid">${ks.map(k => { const A = MC_AF[k], done = (me.once||{})[k]===(M.season||1);
            return `<button class="af${A.sus>=20?" hot":A.sus>0?" warm":A.k==="clean"?" clean":""}" data-act="mcaf" data-v="${k}" ${done?"disabled":""}><span>${A.ic}</span><b>${A.t}</b><small>${done?"déjà fait":mcAfMoney(k)?`${mcAfMoney(k)} M€`:A.bet?"mise libre":"gratuit"}${A.sus?` · 🕵️+${A.sus}`:""}</small></button>`; }).join("")}</div>`).join("")}
          <p class="af-t">Tes parades</p><div class="hand center">${me.par.length ? me.par.map((st, i) => mcHandCard(st, i)).join("") : `<span class="hand-empty">Aucune parade</span>`}<button class="mcc k-shop" data-act="mcparshop"><span class="mcc-ic">🛒</span><b>Acheter</b></button></div>
          <div class="bureau-acts"><button class="btn ghost scout" data-act="mcscout">🔎 Recruter : tous les joueurs</button><span class="mct-hint">ou touche un président en haut pour négocier</span></div>
@@ -1773,6 +1802,8 @@ function mcAct(a, v, el){
     case "mcpress": mcPressAnswer(+v); break;
     case "mcplay2": mcPlayPeriod(); break;
     case "mcrules": M.sheet = {t:"rules"}; mcR("sheet"); break;
+    case "mctipok": PROFILE.best.mcTips = PROFILE.best.mcTips || {}; PROFILE.best.mcTips[v] = 1; saveProfile(); mcR(); break;
+    case "mctipsreset": PROFILE.best.mcTips = {}; saveProfile(); M.sheet = null; toast("Les conseils réapparaîtront.", "ok"); mcR(); break;
     case "mctab": M.tab = v; M.sheet = null; mcR(); window.scrollTo(0, 0); break;
     case "mcsellask": M.sheet = {t:"sellask", u:v}; mcR("sheet"); break;
     case "mclist": { const c = mcRoster(me).find(x => x.uid===v); if(!c) break; c.listed = !c.listed; toast(c.listed ? `${cardName(c.n)} est sur la liste des transferts.` : "Retiré de la liste.", "ok"); M.sheet = null; mcR(); break; }

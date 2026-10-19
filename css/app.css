@@ -1195,3 +1195,20 @@ button.me-pill{font:inherit;color:inherit;border:0;cursor:pointer}
 .susbar{height:10px;background:#0c124022;border-radius:99px;overflow:hidden}.susbar i{display:block;height:100%;background:linear-gradient(90deg,#3ed38f,#ff9f3a,#ff4d6d)}
 .det-l{margin:0;font-weight:700;font-size:13.5px}
 .enq{display:flex;flex-direction:column;gap:6px}.enq p{margin:0;background:#ff4d6d;color:#fff;border-radius:12px;padding:8px 12px}.enq p.me{background:#c8344f;box-shadow:0 0 0 2px #ffd23f}.enq small{display:block;font-size:12px;opacity:.95}
+
+/* ---------- Mercato v9.1 : tableau de bord, coach */
+.db-hero{display:flex;flex-direction:column;gap:6px;background:linear-gradient(135deg,#0c1240,#3a1a8a);color:#fff;border-radius:16px;padding:12px 14px}
+.db-hero>div:first-child{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}.db-hero small{font-size:11px;text-transform:uppercase;letter-spacing:.06em;opacity:.8;width:100%}
+.db-hero b{font-family:var(--f-display);font-weight:400;font-size:40px;line-height:1;color:#ffd23f}.db-hero em{font-style:normal;font-weight:800}
+.db-chips{display:flex;flex-wrap:wrap;gap:5px}.db-chips span{font-size:12px;font-weight:800;background:#ffffff22;border-radius:99px;padding:3px 8px}.db-chips .neg{background:#ff4d6d}
+.db-bars p{display:grid;grid-template-columns:96px 1fr 34px;gap:8px;align-items:center;margin:4px 0;font-size:13px;font-weight:700}
+.db-bars i{display:block;height:12px;background:#0c124014;border-radius:99px;overflow:hidden}.db-bars i b{display:block;height:100%;background:#3ed38f;border-radius:99px}.db-bars i b.neg{background:#ff4d6d}
+.db-bars p.me span,.db-bars p.me em{color:#2b59c3}.db-bars p.me i b{background:#ffd23f}.db-bars em{font-style:normal;text-align:right;font-family:var(--f-mono)}
+.db-k i{display:block;color:var(--ink-soft)}.db-k b{font-size:20px}
+.db-flow{display:flex;flex-wrap:wrap;gap:5px;align-items:center}.db-flow span{font-size:12px;font-weight:800;border-radius:8px;padding:3px 7px;background:#0c124010}
+.db-flow .pos{color:#1f9a5c}.db-flow .neg{color:#c8344f}.db-flow b{margin-left:auto;font-size:15px}.db-flow b.pos{color:#1f9a5c}.db-flow b.neg{color:#c8344f}
+.coach{background:#ffd23f;color:#0c1240;border-radius:14px;padding:10px 12px;margin-bottom:8px;box-shadow:0 4px 0 #c99a00;animation:pop .35s both;display:flex;flex-direction:column;gap:4px;width:100%}
+.coach b{font-size:14px}.coach p{margin:0;font-size:13px;font-weight:600;line-height:1.35}.coach .mini-btn{align-self:flex-end}
+.rule-goal{background:#0c12400d;border-radius:12px;padding:8px 12px}.rule-goal p{margin:4px 0;font-size:13.5px}
+.rule-steps{margin:0;padding-left:20px;font-size:13.5px}.rule-steps li{margin:3px 0}
+.sheet>*{flex-shrink:0}
