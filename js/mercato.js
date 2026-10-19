@@ -316,13 +316,15 @@ const mcBlank = o => Object.assign({team:[], bench:[], hand:[], par:[], sus:0, c
 /* le joueur a choisi son club : on crée la ligue */
 function mcSetup(profile){
   M.len = M.len || 1;
-  const sr = M.sr, P = MC_PROFILES[profile], f = {easy:0.85, normal:1, hard:1.15}[M.diff];
+  const sr = M.sr, P = MC_PROFILES[profile], f = {easy:0.8, normal:1.05, hard:1.5}[M.diff];
   const me = mcBlank({n:P.n, ic:P.ic, prof:"me", bot:false, col:"#ffd23f", money:P.money, debt:P.debt||0, goal:P.goal, profile, sys:P.sys});
   const others = mcShuffle(MC_BASE.filter(k => k!==profile), sr);
   const bots = mcShuffle([...MC_BOTS], sr).slice(0, 3).map((b, i) => { const Q = MC_PROFILES[others[i]];
     return mcBlank({n:b.n, club:b.club, ic:b.ic, prof:b.prof, bot:true, col:b.col, money:Math.round(Q.money*f), debt:Q.debt||0, goal:Q.goal, profile:others[i], sys:Q.sys}); });
   M.players = [me, ...bots];
   M.players.forEach(p => { mcBuildSquad(p, MC_PROFILES[p.profile].mix); if(p.bot) p.secret = mcShuffle(Object.keys(MC_SECRETS), sr)[0]; });
+  const boost = {easy:-3, normal:1, hard:6}[M.diff];   // effectifs des ordis un peu plus forts selon le niveau
+  if(boost) bots.forEach(b => { mcRoster(b).forEach(c => { c.ovr += boost; mcRevalue(c); c.paid = c.val; }); mcLineup(b); });
   if(P.boost) mcRoster(me).filter(c => c.age<=21).forEach(c => { c.pot = Math.max(c.pot, 82 + Math.floor(sr()*9)); c.ovr += 3; mcRevalue(c); c.paid = c.val; });
   M.cpu = MC_CPU.map(([n, ic, col, tier]) => { const c = mcBlank({n, ic, col, cpu:true, tier}); mcBuildSquad(c, "cpu"+tier); return c; });
   M.clubs = [...M.players, ...M.cpu];
@@ -702,7 +704,7 @@ function mcNewsChoose(k){
 /* ======================================================================
    VALEUR POUR UN ORDINATEUR
    ====================================================================== */
-const MC_K = {easy:1.6, normal:2.8, hard:4.2};    // M€ par point de note et par période
+const MC_K = {easy:1.6, normal:2.6, hard:2.8};    // M€ par point de note et par période
 function mcGainOf(p, c){
   if(mcRoster(p).includes(c)) return 0;
   const w = mcWhere(p, c, mcSeen(p, c));
@@ -727,8 +729,8 @@ function mcBotBids(p){
     if(bids.length>=(M.diff==="easy" && M.r()<0.5 ? 1 : M.buys)) break;
     const w = mcWtp(p, c); if(w < c.price) break;
     const cap = Math.round(c.price * (c.kind==="legend" ? 1.3 : c.age<=21 ? (p.prof==="D" ? 2 : 1.6) : 1.5));
-    const share = {easy:0.45, normal:0.65, hard:0.8}[M.diff];
-    const bid = Math.min(Math.round(w * (M.diff==="hard" ? 0.95 + M.r()*0.05 : 0.85 + M.r()*0.15)), cap, Math.max(c.price, Math.round(budget*share)), budget);
+    const share = {easy:0.45, normal:0.65, hard:0.7}[M.diff];
+    const bid = Math.min(Math.round(w * (M.diff==="hard" ? 0.88 + M.r()*0.06 : M.diff==="normal" ? 0.86 + M.r()*0.1 : 0.85 + M.r()*0.15)), cap, Math.max(c.price, Math.round(budget*share)), budget);
     if(bid < c.price) continue;
     bids.push([c.uid, bid]); budget -= bid;
   }
@@ -1044,7 +1046,7 @@ function mcBotTurn(p){
       }
     }
   }
-  const rate = {easy:0.45, normal:{A:0.9, B:0.6, C:0.7, D:0.65}[p.prof], hard:0.92}[M.diff], cap = {easy:35, normal:50, hard:65}[M.diff];
+  const rate = {easy:0.45, normal:{A:0.9, B:0.6, C:0.7, D:0.65}[p.prof], hard:0.92}[M.diff], cap = {easy:35, normal:50, hard:40}[M.diff];
   for(const k of mcShuffle([...MC_BOTAF[p.prof]], M.r)){
     if(p._n >= MC.plays) break;
     if(M.r() > rate) continue;
@@ -1404,7 +1406,7 @@ const mcOvrMid = c => { if(mcKnown(c)) return mcOvr(c); const e = mcEst(c); retu
 /* rapports du recruteur : de plus en plus chers dans la même période */
 const mcScoutCost = () => { const n = M.scouts||0; if(n >= 3) return null; const c = [2,5,10][n]; return mcMe().power==="chasseur" ? Math.ceil(c/2) : c; };
 /* les ordis aussi se trompent : chacun voit une note faussée, sauf pour ses propres joueurs */
-const mcSeen = (p, c) => { if(!p.bot || mcRoster(p).includes(c)) return mcOvr(c); const k = {easy:5, normal:3, hard:2}[M.diff], e = ((hashStr(p.prof + c.uid) >>> 0) % (2*k+1)) - k; return mcOvr(c) + e; };
+const mcSeen = (p, c) => { if(!p.bot || mcRoster(p).includes(c)) return mcOvr(c); const k = {easy:5, normal:2, hard:1}[M.diff], e = ((hashStr(p.prof + c.uid) >>> 0) % (2*k+1)) - k; return mcOvr(c) + e; };
 const mcWindow = () => M.period===1 || M.period===MC.flashPeriod;
 const mcPotTxt = c => c.age<=21 ? (c.scouted ? `pot. ${c.pot}` : `pot. ${c.pot>=85?"⭐⭐⭐":c.pot>=78?"⭐⭐":"⭐"}`) : "";
 /* une ligne de joueur avec tout ce qui compte, pour comparer sans ouvrir chaque fiche */
