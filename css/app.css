@@ -1164,3 +1164,34 @@ button.me-pill{font:inherit;color:inherit;border:0;cursor:pointer}
 .jp-box small{color:#fff;font-weight:800;font-size:16px;animation:fadein .4s 1.5s both}
 @keyframes fadein{from{opacity:0}to{opacity:1}}
 @media (prefers-reduced-motion:reduce){.mhero::after,.mtile::after,.mh-av span,.lucky.idle,.mh-btns .btn,.mh-bg i{animation:none}}
+
+/* ---------- Mercato v9 : terrain à 11, bureau des affaires, soupçons */
+.mpitch{background:repeating-linear-gradient(180deg,#1f8f4e 0 34px,#1a8447 34px 68px);border-radius:16px;padding:10px 4px;display:flex;flex-direction:column;gap:8px;box-shadow:inset 0 0 0 2px #ffffff40}
+.mp-row{display:flex;justify-content:space-around;gap:3px}
+.mp-t{flex:1;max-width:76px;min-width:0;display:flex;flex-direction:column;align-items:center;gap:1px;background:#0c1240cc;border:2px solid #ffffff55;border-radius:10px;padding:3px 2px;color:#fff;font:inherit}
+.mp-t i{font-style:normal;font-size:9.5px;font-weight:800;color:#ffd23f;letter-spacing:.04em}
+.mp-t b{font-size:10.5px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mp-t em{font-style:normal;font-family:var(--f-mono);font-size:11px;font-weight:700}
+.mp-t.off{border-color:#ff9f3a}.mp-t.off em{color:#ffb86b}.mp-t.out{opacity:.6;border-style:dashed}.mp-t.empty{background:#ffffff22}
+.mp-t.on{border-color:#ffd23f;box-shadow:0 0 0 2px #ffd23f}
+.me-line.comp{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:space-between;font-weight:800;font-size:13px;color:#fff;background:#0c124099;border-radius:12px;padding:8px 10px;border:0;font-family:inherit;width:100%}
+.cmp-sys{background:#ffd23f;color:#0c1240;border-radius:7px;padding:2px 7px}.cmp-go{color:#ffd23f}
+.me-sh.sus.warm{background:#ff9f3a;color:#0c1240}.me-sh.sus.hot{background:#ff4d6d;color:#fff;animation:newpulse 1.4s infinite}
+.blocks{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.blocks span{background:#0c124014;border-radius:10px;padding:6px;text-align:center;font-size:12px;font-weight:700}.blocks b{display:block;font-size:18px}
+.cv .blocks span{background:#ffffffee;color:var(--ink)}
+.chips.sys{flex-wrap:wrap}.chips.sys button{font-weight:800}
+.cand{display:grid;grid-template-columns:1fr auto;gap:0 8px;align-items:center;text-align:left;font:inherit;color:var(--ink);background:#0c12400d;border:0;border-radius:10px;padding:7px 10px}
+.cand small{grid-column:1;color:var(--ink-soft);font-size:11.5px}.cand em{grid-row:1/3;grid-column:2;font-style:normal;font-family:var(--f-display);font-size:20px}
+.cand em.ok{color:#1f9a5c}.cand em.mid{color:#c26a00}.cand em.ko{color:#c8344f}
+.af-t{color:#fff;font-weight:900;font-size:13px;margin:8px 0 4px;opacity:.85;text-transform:uppercase;letter-spacing:.05em}
+.af-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+.af{display:grid;grid-template-columns:auto 1fr;gap:0 8px;align-items:center;text-align:left;font:inherit;color:var(--ink);background:#ffffffee;border:0;border-left:5px solid #3ed38f;border-radius:12px;padding:7px 9px}
+.af span{grid-row:span 2;font-size:22px}.af b{font-size:12.5px;line-height:1.15}.af small{font-size:11px;color:var(--ink-soft)}
+.af.warm{border-left-color:#ff9f3a}.af.hot{border-left-color:#ff4d6d}.af.clean{border-left-color:#8fb6ff}.af[disabled]{opacity:.45}
+.af-meta{display:flex;flex-wrap:wrap;gap:6px}.af-meta span{font-size:12px;font-weight:800;background:#0c124012;border-radius:99px;padding:4px 9px}.af-meta .sus{background:#ff4d6d22;color:#c8344f}.af-meta .ok{background:#3ed38f33;color:#1f7a4a}
+.tgt-p.on{outline:3px solid #ffd23f}.tgt.on{outline:3px solid #ffd23f;border-radius:10px}
+.mcc.k-par{border-color:#8fb6ff}.mcc.k-shop{border-style:dashed;cursor:pointer;font:inherit}
+.det{display:flex;flex-direction:column;gap:6px;background:#0c12400d;border-radius:14px;padding:10px}
+.susbar{height:10px;background:#0c124022;border-radius:99px;overflow:hidden}.susbar i{display:block;height:100%;background:linear-gradient(90deg,#3ed38f,#ff9f3a,#ff4d6d)}
+.det-l{margin:0;font-weight:700;font-size:13.5px}
+.enq{display:flex;flex-direction:column;gap:6px}.enq p{margin:0;background:#ff4d6d;color:#fff;border-radius:12px;padding:8px 12px}.enq p.me{background:#c8344f;box-shadow:0 0 0 2px #ffd23f}.enq small{display:block;font-size:12px;opacity:.95}
